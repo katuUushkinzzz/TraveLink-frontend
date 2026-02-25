@@ -1,0 +1,111 @@
+.card {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    gap: 20px;
+    cursor: pointer;
+    padding-right: 10px;
+}
+
+.cardTint {
+    position: absolute;
+    top: -10;
+    right: 0;
+    bottom: -10;
+    left: -10;
+    transition: background-color 100ms ease-in-out;
+    pointer-events: none;
+}
+
+.card:hover .cardTint {
+    border-radius: 5px;
+    background-color: #00000008;
+}
+
+.cardContent {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    position: relative;
+    width: 248px;
+    gap: 5px;
+}
+
+.cardThumbnail {
+    border-radius: 5px;
+}
+
+.cardName {
+    height: 25px;
+    font-size: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 220px;
+}
+
+.cardDesc {
+    display: -webkit-box;
+    height: 95px;
+    font-size: 16px;
+    font-weight: 400;
+    overflow: hidden;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.cardFooter {
+    position: absolute;
+    bottom: 0;
+}
+
+.interactContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.interactContainer>span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+.interactContainer>span>img {
+    height: fit-content;
+}
+
+.interactTxt {
+    font-weight: 400;
+    font-size: 18px;
+}
+
+.favButton {
+    position: absolute;
+    top: 0;
+    right: -5;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.favButton>input {
+    display: none;
+}
+
+.favButton>svg {
+
+}
+
+.favButton>input:hover ~ svg {
+    fill: #5957632a;
+}
+
+.favButton>input:checked ~ svg {
+    fill: #595763;
+}
+
+.favButton>input:checked ~ svg:hover {
+    fill: #46444e;
+}

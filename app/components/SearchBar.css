@@ -64,28 +64,28 @@
     cursor: pointer;
 }
 
-.showContainer {
+.collapseContainer {
     width: 45px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.showButton {
+.collapseButton {
     transition: transform filter 0.1s ease-in-out;
     filter: drop-shadow(0px 4px 4px #0000004a);
     cursor: pointer;
 }
 
-.showButton:active {
+.collapseButton:active {
     filter: drop-shadow(0px 0px 0px #0000004a);
-    transform: translate(0, 1px);
+    /* transform: translate(0, 1px); */
 }
 
-.showButton>img {
+.collapseButton>img {
     transition: transform 0.1s ease-in-out;
 }
 
-.sideHiden ~ .searchContainer .showButton>img {
+.sideHiden ~ .searchContainer .collapseButton>img {
     transform: rotate(180deg);
 }

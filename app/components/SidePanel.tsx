@@ -3,7 +3,11 @@
 import Image from 'next/image';
 import './SidePanel.css';
 import './SearchBar.css'
+import './Card.css'
+import './PointCard.css'
+import './RouteCard.css'
 import { useEffect, useRef, useState } from 'react';
+import FavSvg from '@/public/search-window/fav.svg'
 
 function CategoryButton({ categoryName, image, color }: { categoryName: string, image: string, color: string }) {
     return (
@@ -26,9 +30,9 @@ function RouteButton({ routeName, routeDescription, routeTags, image, likeCount,
                        likeCount: number, 
                        commCount: number }) {
     return (
-        <div className='txt routeButton'>
+        <div className='txt card'>
             <Image className='cardThumbnail' alt="" src={image} width={200} height={200} />
-            <div className='routeButtonContent'>
+            <div className='cardContent'>
                 <h1 className='cardName'>{routeName}</h1>
                 <span className='cardDesc'>{routeDescription}</span>
                 <div className='cardFooter'>
@@ -46,8 +50,12 @@ function RouteButton({ routeName, routeDescription, routeTags, image, likeCount,
                         </span>
                     </div>
                 </div>
-                <Image className='favIcon' alt="" src='/search-window/fav.svg' width={15} height={18.23} />
+                <label className='favButton'>
+                    <input type='checkbox'></input>
+                    <FavSvg width={17} height={21}/>
+                </label>
             </div>
+            <div className='cardTint'/>
         </div>
     )
 }
@@ -59,11 +67,11 @@ function PointButton({ pointName, pointType, pointLocation, pointDescription, im
                        pointDescription: string, 
                        image: string, 
                        rating: number, 
-                       rateCount: number }) {
+                       rateCount: number, }) {
     return (
-        <div className='txt routeButton'>
+        <div className='txt card'>
             <Image className='cardThumbnail' alt="" src={image} width={200} height={200} />
-            <div className='routeButtonContent'>
+            <div className='cardContent'>
                 <h1 className='cardName'>{pointName}</h1>
                 <h2 className='pointType'>{pointType}</h2>
                 <span className='pointLocation'>{pointLocation}</span>
@@ -80,8 +88,12 @@ function PointButton({ pointName, pointType, pointLocation, pointDescription, im
                         </span>
                     </div>
                 </div>
-                <Image className='favIcon' alt="" src='/search-window/fav.svg' width={15} height={18.23} />
+                <label className='favButton'>
+                    <input type='checkbox'></input>
+                    <FavSvg width={17} height={21}/>
+                </label>
             </div>
+            <div className='cardTint'/>
         </div>
     )
 }
@@ -120,52 +132,54 @@ export default function SidePanel() {
     return (
         <>
             <div id="sideContainer" className="sideContainer" ref={sidePanelRef}>
-                <span className="txt">Таганрог</span>
-                <span className="txt subheaderLabel">Категории</span>
-                <div className="categoryContainer">
-                    <CategoryButton categoryName="Рестораны" image="/search-window/restaurant-cat-icon.png" color="#FE8E43"/>
-                    <CategoryButton categoryName="Архитектура" image="/search-window/architechture-cat-icon.png" color="#FFE898"/>
-                    <CategoryButton categoryName="Парки" image="/search-window/park-cat-icon.png" color="#85DB85"/>
-                    <CategoryButton categoryName="Медицина" image="/search-window/medicine-cat-icon.png" color="#FF7070"/>
-                    <CategoryButton categoryName="Продукты" image="/search-window/groceries-cat-icon.png" color="#FE8E43"/>
-                    <CategoryButton categoryName="Торговые центры" image="/search-window/mall-cat-icon.png" color="#67999C"/>
-                    <CategoryButton categoryName="Отдых" image="/search-window/rest-cat-icon.png" color="#FF7070"/>
-                    <CategoryButton categoryName="Прачечные" image="/search-window/laudry-cat-icon.png" color="#67999C"/>
-                    <CategoryButton categoryName="Развлечения" image="/search-window/ent-cat-icon.png" color="#CB3466"/>
-                    <CategoryButton categoryName="Кофейни" image="/search-window/cafe-cat-icon.png" color="#BE8667"/>
-                    <CategoryButton categoryName="Пляжи" image="/search-window/beach-cat-icon.png" color="#FFE897"/>
-                    <CategoryButton categoryName="Салоны красоты" image="/search-window/beauty-cat-icon.png" color="#FF7070"/>
-                </div>
-                <span className="txt">Рекомендации</span>
-                <div className="recContainer">
-                    <div className='recTabContainer'>
-                        <input id='recTabRoutes' type='radio' name='tabs' defaultChecked={true}></input>
-                        <label htmlFor='recTabRoutes' className='txt recTab' onClick={() => setRecTab(0)}>Маршруты</label>
-                        <input id='recTabPoints' type='radio' name='tabs'></input>
-                        <label htmlFor='recTabPoints' className='txt recTab' onClick={() => setRecTab(1)}>Точки</label>
+                <div className='scrollArea'>
+                    <h1 className="txt">Таганрог</h1>
+                    <h3 className="txt">Категории</h3>
+                    <div className="categoryContainer">
+                        <CategoryButton categoryName="Рестораны" image="/search-window/restaurant-cat-icon.png" color="#FE8E43"/>
+                        <CategoryButton categoryName="Архитектура" image="/search-window/architechture-cat-icon.png" color="#FFE898"/>
+                        <CategoryButton categoryName="Парки" image="/search-window/park-cat-icon.png" color="#85DB85"/>
+                        <CategoryButton categoryName="Медицина" image="/search-window/medicine-cat-icon.png" color="#FF7070"/>
+                        <CategoryButton categoryName="Продукты" image="/search-window/groceries-cat-icon.png" color="#FE8E43"/>
+                        <CategoryButton categoryName="Торговые центры" image="/search-window/mall-cat-icon.png" color="#67999C"/>
+                        <CategoryButton categoryName="Отдых" image="/search-window/rest-cat-icon.png" color="#FF7070"/>
+                        <CategoryButton categoryName="Прачечные" image="/search-window/laudry-cat-icon.png" color="#67999C"/>
+                        <CategoryButton categoryName="Развлечения" image="/search-window/ent-cat-icon.png" color="#CB3466"/>
+                        <CategoryButton categoryName="Кофейни" image="/search-window/cafe-cat-icon.png" color="#BE8667"/>
+                        <CategoryButton categoryName="Пляжи" image="/search-window/beach-cat-icon.png" color="#FFE897"/>
+                        <CategoryButton categoryName="Салоны красоты" image="/search-window/beauty-cat-icon.png" color="#FF7070"/>
                     </div>
-                    <div className='recRoutes' style={{display: currentRecTab === 0 ? 'flex' : 'none'}}>
-                        {['a','b','c','d','e','f'].map((e, i) => (
-                            <RouteButton 
-                                key={i} 
-                                routeName={e} 
-                                routeDescription={lorem} 
-                                routeTags={['test', 'test2', 'test2', 'test2', 'test2', 'test2', 'test2', 'test2', 'test2']} 
-                                likeCount={1337} 
-                                commCount={420} 
-                                image='/search-window/checker.png'/>))}
-                    </div>
-                    <div className='recRoutes' style={{display: currentRecTab === 1 ? 'flex' : 'none'}}>
-                        {['g','h','i','j','k','l'].map((e, i) => (
-                            <PointButton 
-                                key={i} 
-                                pointName={e} 
-                                pointDescription={lorem} 
-                                pointType='Restaurant' 
-                                pointLocation='Пушкина 1' 
-                                rating={4.9} 
-                                rateCount={10223} 
-                                image='/search-window/checker.png'/>))}
+                    <h1 className="txt">Рекомендации</h1>
+                    <div className="recContainer">
+                        <div className='recTabContainer'>
+                            <input id='recTabRoutes' type='radio' name='tabs' defaultChecked={true}></input>
+                            <label htmlFor='recTabRoutes' className='txt recTab' onClick={() => setRecTab(0)}>Маршруты</label>
+                            <input id='recTabPoints' type='radio' name='tabs'></input>
+                            <label htmlFor='recTabPoints' className='txt recTab' onClick={() => setRecTab(1)}>Точки</label>
+                        </div>
+                        <div className='recRoutes' style={{display: currentRecTab === 0 ? 'flex' : 'none'}}>
+                            {['a','b','c','d','e','f'].map((e, i) => (
+                                <RouteButton 
+                                    key={i} 
+                                    routeName={e} 
+                                    routeDescription={lorem} 
+                                    routeTags={['test', 'test2', 'test2', 'test2', 'test2', 'test2', 'test2', 'test2', 'test2']} 
+                                    likeCount={1337} 
+                                    commCount={420} 
+                                    image='/search-window/checker.png'/>))}
+                        </div>
+                        <div className='recRoutes' style={{display: currentRecTab === 1 ? 'flex' : 'none'}}>
+                            {['g','h','i','j','k','l'].map((e, i) => (
+                                <PointButton 
+                                    key={i} 
+                                    pointName={e} 
+                                    pointDescription={lorem} 
+                                    pointType='Restaurant' 
+                                    pointLocation='Пушкина 1' 
+                                    rating={4.9} 
+                                    rateCount={10223} 
+                                    image='/search-window/checker.png'/>))}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -187,8 +201,8 @@ export default function SidePanel() {
                         </button>
                     </div>
                 </div>
-                <div className='showContainer'>
-                    <button className='showButton' onClick={() => setPanelShown(!isPanelShown)}>
+                <div className='collapseContainer'>
+                    <button className='collapseButton' onClick={() => setPanelShown(!isPanelShown)}>
                         <Image alt='' src='/search-window/collapse-button.svg' width={25} height={25}/>
                     </button>
                 </div>

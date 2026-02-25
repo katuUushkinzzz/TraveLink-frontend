@@ -1,33 +1,45 @@
-.txt {
-    font-family: 'Montserrat';
+h1 {
     font-weight: 500;
     font-size: 24px;
+}
+
+h2 {
+    font-weight: 400;
+    font-size: 16px;
+}
+
+h3 {
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.txt {
+    font-family: 'Montserrat';
     color: #393939;
-    line-height: 100%;
 }
 
 .sideContainer {
     position: absolute;
     left: 0;
     top: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
     width: 525px;
     height: 100vh;
-    background-color: white;
-    padding: 90px 10px 0 15px;
     transition: left 0.5s ease-in-out;
+    padding: 80px 0 0 15px;
+    background-color: white;
+}
+
+.scrollArea {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 10px 0 0;
+    gap: 9px;
+    height: 100%;
     overflow: scroll;
 }
 
 .sideHiden {
     left: -525px;
-}
-
-.subheaderLabel {
-    font-weight: 300;
-    font-size: 16px;
 }
 
 .categoryContainer {
@@ -84,6 +96,7 @@
     font-size: 20px;
     color: #AFAEB5;
     cursor: pointer;
+    font-weight: 500;
 }
 
 .recTabContainer input:checked+.recTab {
@@ -107,114 +120,7 @@
 
 .recRoutes {
     flex-direction: column;
-    margin-top: 20px;
+    margin: 20px 0 0 20px;
+    /* margin-top: 20px; */
     gap: 35px;
-}
-
-.routeButton {
-    display: flex;
-    flex-direction: row;
-    gap: 20px
-}
-
-.cardThumbnail {
-    border-radius: 5px;
-}
-
-.routeButtonContent {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    width: 248px;
-    gap: 5px;
-}
-
-.cardName {
-    height: 24px;
-    font-size: 20px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    max-width: 220px;
-}
-
-.cardDesc {
-    display: -webkit-box;
-    height: 95px;
-    font-size: 16px;
-    font-weight: 400;
-    overflow: hidden;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-}
-
-.pointDesc {
-    height: 90px;
-    font-size: 14px;
-}
-
-.pointLocation {
-    font-size: 14px;
-    font-weight: 400;
-    height: 17px;
-}
-
-.pointType {
-    font-size: 16px;
-    font-weight: 400;
-    height: 20px;
-}
-
-.routeTagContainer {
-    height: 32px;
-    line-height: 11px;
-    overflow: hidden;
-}
-
-.routeTag {
-    display: inline;
-    font-size: 12px;
-    font-weight: 400;
-    color: #5BDAFF;
-    white-space: normal;
-    overflow-wrap: normal;
-    margin-right: 6px;
-}
-
-.routeTag::before {
-    content: " #";
-}
-
-.favIcon {
-    position: absolute;
-    top: 5px;
-    right: 0;
-}
-
-.cardFooter {
-    position: absolute;
-    bottom: 0;
-}
-
-.interactContainer {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.interactContainer>span {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5px;
-}
-
-.interactContainer>span>img {
-    height: fit-content;
-}
-
-.interactTxt {
-    font-weight: 400;
-    font-size: 18px;
 }

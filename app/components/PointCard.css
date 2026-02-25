@@ -1,0 +1,16 @@
+.pointType {
+    font-size: 16px;
+    font-weight: 400;
+    height: 20px;
+}
+
+.pointLocation {
+    font-size: 14px;
+    font-weight: 400;
+    height: 17px;
+}
+
+.pointDesc {
+    height: 85px;
+    font-size: 14px;
+}
