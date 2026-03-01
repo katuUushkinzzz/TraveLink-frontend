@@ -27,6 +27,7 @@ function Login({ onClose }) {
           type="email"
           placeholder="Почта"
           value={email}
+          onChange={(e) => setEmail(e.target.value)}
           onFocus={() => setVisitedEmail(true)}
           onBlur={() => setVisitedEmail(false)}
           style={{ borderColor: visitedEmail ? '#C9F3FF' : '' }}
@@ -38,6 +39,7 @@ function Login({ onClose }) {
             type={showPassword ? 'text' : 'password'}
             placeholder="Пароль"
             value={password}
+            onChange={(e) => setPassword(e.target.value)}
             onFocus={() => setVisitedPassword(true)}
             onBlur={() => setVisitedPassword(false)}
             style={{ borderColor: visitedPassword ? '#C9F3FF' : '' }}
