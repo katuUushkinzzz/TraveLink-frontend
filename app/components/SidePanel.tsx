@@ -1,13 +1,14 @@
-'use client';
+'use client'
 
-import Image from 'next/image';
-import './SidePanel.css';
-import './SearchBar.css'
+import Image from 'next/image'
+import './SidePanel.css'
 import './Card.css'
 import './PointCard.css'
 import './RouteCard.css'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react'
 import FavSvg from '@/public/search-window/fav.svg'
+
+import SearchBar from './SearchBar'
 
 function CategoryButton({ categoryName, image, color }: { categoryName: string, image: string, color: string }) {
     return (
@@ -112,15 +113,7 @@ export default function SidePanel() {
      laboriosam debitis ipsum deserunt. Excepturi reiciendis neque aperiam nihil recusandae dicta assumenda inventore vel voluptatem officia 
      odio delectus ipsum ipsam exercitationem incidunt beatae illo, ad explicabo a architecto. Delectus autem porro beatae ipsam. Odio provident 
      consequuntur numquam vel nisi fugit iusto, repellendus itaque suscipit, similique accusantium cum aliquid non, magnam nihil. Nesciunt 
-     quaerat eius, cumque illo quisquam aut repudiandae, fuga nostrum consequuntur quae facilis optio repellat nihil, dicta modi qui! Aspernatur, 
-     eaque recusandae praesentium voluptate illum similique at tempora labore numquam culpa voluptatum illo eius id vel veniam itaque dolore ad 
-     ex necessitatibus iste deserunt accusamus rerum. Modi at molestias quae, facere culpa quaerat? Perferendis sequi ut beatae dignissimos 
-     officiis ducimus repellendus corrupti doloribus nisi vel recusandae esse provident, obcaecati magnam itaque, repudiandae aut. Labore eum 
-     corrupti excepturi repellat architecto libero quis nesciunt? Eius autem laborum itaque eum error molestiae, commodi vero cum deleniti iure 
-     ab dolore aliquam incidunt inventore tenetur recusandae quisquam cumque. Sapiente, laborum. Vel quo expedita obcaecati voluptate iure 
-     ratione. Magnam excepturi numquam esse explicabo possimus dolorum quae. Voluptate laborum autem atque facilis vitae pariatur debitis 
-     eligendi, aspernatur laboriosam tempore, id illo iure distinctio obcaecati rem harum necessitatibus sunt quidem deleniti excepturi 
-     consequatur vero dolores sequi. Totam adipisci eius nobis saepe facilis?`
+     quaerat eius, cumque illo quisquam aut repudiandae, fuga nostrum consequuntur quae facilis optio repellat nihil, dicta modi qui!`
 
     useEffect(() => {
         if (sidePanelRef.current) {
@@ -187,30 +180,7 @@ export default function SidePanel() {
                     </div>
                 </div>
             </div>
-            <div className='searchContainer'>
-                <div className='searchBar'>
-                    <Image alt="" src="/search-window/search-route.png" width={30} height={30} />
-                    <input type='search' className='searchField' placeholder='Поиск'></input>
-                    <div className='searchButton'>
-                        <button className='barButton' onClick={() => {
-                            // TODO: Make search implementation
-                        }}>
-                            <Image alt="" src="/search-window/search.png" width={30} height={30} />
-                        </button>
-                        <div className='separator' />
-                        <button className='barButton' onClick={() => {
-                            // TODO: Make routing implementation
-                        }}>
-                            <Image alt="" src="/search-window/route.png" width={30} height={30} />
-                        </button>
-                    </div>
-                </div>
-                <div className='collapseContainer'>
-                    <button className='collapseButton' onClick={() => setPanelShown(!isPanelShown)}>
-                        <Image alt='' src='/search-window/collapse-button.svg' width={25} height={25}/>
-                    </button>
-                </div>
-            </div>
+            <SearchBar setPanelShown={setPanelShown} isPanelShown={isPanelShown}/>
         </>
     )
 }
