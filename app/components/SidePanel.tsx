@@ -22,13 +22,14 @@ function CategoryButton({ categoryName, image, color }: { categoryName: string, 
     )
 }
 
-function RouteButton({ routeName, routeDescription, routeTags, image, likeCount, commCount }: 
+function RouteButton({ routeName, routeDescription, routeTags, image, likeCount, commCount, isFav = false }: 
                      { routeName: string, 
                        routeDescription: string, 
                        routeTags: string[], 
                        image: string, 
                        likeCount: number, 
-                       commCount: number }) {
+                       commCount: number,
+                       isFav: boolean }) {
     return (
         <div className='txt card'>
             <Image className='cardThumbnail' alt="" src={image} width={200} height={200} />
@@ -51,7 +52,7 @@ function RouteButton({ routeName, routeDescription, routeTags, image, likeCount,
                     </div>
                 </div>
                 <label className='favButton'>
-                    <input type='checkbox'></input>
+                    <input type='checkbox' defaultChecked={isFav}></input>
                     <FavSvg width={17} height={21}/>
                 </label>
             </div>
@@ -60,14 +61,15 @@ function RouteButton({ routeName, routeDescription, routeTags, image, likeCount,
     )
 }
 
-function PointButton({ pointName, pointType, pointLocation, pointDescription, image, rating, rateCount }: 
+function PointButton({ pointName, pointType, pointLocation, pointDescription, image, rating, rateCount, isFav = false }: 
                      { pointName: string, 
                        pointType: string, 
                        pointLocation: string, 
                        pointDescription: string, 
                        image: string, 
                        rating: number, 
-                       rateCount: number, }) {
+                       rateCount: number,
+                       isFav: boolean }) {
     return (
         <div className='txt card'>
             <Image className='cardThumbnail' alt="" src={image} width={200} height={200} />
@@ -89,7 +91,7 @@ function PointButton({ pointName, pointType, pointLocation, pointDescription, im
                     </div>
                 </div>
                 <label className='favButton'>
-                    <input type='checkbox'></input>
+                    <input type='checkbox' defaultChecked={isFav}></input>
                     <FavSvg width={17} height={21}/>
                 </label>
             </div>
@@ -166,7 +168,8 @@ export default function SidePanel() {
                                     routeTags={['test', 'test2', 'test2', 'test2', 'test2', 'test2', 'test2', 'test2', 'test2']} 
                                     likeCount={1337} 
                                     commCount={420} 
-                                    image='/search-window/checker.png'/>))}
+                                    image='/search-window/checker.png'
+                                    isFav={true}/>))}
                         </div>
                         <div className='recRoutes' style={{display: currentRecTab === 1 ? 'flex' : 'none'}}>
                             {['g','h','i','j','k','l'].map((e, i) => (
@@ -178,7 +181,8 @@ export default function SidePanel() {
                                     pointLocation='Пушкина 1' 
                                     rating={4.9} 
                                     rateCount={10223} 
-                                    image='/search-window/checker.png'/>))}
+                                    image='/search-window/checker.png'
+                                    isFav={true}/>))}
                         </div>
                     </div>
                 </div>

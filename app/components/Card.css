@@ -50,6 +50,7 @@
     font-size: 16px;
     font-weight: 400;
     overflow: hidden;
+    line-clamp: 4;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
 }
@@ -94,18 +95,28 @@
     display: none;
 }
 
-.favButton>svg {
+/* .favButton>svg {
 
-}
+} */
 
 .favButton>input:hover ~ svg {
     fill: #5957632a;
 }
 
 .favButton>input:checked ~ svg {
-    fill: #595763;
+    fill: #FFDC64;
+    stroke: #FFDC64;
+}
+
+.favButton>input:checked ~ svg>path {
+    stroke: #FFDC64;
 }
 
 .favButton>input:checked ~ svg:hover {
-    fill: #46444e;
+    fill: #e5c55b;
 }
+
+.favButton>input:checked ~ svg:hover>path {
+    stroke: #e5c55b;
+}
+
