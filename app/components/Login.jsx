@@ -1,8 +1,4 @@
 import { useState } from 'react';
-import closeIcon from './close.svg';
-import eyeIcon from './eye-closed.svg';
-import eyeOffIcon from './eye-open.svg';
-import vkIcon from './VK.svg';
 import './Login.css';
 
 function Login({ onClose }) {
@@ -21,7 +17,7 @@ function Login({ onClose }) {
     <div className="login-overlay">
       <div className="login-modal">
         <button className="login-close" type="button" onClick={onClose}>
-          <img src={closeIcon} alt="закрыть" width={20} height={20} />
+          <img src="/login/close.svg" alt="закрыть" width={20} height={20} />
         </button>
         <h2 className="login-title">Вход</h2>
 
@@ -47,7 +43,7 @@ function Login({ onClose }) {
           />
           <button className="eye-button" type="button" onClick={() => setShowPassword(!showPassword)}>
             <img
-              src={showPassword ? eyeOffIcon : eyeIcon}
+              src={showPassword ? "/login/eye-open.svg" : "/login/eye-closed.svg"}
               alt="показать пароль"
               className="eye-icon"
             />
@@ -75,7 +71,7 @@ function Login({ onClose }) {
         <div className="login-or">или</div>
 
         <button className="login-btn-vk" type="button">
-          <img src={vkIcon} alt="vk" width={28} height={28} />
+          <img src="/login/VK.svg" alt="vk" width={28} height={28} />
           Войти с VK ID
         </button>
 
