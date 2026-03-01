@@ -97,6 +97,7 @@ h3 {
     color: #AFAEB5;
     cursor: pointer;
     font-weight: 500;
+    user-select: none;
 }
 
 .recTabContainer input:checked+.recTab {

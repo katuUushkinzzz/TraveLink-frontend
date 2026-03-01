@@ -1,14 +1,13 @@
 'use client'
 
-import Image from 'next/image'
-import './SidePanel.css'
-import './Card.css'
-import './PointCard.css'
-import './RouteCard.css'
 import { useEffect, useRef, useState } from 'react'
-import FavSvg from '@/public/search-window/fav.svg'
+import Image from 'next/image'
+
+import './SidePanel.css'
 
 import SearchBar from './SearchBar'
+import RouteButton from './RouteCard'
+import PointButton from './PointCard'
 
 function CategoryButton({ categoryName, image, color }: { categoryName: string, image: string, color: string }) {
     return (
@@ -23,87 +22,9 @@ function CategoryButton({ categoryName, image, color }: { categoryName: string, 
     )
 }
 
-function RouteButton({ routeName, routeDescription, routeTags, image, likeCount, commCount, isFav = false }: 
-                     { routeName: string, 
-                       routeDescription: string, 
-                       routeTags: string[], 
-                       image: string, 
-                       likeCount: number, 
-                       commCount: number,
-                       isFav: boolean }) {
-    return (
-        <div className='txt card'>
-            <Image className='cardThumbnail' alt="" src={image} width={200} height={200} />
-            <div className='cardContent'>
-                <h1 className='cardName'>{routeName}</h1>
-                <span className='cardDesc'>{routeDescription}</span>
-                <div className='cardFooter'>
-                    <div className='routeTagContainer'>
-                        {routeTags.map((e, i) => (<span key={i} className='routeTag'>{e}</span>))}
-                    </div>
-                    <div className='interactContainer'>
-                        <span className='txt interactTxt'>
-                            {likeCount}
-                            <Image alt="" src='/search-window/like.svg' width={18.9} height={16.23}></Image>
-                        </span>
-                        <span className='txt interactTxt'>
-                            {commCount}
-                            <Image alt="" src='/search-window/comm.png' width={18} height={18}></Image>
-                        </span>
-                    </div>
-                </div>
-                <label className='favButton'>
-                    <input type='checkbox' defaultChecked={isFav}></input>
-                    <FavSvg width={17} height={21}/>
-                </label>
-            </div>
-            <div className='cardTint'/>
-        </div>
-    )
-}
-
-function PointButton({ pointName, pointType, pointLocation, pointDescription, image, rating, rateCount, isFav = false }: 
-                     { pointName: string, 
-                       pointType: string, 
-                       pointLocation: string, 
-                       pointDescription: string, 
-                       image: string, 
-                       rating: number, 
-                       rateCount: number,
-                       isFav: boolean }) {
-    return (
-        <div className='txt card'>
-            <Image className='cardThumbnail' alt="" src={image} width={200} height={200} />
-            <div className='cardContent'>
-                <h1 className='cardName'>{pointName}</h1>
-                <h2 className='pointType'>{pointType}</h2>
-                <span className='pointLocation'>{pointLocation}</span>
-                <span className='cardDesc pointDesc'>
-                    О месте:<br/>
-                    {pointDescription}
-                </span>
-                <div className='cardFooter'>
-                    <div className='interactContainer'>
-                        <span className='txt interactTxt'>
-                            {rating}
-                            <Image alt="" src='/search-window/star.svg' width={18.9} height={16.23}></Image>
-                            ({rateCount})
-                        </span>
-                    </div>
-                </div>
-                <label className='favButton'>
-                    <input type='checkbox' defaultChecked={isFav}></input>
-                    <FavSvg width={17} height={21}/>
-                </label>
-            </div>
-            <div className='cardTint'/>
-        </div>
-    )
-}
-
 export default function SidePanel() {
     const [isPanelShown, setPanelShown] = useState(true);
-    const [currentRecTab, setRecTab] = useState(0);
+    const [currentRecTab, setRecTab] = useState(1);
     const sidePanelRef = useRef<HTMLDivElement>(null);
 
     const lorem = 
@@ -147,12 +68,12 @@ export default function SidePanel() {
                     <h1 className="txt">Рекомендации</h1>
                     <div className="recContainer">
                         <div className='recTabContainer'>
-                            <input id='recTabRoutes' type='radio' name='tabs' defaultChecked={true}></input>
-                            <label htmlFor='recTabRoutes' className='txt recTab' onClick={() => setRecTab(0)}>Маршруты</label>
-                            <input id='recTabPoints' type='radio' name='tabs'></input>
-                            <label htmlFor='recTabPoints' className='txt recTab' onClick={() => setRecTab(1)}>Точки</label>
+                            <input onChange={() => setRecTab(1)} id='recTabRoutes' type='radio' name='tabs' defaultChecked={true}></input>
+                            <label htmlFor='recTabRoutes' className='txt recTab'>Маршруты</label>
+                            <input onChange={() => setRecTab(2)} id='recTabPoints' type='radio' name='tabs'></input>
+                            <label htmlFor='recTabPoints' className='txt recTab'>Точки</label>
                         </div>
-                        <div className='recRoutes' style={{display: currentRecTab === 0 ? 'flex' : 'none'}}>
+                        <div className='recRoutes' style={{display: currentRecTab === 1 ? 'flex' : 'none'}}>
                             {['a','b','c','d','e','f'].map((e, i) => (
                                 <RouteButton 
                                     key={i} 
@@ -164,7 +85,7 @@ export default function SidePanel() {
                                     image='/search-window/checker.png'
                                     isFav={true}/>))}
                         </div>
-                        <div className='recRoutes' style={{display: currentRecTab === 1 ? 'flex' : 'none'}}>
+                        <div className='recRoutes' style={{display: currentRecTab === 2 ? 'flex' : 'none'}}>
                             {['g','h','i','j','k','l'].map((e, i) => (
                                 <PointButton 
                                     key={i} 
