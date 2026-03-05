@@ -1,10 +1,8 @@
 // src/pages/Registration.jsx
+'use client';
 import { useState } from 'react';
-import '../styles/registration.css';
-import arrowBack from '../assets/arrow-back.svg';
-import closeIcon from '../assets/close.svg';
-import eyeClosed from '../assets/eye-closed.svg';
-import eyeOpen from '../assets/eye-open.svg';
+import './registration.css';
+
 
 function Registration() {
     const [showPassword, setShowPassword] = useState(false);
@@ -15,13 +13,13 @@ function Registration() {
             <div className="modal">
                 <div className="header">
                     <img
-                        src={arrowBack}
+                        src="/arrow-back.svg"
                         alt="Назад"
                         className="icon left"
                     />
                     <h1 className="title">Регистрация</h1>
                     <img
-                        src={closeIcon}
+                        src="/close.svg"
                         alt="Закрыть"
                         className="icon right"
                     />
@@ -44,7 +42,7 @@ function Registration() {
                             type="button"
                         >
                             <img 
-                                src={showPassword ? eyeOpen : eyeClosed} 
+                                src={showPassword ? "/eye-open.svg" : "/eye-closed.svg"}
                                 alt={showPassword ? "Скрыть пароль" : "Показать пароль"}
                                 className="eye-icon"
                             />
@@ -64,7 +62,7 @@ function Registration() {
                             type="button"
                         >
                             <img 
-                                src={showConfirmPassword ? eyeOpen : eyeClosed} 
+                                src={showConfirmPassword ? "/eye-open.svg" : "/eye-closed.svg"}
                                 alt={showConfirmPassword ? "Скрыть пароль" : "Показать пароль"}
                                 className="eye-icon"
                             />
