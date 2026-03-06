@@ -1,0 +1,25 @@
+.routeSideContainer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 525px;
+    height: 100vh;
+    transition: left 0.5s ease-in-out;
+    padding: 80px 0 0 15px;
+    background-color: white;
+}
+
+.routeHeader {
+    display: flex;
+    flex-direction: row;
+    width: 495px;
+    height: 63px;
+}
+
+.routeProfile {
+    flex: 1;
+}
+
+.routeInfo {
+    flex: 2;
+}

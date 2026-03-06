@@ -2,17 +2,19 @@ import Image from 'next/image'
 import FavSvg from '@/public/search-window/fav.svg'
 import './Card.css'
 import './RouteCard.css'
+import { MouseEventHandler } from 'react'
 
-export default function RouteButton({ routeName, routeDescription, routeTags, image, likeCount, commCount, isFav = false }: 
+export default function RouteButton({ routeName, routeDescription, routeTags, image, likeCount, commCount, isFav = false, onClick }: 
                                     { routeName: string, 
                                       routeDescription: string, 
                                       routeTags: string[], 
                                       image: string, 
                                       likeCount: number, 
                                       commCount: number,
-                                      isFav: boolean }) {
+                                      isFav: boolean,
+                                      onClick: MouseEventHandler<HTMLDivElement> }) {
     return (
-        <div className='txt card'>
+        <div className='txt card' onClick={onClick}>
             <Image className='cardThumbnail' alt="" src={image} width={200} height={200} />
             <div className='cardContent'>
                 <h1 className='cardName'>{routeName}</h1>

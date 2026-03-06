@@ -21,7 +21,7 @@
     transition-timing-function: ease-in-out;
 }
 
-.sideHiden ~ .searchContainer .searchBar {
+.sideHidden ~ .searchContainer .searchBar {
     background-color: white;
     box-shadow: 0px 4px 4px #0000004a;
 }
@@ -86,6 +86,6 @@
     transition: transform 0.1s ease-in-out;
 }
 
-.sideHiden ~ .searchContainer .collapseButton>img {
+.collapseImgRotate {
     transform: rotate(180deg);
 }
