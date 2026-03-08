@@ -1,6 +1,7 @@
 'use client'
 
 import { RefObject, useEffect, useRef, useState } from 'react'
+import { StaticImport } from 'next/dist/shared/lib/get-img-props'
 import Image from 'next/image'
 
 import './RoutePanel.css'
@@ -8,6 +9,27 @@ import './SidePanel.css'
 
 import RouteButton from './RouteCard'
 import PointButton from './PointCard'
+
+interface RouteContents {
+    author: string
+    authorPfp: string | StaticImport
+    creationDate: string
+    routeName: string
+    likeCount: number
+    commentCount: number
+    routeDescription: string
+    routeTags: string[]
+    points: PointContents[]
+}
+
+interface PointContents {
+    pointName: string
+    pointType: string
+    pointLocation: string
+    pointRating: number
+    ratingCount: number
+    pointDescription: string
+}
 
 function CategoryButton({ categoryName, image, color, categoryId }: { categoryName: string, image: string, color: string, categoryId: string }) {
     return (
@@ -23,25 +45,51 @@ function CategoryButton({ categoryName, image, color, categoryId }: { categoryNa
     )
 }
 
-function RoutePanel({ sidePanelRef }: 
-                    { sidePanelRef: RefObject<HTMLDivElement | null> }) {
+function RoutePanel({ sidePanelRef, routeContents }: 
+                    { sidePanelRef: RefObject<HTMLDivElement | null>
+                      routeContents: RouteContents | undefined }) {
     return (
         <div className='routeSideContainer sideHidden' id='routeSideContainer'>
             <div className='routeHeader'>
-                <div className='routeProfile'></div>
-                <div className='routeInfo'></div>
+                <div className='routeProfile'>
+                    <Image src={routeContents?.authorPfp ? routeContents?.authorPfp : '/search-window/checker.png'} alt='' width={50} height={50}/>
+                    <div>
+                        <h2 className='txt'>{routeContents?.author}</h2>
+                        <h3 className='txt'>{routeContents?.creationDate}</h3>
+                    </div>
+                </div>
+                <div className='routeInfo'>
+                    <h1 className='txt'>{routeContents?.routeName}</h1>
+                    <div>
+                        <span className='txt interactTxt'>
+                            {routeContents?.likeCount}
+                            <Image alt="" src='/search-window/like.svg' width={18.9} height={16.23}></Image>
+                        </span>
+                        <span className='txt interactTxt'>
+                            {routeContents?.commentCount}
+                            <Image alt="" src='/search-window/comm.png' width={18} height={18}></Image>
+                        </span>
+                    </div>
+                </div>
+                <div className='collapseContainer'>
+                    <button className='collapseButton' onClick={() => {
+                        if (sidePanelRef.current) {
+                            sidePanelRef.current.classList.add('sideHidden')
+                            sidePanelRef.current =  document.getElementById('sideContainer') as HTMLDivElement; 
+                            sidePanelRef.current.classList.remove('sideHidden')
+                        }
+                    }}>
+                        <Image alt='' src='/search-window/close-button.svg' width={25} height={25} />
+                    </button>
+                </div>
             </div>
             <div className='routeDesc'>
-                <div className='routeTags'></div>
+                <span className='txt'>{routeContents?.routeDescription}</span>
+                <div className='routeTags'>
+                    {routeContents?.routeTags.map((e, i) => (<span key={i} className='routeTag'>{e}</span>))}
+                </div>
             </div>
             <div className='routePoints'></div>
-            <button onClick={() => {
-                if (sidePanelRef.current) {
-                    sidePanelRef.current.classList.add('sideHidden')
-                    sidePanelRef.current =  document.getElementById('sideContainer') as HTMLDivElement; 
-                    sidePanelRef.current.classList.remove('sideHidden')
-                }
-            }}>X</button>
         </div>
     )
 }
@@ -62,6 +110,7 @@ function RoutePanel({ sidePanelRef }:
 export default function SidePanel({ isPanelShown }: 
                                   { isPanelShown: boolean }) {
     const [currentRecTab, setRecTab] = useState(1);
+    const [routeContents, setRouteContents] = useState<RouteContents>();
     const sidePanelRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -111,6 +160,45 @@ export default function SidePanel({ isPanelShown }:
                                 image='/search-window/checker.png'
                                 isFav={false}
                                 onClick={() => { 
+                                    setRouteContents({
+                                        author: 'Jonh Doe',
+                                        authorPfp: '/search-window/checker.png',
+                                        creationDate: '01 января 1970',
+                                        routeName: 'Placeholder Route' ,
+                                        routeDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+                                        routeTags: ['test1', 'test2', 'test3', 'test4'],
+                                        likeCount: 1337,
+                                        commentCount: 420,
+                                        points: []
+                                    })
+
+                                    if (sidePanelRef.current) {
+                                        sidePanelRef.current.classList.add('sideHidden')
+                                        sidePanelRef.current = document.getElementById('routeSideContainer') as HTMLDivElement; 
+                                        sidePanelRef.current.classList.remove('sideHidden')
+                                    }
+                                }}/>
+                            <RouteButton 
+                                routeName='New Placeholder Route' 
+                                routeDescription='Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+                                routeTags={['test4', 'test3', 'test2', 'test1']} 
+                                likeCount={228} 
+                                commCount={413} 
+                                image='/search-window/checker.png'
+                                isFav={false}
+                                onClick={() => { 
+                                    setRouteContents({
+                                        author: 'Jane Doe',
+                                        authorPfp: '/search-window/checker.png',
+                                        creationDate: '02 января 1970',
+                                        routeName: 'New Placeholder Route' ,
+                                        routeDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+                                        routeTags: ['test4', 'test3', 'test2', 'test1'],
+                                        likeCount: 228,
+                                        commentCount: 413,
+                                        points: []
+                                    })
+
                                     if (sidePanelRef.current) {
                                         sidePanelRef.current.classList.add('sideHidden')
                                         sidePanelRef.current = document.getElementById('routeSideContainer') as HTMLDivElement; 
@@ -132,7 +220,7 @@ export default function SidePanel({ isPanelShown }:
                     </div>
                 </div>
             </div>
-            <RoutePanel sidePanelRef={sidePanelRef}></RoutePanel>
+            <RoutePanel sidePanelRef={sidePanelRef} routeContents={routeContents}/>
         </>
     )
 }

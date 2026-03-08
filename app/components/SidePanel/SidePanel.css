@@ -13,6 +13,10 @@ h3 {
     font-size: 16px;
 }
 
+img {
+    height: fit-content;
+}
+
 .txt {
     font-family: 'Montserrat';
     color: #393939;
@@ -39,7 +43,7 @@ h3 {
 }
 
 .sideHidden {
-    left: -525px;
+    left: -585px;
 }
 
 .categoryContainer {
