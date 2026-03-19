@@ -99,6 +99,11 @@
     border-color: #C9F3FF;
 }
 
+.password-input::placeholder {
+    color: #605F6D;
+    opacity: 1;
+}
+
 .password-container:focus-within .password-input {
     border-color: #C9F3FF;
 }
@@ -144,6 +149,7 @@
     gap: 8px;
     font-weight: 400;
     font-size: 15px;
+    color: #53515E;
 }
 
 .custom-checkbox {
@@ -191,7 +197,7 @@
     border: none;
     background: #53515E;
     color: #ffffff;
-    font-size: 20px;
+    font-size: 19px;
     cursor: pointer;
     margin: 57px auto 0 auto;
     display: block;
@@ -200,7 +206,7 @@
 .login-or {
     text-align: center;
     color: #53515E;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 400;
     margin: 10px 0 10px 0;
 }
@@ -212,7 +218,7 @@
     border: none;
     background: #0077ff;
     color: #fff;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 500;
     cursor: pointer;
     margin: 0 auto;
@@ -240,7 +246,7 @@
     text-align: center;
     font-size: 14px;
     color: #000000;
-    margin-top: 45px;
+    margin-top: 33px;
     padding-left: 48px;
 }
 .eye-button {
