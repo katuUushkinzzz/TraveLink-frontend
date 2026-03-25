@@ -1,10 +1,10 @@
 import { StaticImport } from 'next/dist/shared/lib/get-img-props'
-import { ChangeEventHandler, Dispatch, RefObject, SetStateAction } from 'react'
+import { ChangeEventHandler, RefObject } from 'react'
 import LikeSvg from '@/public/search-window/like.svg'
 import Image from 'next/image'
 
 import './RoutePanel.css'
-import './Card.css'
+import './Cards/Card.css'
 
 export interface RouteData {
     id: number
@@ -30,7 +30,7 @@ export interface PointContents {
     pointDescription: string
 }
 
-export function RoutePanel({ sidePanelRef, routeData, onLiked}: 
+export function RoutePanel({ sidePanelRef, routeData, onLiked}:
                            { sidePanelRef: RefObject<HTMLDivElement | null>
                              routeData: RouteData | undefined,
                              onLiked: ChangeEventHandler<HTMLInputElement> }) {
@@ -71,7 +71,7 @@ export function RoutePanel({ sidePanelRef, routeData, onLiked}:
                 <button className='collapseButton' onClick={() => {
                     if (sidePanelRef.current) {
                         sidePanelRef.current.classList.add('sideHidden')
-                        sidePanelRef.current = document.getElementById('sideContainer') as HTMLDivElement; 
+                        sidePanelRef.current = document.getElementById('sideContainer') as HTMLDivElement;
                     }
                 }}>
                     <Image alt='' src='/search-window/collapse-button.svg' width={25} height={25} />

@@ -3,13 +3,13 @@ import FavSvg from '@/public/search-window/fav.svg'
 import './Card.css'
 import './PointCard.css'
 
-export default function PointButton({ pointName, pointType, pointLocation, pointDescription, image, rating, rateCount, isFav = false }: 
-                                    { pointName: string, 
-                                      pointType: string, 
-                                      pointLocation: string, 
-                                      pointDescription: string, 
-                                      image: string, 
-                                      rating: number, 
+export default function PointButton({ pointName, pointType, pointLocation, pointDescription, image, rating, rateCount, isFav = false }:
+                                    { pointName: string,
+                                      pointType: string,
+                                      pointLocation: string,
+                                      pointDescription: string,
+                                      image: string,
+                                      rating: number,
                                       rateCount: number,
                                       isFav: boolean }) {
     return (

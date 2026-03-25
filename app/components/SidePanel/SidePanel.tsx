@@ -1,13 +1,13 @@
 'use client'
 
-import { ChangeEventHandler, Dispatch, RefObject, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, RefObject, SetStateAction, useEffect, useState } from 'react'
 import { RouteData } from './RoutePanel'
 import Image from 'next/image'
 
 import './SidePanel.css'
 
-import RouteCard from './RouteCard'
-import PointButton from './PointCard'
+import RouteCard from './Cards/RouteCard'
+import PointButton from './Cards/PointCard'
 
 function CategoryButton({ categoryName, image, color, categoryId }: { categoryName: string, image: string, color: string, categoryId: string }) {
     return (
@@ -27,7 +27,7 @@ function showRoutePanel(contents: RouteData, setRouteData: Dispatch<SetStateActi
     setRouteData(contents)
 
     if (sidePanelRef.current) {
-        sidePanelRef.current = document.getElementById('routeSideContainer') as HTMLDivElement; 
+        sidePanelRef.current = document.getElementById('routeSideContainer') as HTMLDivElement;
         sidePanelRef.current.classList.remove('sideHidden')
     }
 }
@@ -35,24 +35,24 @@ function showRoutePanel(contents: RouteData, setRouteData: Dispatch<SetStateActi
 /**
  * Collapsible main side panel
  * @param isPanelShown - `useState` `boolean` component for checking collapse state
- * 
+ *
  * @example
  * ```tsx
- *  // Create stateful value to control collapsible state 
+ *  // Create stateful value to control collapsible state
  *  const [isPanelShown, setPanelShown] = useState(true);
- *  
+ *
  *  // Pass it to SidePanel to allow for collapsing by changing stateful value
  *  <SidePanel isPanelShown={isPanelShown}></SidePanel>
  * ```
  */
-export default function SidePanel({ isPanelShown, sidePanelRef, routes, setRouteData, onLiked }: 
+export default function SidePanel({ isPanelShown, sidePanelRef, routes, setRouteData, onLiked }:
                                   { isPanelShown: boolean
                                     sidePanelRef: RefObject<HTMLDivElement | null>
                                     routes: RouteData[]
-                                    setRouteData: Dispatch<SetStateAction<RouteData | undefined>> 
+                                    setRouteData: Dispatch<SetStateAction<RouteData | undefined>>
                                     onLiked: (id: number) => void }) {
     const [currentRecTab, setRecTab] = useState(1);
-    
+
     useEffect(() => {
         if (sidePanelRef.current) {
             if (isPanelShown)
@@ -101,13 +101,13 @@ export default function SidePanel({ isPanelShown, sidePanelRef, routes, setRoute
                             ))}
                         </div>
                         <div className='recRoutes' style={{display: currentRecTab === 2 ? 'flex' : 'none'}}>
-                            <PointButton 
-                                pointName='Placeholder Point' 
+                            <PointButton
+                                pointName='Placeholder Point'
                                 pointDescription='Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
-                                pointType='Placeholder' 
-                                pointLocation='Placeholder st. 1' 
-                                rating={4.9} 
-                                rateCount={10223} 
+                                pointType='Placeholder'
+                                pointLocation='Placeholder st. 1'
+                                rating={4.9}
+                                rateCount={10223}
                                 image='/search-window/checker.png'
                                 isFav={true}/>
                         </div>

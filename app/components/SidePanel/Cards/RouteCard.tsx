@@ -4,9 +4,9 @@ import LikeSvg from '@/public/search-window/like.svg'
 import './Card.css'
 import './RouteCard.css'
 import { ChangeEventHandler, MouseEventHandler } from 'react'
-import { RouteData } from './RoutePanel'
+import { RouteData } from '../RoutePanel'
 
-export default function RouteCard({ routeData, onLiked, onClick }: 
+export default function RouteCard({ routeData, onLiked, onClick }:
                                   { routeData: RouteData
                                     onLiked: ChangeEventHandler<HTMLInputElement>,
                                     onClick: MouseEventHandler<HTMLDivElement> }) {

@@ -6,17 +6,17 @@ import './SearchBar.css'
  * Search bar element with collapse button
  * @param setPanelShown - `useState` `Dispatch` component for collapsible element
  * @param isPanelShown - `useState` `boolean` component for collapsible element
- * 
+ *
  * @example
  * ```tsx
- *  // Create stateful value to control collapsible state 
+ *  // Create stateful value to control collapsible state
  *  const [isPanelShown, setPanelShown] = useState(true);
- *  
+ *
  *  // Pass it to SearchBar to allow for update with 'collapse' button
  *  <SearchBar setPanelShown={setPanelShown} isPanelShown={isPanelShown}/>
  * ```
  */
-export default function SearchBar({ setPanelShown, isPanelShown }: 
+export default function SearchBar({ setPanelShown, isPanelShown }:
                                   { setPanelShown: Dispatch<SetStateAction<boolean>>
                                     isPanelShown: boolean }) {
     const colImgRef = useRef<HTMLImageElement>(null);
@@ -55,5 +55,5 @@ export default function SearchBar({ setPanelShown, isPanelShown }:
                 </button>
             </div>
         </div>
-    )                                    
+    )
 }
