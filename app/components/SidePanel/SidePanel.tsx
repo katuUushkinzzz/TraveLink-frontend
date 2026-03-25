@@ -35,6 +35,10 @@ function showRoutePanel(contents: RouteData, setRouteData: Dispatch<SetStateActi
 /**
  * Collapsible main side panel
  * @param isPanelShown - `useState` `boolean` component for checking collapse state
+ * @param sidePanelRef - a `ref` used to decide which side pannel is active
+ * @param routes - a `state` array containing routes data
+ * @param setRouteData - a `state` dispatcher controling the contents of currently opened route panel 
+ * @param onLiked - a function determing an action on clicking the like button
  *
  * @example
  * ```tsx
