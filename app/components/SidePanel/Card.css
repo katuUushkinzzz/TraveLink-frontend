@@ -3,7 +3,6 @@
     position: relative;
     flex-direction: row;
     gap: 20px;
-    cursor: pointer;
     padding-right: 10px;
 }
 
@@ -33,6 +32,7 @@
 
 .cardThumbnail {
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .cardName {
@@ -67,20 +67,48 @@
     margin-top: 10px;
 }
 
-.interactContainer>span {
+.interactContainer span, .interactContainer label {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 5px;
 }
 
-.interactContainer>span>img {
+.interactContainer img {
     height: fit-content;
 }
 
 .interactTxt {
     font-weight: 400;
     font-size: 18px;
+}
+
+.likeButton {
+    cursor: pointer;
+}
+
+.likeButton>input {
+    display: none;
+}
+
+.likeButton>input:hover ~ svg {
+    fill: #5957632a;
+}
+
+.likeButton>input:checked ~ svg {
+    fill: #CB4843;
+}
+
+.likeButton>input:checked ~ svg>path {
+    stroke: #CB4843;
+}
+
+.likeButton:hover>input:checked ~ svg {
+    fill: #ac3c38;
+}
+
+.likeButton:hover>input:checked ~ svg>path {
+    stroke: #ac3c38;
 }
 
 .favButton {
@@ -95,17 +123,12 @@
     display: none;
 }
 
-/* .favButton>svg {
-
-} */
-
 .favButton>input:hover ~ svg {
     fill: #5957632a;
 }
 
 .favButton>input:checked ~ svg {
     fill: #FFDC64;
-    stroke: #FFDC64;
 }
 
 .favButton>input:checked ~ svg>path {
