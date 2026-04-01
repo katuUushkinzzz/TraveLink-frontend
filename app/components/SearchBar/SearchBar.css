@@ -4,6 +4,7 @@
     top: 10px;
     display: flex;
     flex-direction: row;
+    z-index: 1;
 }
 
 .searchBar {
@@ -21,7 +22,7 @@
     transition-timing-function: ease-in-out;
 }
 
-.sideHidden ~ .searchContainer .searchBar {
+.sidePanelHidden ~ .searchContainer .searchBar {
     background-color: white;
     box-shadow: 0px 4px 4px #0000004a;
 }

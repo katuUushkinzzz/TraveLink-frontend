@@ -15,8 +15,8 @@ export interface RouteData {
     routeName: string
     likeCount: number
     commentCount: number
-    routeDescription: string
-    routeTags: string[]
+    routePanelDescriptionription: string
+    routePanelTags: string[]
     points: PointContents[]
     isLiked: boolean
     image: string
@@ -36,11 +36,11 @@ export interface PointContents {
 function Point({ id, pointContents }: { id: number, pointContents: PointContents }) {
     return (
         <div>
-            <div className='pointInfo'>
-                <Image src='/search-window/alpaca.jpg' width={200} height={200} alt=''/>
-                <div className='pointEssentialsContainer'>
-                    <div className='pointNumber'>{id}</div>
-                    <div className='pointEssentials'>
+            <div className='routePanelPointHeader'>
+                <Image src='/search-window/alpaca.jpg' width={200} height={200} alt='' />
+                <div className='routePanelPointInfoContainer'>
+                    <div className='routePanelPointNumber'>{id}</div>
+                    <div className='routePanelPointInfo'>
                         <h1 className='txt'>{pointContents.pointName}</h1>
                         <h2 className='txt'>{pointContents.pointType}</h2>
                         <span className='txt'>{pointContents.pointLocation}</span>
@@ -54,11 +54,11 @@ function Point({ id, pointContents }: { id: number, pointContents: PointContents
                     </div>
                 </div>
             </div>
-            <div className='pointAbout txt'>
-                О месте:<br/>
+            <div className='routePanelPointDescription txt'>
+                О месте:<br />
                 {pointContents.pointDescription}
             </div>
-            <div className='nextDistance txt' hidden={pointContents.nextDistance ? false : true}>
+            <div className='routePanelPointDistance txt' hidden={pointContents.nextDistance ? false : true}>
                 <Image src={'/search-window/walking.png'} alt='' width={25} height={25}></Image>
                 <span>{pointContents.nextDistance as number >= 1000 ? pointContents.nextDistance as number / 1000 + ' км' : pointContents.nextDistance + ' м'}</span>
                 <span>~</span>
@@ -68,29 +68,31 @@ function Point({ id, pointContents }: { id: number, pointContents: PointContents
     )
 }
 
-export function RoutePanel({ sidePanelRef, routeData, onLiked}:
-                           { sidePanelRef: RefObject<HTMLDivElement | null>
-                             routeData: RouteData | undefined,
-                             onLiked: ChangeEventHandler<HTMLInputElement> }) {
+export function RoutePanel({ sidePanelRef, routeData, onLiked }:
+    {
+        sidePanelRef: RefObject<HTMLDivElement | null>
+        routeData: RouteData | undefined,
+        onLiked: ChangeEventHandler<HTMLInputElement>
+    }) {
 
     return (
-        <div className='routeSideContainer sideHidden' id='routeSideContainer'>
-            <div className='routeSideScrollContainer'>
-                <div className='routeHeader'>
-                    <div className='routeProfile'>
-                        <Image src={routeData?.authorPfp ? routeData?.authorPfp : '/search-window/checker.png'} alt='' width={50} height={50}/>
+        <div className='routePanelContainer sidePanelHidden' id='routePanelContainer'>
+            <div className='routePanelScrollArea'>
+                <div className='routePanelHeader'>
+                    <div className='routePanelProfile'>
+                        <Image src={routeData?.authorPfp ? routeData?.authorPfp : '/search-window/checker.png'} alt='' width={50} height={50} />
                         <div>
                             <h2 className='txt'>{routeData?.author}</h2>
                             <h3 className='txt'>{routeData?.creationDate}</h3>
                         </div>
                     </div>
-                    <div className='routeInfo'>
+                    <div className='routePanelInfo'>
                         <h1 className='txt'>{routeData?.routeName}</h1>
                         <div className='interactContainer'>
                             <label className='txt interactTxt likeButton'>
                                 {routeData?.likeCount}
-                                <input type='checkbox' checked={routeData?.isLiked || false} onChange={onLiked}/>
-                                <LikeSvg width={20.4} height={17.7}/>
+                                <input type='checkbox' checked={routeData?.isLiked || false} onChange={onLiked} />
+                                <LikeSvg width={20.4} height={17.7} />
                             </label>
                             <span className='txt interactTxt'>
                                 {routeData?.commentCount}
@@ -99,23 +101,23 @@ export function RoutePanel({ sidePanelRef, routeData, onLiked}:
                         </div>
                     </div>
                 </div>
-                <div className='routeDesc'>
-                    <span className='txt'>{routeData?.routeDescription}</span>
-                    <div className='routeTags'>
-                        {routeData?.routeTags.map((e, i) => (<span key={i} className='routeTag'>{e}</span>))}
+                <div className='routePanelDescription'>
+                    <span className='txt'>{routeData?.routePanelDescriptionription}</span>
+                    <div className='routePanelTags'>
+                        {routeData?.routePanelTags.map((e, i) => (<span key={i} className='routePanelTag'>{e}</span>))}
                     </div>
                 </div>
                 <div className='routePoints'>
                     {routeData?.points.map((point, id) => {
-                    return <Point key={id} id={id+1} pointContents={point}/>
+                        return <Point key={id} id={id + 1} pointContents={point} />
                     })}
                 </div>
             </div>
             <div className='collapseContainer'>
                 <button className='collapseButton' onClick={() => {
                     if (sidePanelRef.current) {
-                        sidePanelRef.current.classList.add('sideHidden')
-                        sidePanelRef.current = document.getElementById('sideContainer') as HTMLDivElement;
+                        sidePanelRef.current.classList.add('sidePanelHidden')
+                        sidePanelRef.current = document.getElementById('sidePanelContainer') as HTMLDivElement;
                     }
                 }}>
                     <Image alt='' src='/search-window/collapse-button.svg' width={25} height={25} />

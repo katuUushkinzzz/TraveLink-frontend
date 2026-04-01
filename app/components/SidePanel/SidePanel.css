@@ -1,4 +1,4 @@
-.sideContainer {
+.sidePanelContainer {
     position: absolute;
     left: 0;
     top: 0;
@@ -9,7 +9,7 @@
     background-color: white;
 }
 
-.scrollArea {
+.sidePanelScrollArea {
     display: flex;
     flex-direction: column;
     padding: 10px 10px 0 0;
@@ -18,11 +18,11 @@
     overflow: scroll;
 }
 
-.sideHidden {
+.sidePanelHidden {
     left: -585px;
 }
 
-.categoryContainer {
+.sidePanelCategories {
     display: grid;
     grid-template-columns: 60px 60px 60px 60px 60px 60px;
     column-gap: 20px;
@@ -50,23 +50,23 @@
     justify-content: center;
 }
 
-.recContainer {
+.recommendsContainer {
     flex: 1;
     padding-bottom: 15px;
 }
 
-.recTabContainer {
+.recommendsTabs {
     display: flex;
     flex-direction: row;
     justify-content: center;
     height: 60px;
 }
 
-.recTabContainer input {
+.recommendsTabs input {
     display: none;
 }
 
-.recTab {
+.recommendsTab {
     position: relative;
     display: flex;
     align-items: center;
@@ -80,11 +80,11 @@
     user-select: none;
 }
 
-.recTabContainer input:checked+.recTab {
+.recommendsTabs input:checked+.recommendsTab {
     color: #C9F3FF;
 }
 
-.recTab::after {
+.recommendsTab::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -95,13 +95,12 @@
     transform: scaleX(0);
 }
 
-.recTabContainer input:checked+.recTab::after {
+.recommendsTabs input:checked+.recommendsTab::after {
     transform: scaleX(1);
 }
 
-.recRoutes {
+.recommendsCards {
     flex-direction: column;
     margin: 20px 0 0 20px;
-    /* margin-top: 20px; */
     gap: 35px;
 }
