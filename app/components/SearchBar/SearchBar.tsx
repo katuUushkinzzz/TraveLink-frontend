@@ -16,9 +16,13 @@ import './SearchBar.css'
  *  <SearchBar setPanelShown={setPanelShown} isPanelShown={isPanelShown}/>
  * ```
  */
-export default function SearchBar({ setPanelShown, isPanelShown }:
-                                  { setPanelShown: Dispatch<SetStateAction<boolean>>
-                                    isPanelShown: boolean }) {
+export default function SearchBar({ setPanelShown, isPanelShown, showABRoute, isABRouteShown }:
+    {
+        setPanelShown: Dispatch<SetStateAction<boolean>>
+        isPanelShown: boolean
+        showABRoute: Dispatch<SetStateAction<boolean>>
+        isABRouteShown: boolean
+    }) {
     const colImgRef = useRef<HTMLImageElement>(null);
 
     useEffect(() => {
@@ -43,7 +47,7 @@ export default function SearchBar({ setPanelShown, isPanelShown }:
                     </button>
                     <div className='separator' />
                     <button className='barButton' onClick={() => {
-                        // TODO: Make routing implementation
+                        showABRoute(!isABRouteShown)
                     }}>
                         <Image alt="" src="/search-window/route.png" width={30} height={30} />
                     </button>

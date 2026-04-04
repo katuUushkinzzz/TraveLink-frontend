@@ -1,6 +1,6 @@
 'use client'
 
-import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { RouteData, RoutePanel } from './RoutePanel'
 import Image from 'next/image'
 
@@ -18,9 +18,10 @@ import SearchBar from '../SearchBar/SearchBar'
  *  <SidePanel/>
  * ```
  */
-export default function SidePanel() {
+export default function SidePanel({ showCityPicker, currentCity }: { showCityPicker: Dispatch<SetStateAction<boolean>>, currentCity: string }) {
     const [currentRecTab, setRecTab] = useState(1);
-    const [isPanelShown, setPanelShown] = useState(true);
+    const [isPanelShown, setPanelShown] = useState<boolean>(true);
+    const [isABRouteShown, showABRoute] = useState<boolean>(false);
     const [routeData, setRouteData] = useState<RouteData>();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [routes, setRoutes] = useState<RouteData[]>([
@@ -90,7 +91,7 @@ export default function SidePanel() {
         }
     });
 
-    const toggleLike = (id: number | undefined) => {
+    function toggleLike(id: number | undefined) {
         if (id !== undefined) {
             setRoutes(routes.map(route => {
                 if (route.id === id) {
@@ -112,14 +113,45 @@ export default function SidePanel() {
         }
     };
 
+    function showRoutePanel(contents: RouteData) {
+        setRouteData(contents)
+
+        if (sidePanelRef.current) {
+            sidePanelRef.current = document.getElementById('routePanelContainer') as HTMLDivElement;
+            sidePanelRef.current.classList.remove('sidePanelHidden')
+        }
+    }
+
     return (
         <>
-            <SearchBar setPanelShown={setPanelShown} isPanelShown={isPanelShown} />
+            <SearchBar setPanelShown={setPanelShown} isPanelShown={isPanelShown} showABRoute={showABRoute} isABRouteShown={isABRouteShown}/>
             <RoutePanel sidePanelRef={sidePanelRef} routeData={routeData} onLiked={() => toggleLike(routeData?.id)} />
             <div id="sidePanelContainer" className="sidePanelContainer" ref={sidePanelRef}>
                 <div className='sidePanelScrollArea'>
-                    <h1 className="txt">Таганрог</h1>
-                    <h3 className="txt">Категории</h3>
+                    {isABRouteShown && <div className='sidePanelABRouteContainer'>
+                        <header>
+                            <div className='sidePanelABRouteInputs'>
+                                <h2 className='h2 txt'>Откуда</h2>
+                                <input type='search' placeholder='Введите адрес' className='txt'></input>
+                                <h2 className='h2 txt'>Куда</h2>
+                                <input type='search' placeholder='Введите адрес' className='txt'></input>
+                            </div>
+                            <button>
+                                <Image alt="" src="/search-window/switch.png" width={30} height={30} className='img'/>
+                            </button>
+                        </header>
+                        <footer>
+                            <button className='txt'>
+                                <Image alt="" src="/search-window/plus.png" width={35} height={35} className='img'/>
+                                Добавить
+                            </button>
+                            <button className='txt'>
+                                Сбросить
+                            </button>
+                        </footer>
+                    </div>}
+                    <h1 className="h1 txt"><button onClick={() => showCityPicker(true)}>{currentCity}</button></h1>
+                    <h3 className="h3 txt">Категории</h3>
                     <div className="sidePanelCategories">
                         <CategoryButton categoryId='restaurants' categoryName="Рестораны" image="/search-window/restaurant-cat-icon.png" color="#FE8E43" />
                         <CategoryButton categoryId='architechture' categoryName="Архитектура" image="/search-window/architechture-cat-icon.png" color="#FFE898" />
@@ -134,7 +166,7 @@ export default function SidePanel() {
                         <CategoryButton categoryId='beaches' categoryName="Пляжи" image="/search-window/beach-cat-icon.png" color="#FFE897" />
                         <CategoryButton categoryId='beauty' categoryName="Салоны красоты" image="/search-window/beauty-cat-icon.png" color="#FF7070" />
                     </div>
-                    <h1 className="txt">Рекомендации</h1>
+                    <h1 className="h1 txt">Рекомендации</h1>
                     <div className="recommendsContainer">
                         <div className='recommendsTabs'>
                             <input onChange={() => setRecTab(1)} id='recommendsTabRoutes' type='radio' name='tabs' defaultChecked={true}></input>
@@ -148,7 +180,7 @@ export default function SidePanel() {
                                     key={route.id}
                                     routeData={route}
                                     onLiked={() => toggleLike(route.id)}
-                                    onClick={() => showRoutePanel(route, setRouteData as Dispatch<SetStateAction<RouteData>>, sidePanelRef)}
+                                    onClick={() => showRoutePanel(route)}
                                 />
                             ))}
                         </div>
@@ -182,13 +214,4 @@ function CategoryButton({ categoryName, image, color, categoryId }: { categoryNa
             <span>{categoryName}</span>
         </button>
     )
-}
-
-function showRoutePanel(contents: RouteData, setRouteData: Dispatch<SetStateAction<RouteData>>, sidePanelRef: RefObject<HTMLDivElement | null>) {
-    setRouteData(contents)
-
-    if (sidePanelRef.current) {
-        sidePanelRef.current = document.getElementById('routePanelContainer') as HTMLDivElement;
-        sidePanelRef.current.classList.remove('sidePanelHidden')
-    }
 }

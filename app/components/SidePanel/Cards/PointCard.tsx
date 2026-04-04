@@ -18,8 +18,8 @@ export default function PointButton({ pointName, pointType, pointLocation, point
         <div className='txt card'>
             <Image className='cardThumbnail' alt="" src={image} width={200} height={200} />
             <div className='cardContent'>
-                <h1 className='cardName'>{pointName}</h1>
-                <h2 className='pointType'>{pointType}</h2>
+                <h1 className='cardName h1'>{pointName}</h1>
+                <h2 className='h2 pointType'>{pointType}</h2>
                 <span className='pointLocation'>{pointLocation}</span>
                 <span className='cardDesc pointDesc'>
                     О месте:<br />

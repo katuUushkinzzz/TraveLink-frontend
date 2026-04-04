@@ -1,19 +1,19 @@
-h1 {
+.h1 {
     font-weight: 500;
     font-size: 24px;
 }
 
-h2 {
+.h2 {
     font-weight: 400;
     font-size: 16px;
 }
 
-h3 {
+.h3 {
     font-weight: 300;
     font-size: 16px;
 }
 
-img {
+.img {
     height: fit-content;
 }
 

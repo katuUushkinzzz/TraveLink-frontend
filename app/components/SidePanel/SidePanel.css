@@ -18,6 +18,10 @@
     overflow: scroll;
 }
 
+.sidePanelScrollArea > h1 > button {
+    cursor: pointer;
+}
+
 .sidePanelHidden {
     left: -585px;
 }
@@ -103,4 +107,54 @@
     flex-direction: column;
     margin: 20px 0 0 20px;
     gap: 35px;
+}
+
+.sidePanelABRouteContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidePanelABRouteContainer > footer {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 39px;
+}
+
+.sidePanelABRouteContainer > footer > button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.sidePanelABRouteContainer > header {
+    display: flex;
+    gap: 9px;
+}
+
+.sidePanelABRouteContainer > header > .sidePanelABRouteInputs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidePanelABRouteContainer > header > .sidePanelABRouteInputs > input {
+    padding: 0 25px;
+    height: 50px;
+    border-radius: 17px;
+    border-color: #BFBFC5;
+    border-width: 2px;
+    outline: 0;
+}
+
+.sidePanelABRouteContainer > header > .sidePanelABRouteInputs > h2 {
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.sidePanelABRouteContainer > header > button {
+    cursor: pointer;
 }

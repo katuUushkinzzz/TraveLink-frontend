@@ -41,8 +41,8 @@ function Point({ id, pointContents }: { id: number, pointContents: PointContents
                 <div className='routePanelPointInfoContainer'>
                     <div className='routePanelPointNumber'>{id}</div>
                     <div className='routePanelPointInfo'>
-                        <h1 className='txt'>{pointContents.pointName}</h1>
-                        <h2 className='txt'>{pointContents.pointType}</h2>
+                        <h1 className='h1 txt'>{pointContents.pointName}</h1>
+                        <h2 className='h2 txt'>{pointContents.pointType}</h2>
                         <span className='txt'>{pointContents.pointLocation}</span>
                     </div>
                     <div className='interactContainer'>
@@ -82,12 +82,12 @@ export function RoutePanel({ sidePanelRef, routeData, onLiked }:
                     <div className='routePanelProfile'>
                         <Image src={routeData?.authorPfp ? routeData?.authorPfp : '/search-window/checker.png'} alt='' width={50} height={50} />
                         <div>
-                            <h2 className='txt'>{routeData?.author}</h2>
-                            <h3 className='txt'>{routeData?.creationDate}</h3>
+                            <h2 className='h2 txt'>{routeData?.author}</h2>
+                            <h3 className='h3 txt'>{routeData?.creationDate}</h3>
                         </div>
                     </div>
                     <div className='routePanelInfo'>
-                        <h1 className='txt'>{routeData?.routeName}</h1>
+                        <h1 className='h1 txt'>{routeData?.routeName}</h1>
                         <div className='interactContainer'>
                             <label className='txt interactTxt likeButton'>
                                 {routeData?.likeCount}
