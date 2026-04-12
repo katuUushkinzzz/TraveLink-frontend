@@ -1,6 +1,8 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { ActionDispatch, useEffect } from 'react';
 import Image from 'next/image';
+
 import './SearchBar.css'
+import { State, Action } from '../SidePanel/SidePanelTypes';
 
 /**
  * Search bar element with collapse button
@@ -16,23 +18,17 @@ import './SearchBar.css'
  *  <SearchBar setPanelShown={setPanelShown} isPanelShown={isPanelShown}/>
  * ```
  */
-export default function SearchBar({ setPanelShown, isPanelShown, showABRoute, isABRouteShown }:
+export default function SearchBar({ state, dispatch }:
     {
-        setPanelShown: Dispatch<SetStateAction<boolean>>
-        isPanelShown: boolean
-        showABRoute: Dispatch<SetStateAction<boolean>>
-        isABRouteShown: boolean
+        state: State, dispatch: ActionDispatch<[action: Action]>
     }) {
-    const colImgRef = useRef<HTMLImageElement>(null);
 
     useEffect(() => {
-        if (colImgRef.current) {
-            if (isPanelShown)
-                colImgRef.current.classList.remove('collapseImgRotate')
-            else
-                colImgRef.current.classList.add('collapseImgRotate')
-        }
-    }, [isPanelShown]);
+        if (state.isPanelShown)
+            document.getElementById('collapseImg')?.classList.remove('collapseImgRotate')
+        else
+            document.getElementById('collapseImg')?.classList.add('collapseImgRotate')
+    }, [state.isPanelShown]);
 
     return (
         <div className='searchContainer'>
@@ -47,15 +43,15 @@ export default function SearchBar({ setPanelShown, isPanelShown, showABRoute, is
                     </button>
                     <div className='separator' />
                     <button className='barButton' onClick={() => {
-                        showABRoute(!isABRouteShown)
+                        dispatch({ type: 'SET_AB_ROUTE_SHOWN', payload: !state.isABRouteShown })
                     }}>
                         <Image alt="" src="/search-window/route.png" width={30} height={30} />
                     </button>
                 </div>
             </div>
             <div className='collapseContainer'>
-                <button className='collapseButton' onClick={() => setPanelShown(!isPanelShown)}>
-                    <Image ref={colImgRef} alt='' src='/search-window/collapse-button.svg' width={25} height={25} />
+                <button className='collapseButton' onClick={() => dispatch({ type: 'SET_PANEL_SHOWN', payload: !state.isPanelShown })}>
+                    <Image id='collapseImg' alt='' src='/search-window/collapse-button.svg' width={25} height={25} />
                 </button>
             </div>
         </div>

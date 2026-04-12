@@ -1,37 +1,10 @@
-import { StaticImport } from 'next/dist/shared/lib/get-img-props'
-import { ChangeEventHandler, RefObject } from 'react'
-import LikeSvg from '@/public/search-window/like.svg'
 import Image from 'next/image'
 
-import './General.css'
+import { PointContents, State } from './SidePanelTypes'
+import LikeSvg from '@/public/search-window/like.svg'
+
 import './RoutePanel.css'
 import './Cards/Card.css'
-
-export interface RouteData {
-    id: number
-    author: string
-    authorPfp: string | StaticImport
-    creationDate: string
-    routeName: string
-    likeCount: number
-    commentCount: number
-    routePanelDescriptionription: string
-    routePanelTags: string[]
-    points: PointContents[]
-    isLiked: boolean
-    image: string
-}
-
-export interface PointContents {
-    pointName: string
-    pointType: string
-    pointLocation: string
-    pointRating: number
-    ratingCount: number
-    pointDescription: string
-    nextDistance?: number
-    nextTime?: number
-}
 
 function Point({ id, pointContents }: { id: number, pointContents: PointContents }) {
     return (
@@ -41,8 +14,8 @@ function Point({ id, pointContents }: { id: number, pointContents: PointContents
                 <div className='routePanelPointInfoContainer'>
                     <div className='routePanelPointNumber'>{id}</div>
                     <div className='routePanelPointInfo'>
-                        <h1 className='h1 txt'>{pointContents.pointName}</h1>
-                        <h2 className='h2 txt'>{pointContents.pointType}</h2>
+                        <h1 className='txt'>{pointContents.pointName}</h1>
+                        <h2 className='txt'>{pointContents.pointType}</h2>
                         <span className='txt'>{pointContents.pointLocation}</span>
                     </div>
                     <div className='interactContainer'>
@@ -68,11 +41,9 @@ function Point({ id, pointContents }: { id: number, pointContents: PointContents
     )
 }
 
-export function RoutePanel({ sidePanelRef, routeData, onLiked }:
+export function RoutePanel({ state, toggleLike }:
     {
-        sidePanelRef: RefObject<HTMLDivElement | null>
-        routeData: RouteData | undefined,
-        onLiked: ChangeEventHandler<HTMLInputElement>
+        state: State, toggleLike(id: number | undefined): void
     }) {
 
     return (
@@ -80,45 +51,42 @@ export function RoutePanel({ sidePanelRef, routeData, onLiked }:
             <div className='routePanelScrollArea'>
                 <div className='routePanelHeader'>
                     <div className='routePanelProfile'>
-                        <Image src={routeData?.authorPfp ? routeData?.authorPfp : '/search-window/checker.png'} alt='' width={50} height={50} />
+                        <Image src={state.routeData?.authorPfp ?? '/search-window/checker.png'} alt='' width={50} height={50} />
                         <div>
-                            <h2 className='h2 txt'>{routeData?.author}</h2>
-                            <h3 className='h3 txt'>{routeData?.creationDate}</h3>
+                            <h2 className='txt'>{state.routeData?.author}</h2>
+                            <h3 className='txt'>{state.routeData?.creationDate}</h3>
                         </div>
                     </div>
                     <div className='routePanelInfo'>
-                        <h1 className='h1 txt'>{routeData?.routeName}</h1>
+                        <h1 className='txt'>{state.routeData?.routeName}</h1>
                         <div className='interactContainer'>
                             <label className='txt interactTxt likeButton'>
-                                {routeData?.likeCount}
-                                <input type='checkbox' checked={routeData?.isLiked || false} onChange={onLiked} />
+                                {state.routeData?.likeCount}
+                                <input type='checkbox' checked={state.routeData?.isLiked || false} onChange={() => toggleLike(state.routeData?.id)} />
                                 <LikeSvg width={20.4} height={17.7} />
                             </label>
                             <span className='txt interactTxt'>
-                                {routeData?.commentCount}
+                                {state.routeData?.commentCount}
                                 <Image alt="" src='/search-window/comm.png' width={18} height={18}></Image>
                             </span>
                         </div>
                     </div>
                 </div>
                 <div className='routePanelDescription'>
-                    <span className='txt'>{routeData?.routePanelDescriptionription}</span>
+                    <span className='txt'>{state.routeData?.routePanelDescriptionription}</span>
                     <div className='routePanelTags'>
-                        {routeData?.routePanelTags.map((e, i) => (<span key={i} className='routePanelTag'>{e}</span>))}
+                        {state.routeData?.routePanelTags.map((e, i) => (<span key={i} className='routePanelTag'>{e}</span>))}
                     </div>
                 </div>
                 <div className='routePoints'>
-                    {routeData?.points.map((point, id) => {
+                    {state.routeData?.points.map((point, id) => {
                         return <Point key={id} id={id + 1} pointContents={point} />
                     })}
                 </div>
             </div>
             <div className='collapseContainer'>
                 <button className='collapseButton' onClick={() => {
-                    if (sidePanelRef.current) {
-                        sidePanelRef.current.classList.add('sidePanelHidden')
-                        sidePanelRef.current = document.getElementById('sidePanelContainer') as HTMLDivElement;
-                    }
+                    document.getElementById('routePanelContainer')?.classList.add('sidePanelHidden')
                 }}>
                     <Image alt='' src='/search-window/collapse-button.svg' width={25} height={25} />
                 </button>

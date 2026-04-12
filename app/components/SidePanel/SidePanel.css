@@ -23,7 +23,7 @@
 }
 
 .sidePanelHidden {
-    left: -585px;
+  left: -585px !important;
 }
 
 .sidePanelCategories {

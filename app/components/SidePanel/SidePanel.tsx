@@ -1,14 +1,13 @@
 'use client'
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
-import { RouteData, RoutePanel } from './RoutePanel'
+import { ActionDispatch, useEffect, useState } from 'react'
 import Image from 'next/image'
-
-import './SidePanel.css'
 
 import RouteCard from './Cards/RouteCard'
 import PointButton from './Cards/PointCard'
-import SearchBar from '../SearchBar/SearchBar'
+import { Action, RouteData, State } from './SidePanelTypes'
+
+import './SidePanel.css'
 
 /**
  * Collapsible main side panel
@@ -18,131 +17,43 @@ import SearchBar from '../SearchBar/SearchBar'
  *  <SidePanel/>
  * ```
  */
-export default function SidePanel({ showCityPicker, currentCity }: { showCityPicker: Dispatch<SetStateAction<boolean>>, currentCity: string }) {
+export default function SidePanel({ state, dispatch, routes, toggleLike }:
+    {
+        state: State, dispatch: ActionDispatch<[action: Action]>, routes: RouteData[], toggleLike(id: number | undefined): void
+    }) {
     const [currentRecTab, setRecTab] = useState(1);
-    const [isPanelShown, setPanelShown] = useState<boolean>(true);
-    const [isABRouteShown, showABRoute] = useState<boolean>(false);
-    const [routeData, setRouteData] = useState<RouteData>();
-    const sidePanelRef = useRef<HTMLDivElement>(null);
-    const [routes, setRoutes] = useState<RouteData[]>([
-        {
-            id: 0,
-            author: 'Jonh Doe',
-            authorPfp: '/search-window/checker.png',
-            creationDate: '01 января 1970',
-            routeName: 'Placeholder Route',
-            routePanelDescriptionription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-            routePanelTags: ['test1', 'test2', 'test3', 'test4'],
-            likeCount: 1337,
-            commentCount: 420,
-            points: [{
-                pointName: 'Парк Альпак Пача Мама',
-                pointType: 'Парк',
-                pointLocation: 'пр-кт Сельмаш, 1А Парк культуры и отдыха им. Николая Островского, Ростов-на-Дону',
-                pointRating: 4.9,
-                ratingCount: 912,
-                pointDescription: 'Пача Мама - уютный уголок природы в Ростове-на-Дону, где обитают милые альпаки из Перу, ласковые кролики и ручные козы. Ко всем животным можно зайти в вольеры, покормить, погладить и даже обнять! Зарядитесь альпакотерапией и порцией позитива!',
-                nextDistance: 1160,
-                nextTime: 13
-            },
-            {
-                pointName: 'Парк Альпак Пача Мама',
-                pointType: 'Парк',
-                pointLocation: 'пр-кт Сельмаш, 1А Парк культуры и отдыха им. Николая Островского, Ростов-на-Дону',
-                pointRating: 4.9,
-                ratingCount: 912,
-                pointDescription: 'Пача Мама - уютный уголок природы в Ростове-на-Дону, где обитают милые альпаки из Перу, ласковые кролики и ручные козы. Ко всем животным можно зайти в вольеры, покормить, погладить и даже обнять! Зарядитесь альпакотерапией и порцией позитива!',
-                nextDistance: 1160,
-                nextTime: 13
-            },
-            {
-                pointName: 'Парк Альпак Пача Мама',
-                pointType: 'Парк',
-                pointLocation: 'пр-кт Сельмаш, 1А Парк культуры и отдыха им. Николая Островского, Ростов-на-Дону',
-                pointRating: 4.9,
-                ratingCount: 912,
-                pointDescription: 'Пача Мама - уютный уголок природы в Ростове-на-Дону, где обитают милые альпаки из Перу, ласковые кролики и ручные козы. Ко всем животным можно зайти в вольеры, покормить, погладить и даже обнять! Зарядитесь альпакотерапией и порцией позитива!',
-            }],
-            isLiked: false,
-            image: '/search-window/checker.png'
-        },
-        {
-            id: 1,
-            author: 'Jane Doe',
-            authorPfp: '/search-window/checker.png',
-            creationDate: '02 января 1970',
-            routeName: 'New Placeholder Route',
-            routePanelDescriptionription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-            routePanelTags: ['test4', 'test3', 'test2', 'test1'],
-            likeCount: 228,
-            commentCount: 413,
-            points: [],
-            isLiked: false,
-            image: '/search-window/checker.png'
-        }
-    ]);
 
     useEffect(() => {
-        if (sidePanelRef.current) {
-            if (isPanelShown)
-                sidePanelRef.current.classList.remove('sidePanelHidden')
-            else
-                sidePanelRef.current.classList.add('sidePanelHidden')
-        }
+        if (state.isPanelShown)
+            document.getElementById('sidePanelContainer')?.classList.remove('sidePanelHidden')
+        else
+            document.getElementById('sidePanelContainer')?.classList.add('sidePanelHidden')
     });
 
-    function toggleLike(id: number | undefined) {
-        if (id !== undefined) {
-            setRoutes(routes.map(route => {
-                if (route.id === id) {
-                    const isNowLiked = !route.isLiked;
-                    const updatedRoute = {
-                        ...route,
-                        isLiked: isNowLiked,
-                        likeCount: isNowLiked ? route.likeCount + 1 : route.likeCount - 1
-                    };
-
-                    if (routeData?.id === id) {
-                        setRouteData(updatedRoute)
-                    }
-
-                    return updatedRoute;
-                }
-                return route;
-            }));
-        }
-    };
-
     function showRoutePanel(contents: RouteData) {
-        setRouteData(contents)
-
-        if (sidePanelRef.current) {
-            sidePanelRef.current = document.getElementById('routePanelContainer') as HTMLDivElement;
-            sidePanelRef.current.classList.remove('sidePanelHidden')
-        }
+        dispatch({ type: 'SET_ROUTE_DATA', payload: contents })
+        document.getElementById('routePanelContainer')?.classList.remove('sidePanelHidden')
     }
 
     return (
         <>
-            <SearchBar setPanelShown={setPanelShown} isPanelShown={isPanelShown} showABRoute={showABRoute} isABRouteShown={isABRouteShown}/>
-            <RoutePanel sidePanelRef={sidePanelRef} routeData={routeData} onLiked={() => toggleLike(routeData?.id)} />
-            <div id="sidePanelContainer" className="sidePanelContainer" ref={sidePanelRef}>
+            <div id="sidePanelContainer" className="sidePanelContainer">
                 <div className='sidePanelScrollArea'>
-                    {isABRouteShown && <div className='sidePanelABRouteContainer'>
+                    {state.isABRouteShown && <div className='sidePanelABRouteContainer'>
                         <header>
                             <div className='sidePanelABRouteInputs'>
-                                <h2 className='h2 txt'>Откуда</h2>
+                                <h2 className='txt'>Откуда</h2>
                                 <input type='search' placeholder='Введите адрес' className='txt'></input>
-                                <h2 className='h2 txt'>Куда</h2>
+                                <h2 className='txt'>Куда</h2>
                                 <input type='search' placeholder='Введите адрес' className='txt'></input>
                             </div>
                             <button>
-                                <Image alt="" src="/search-window/switch.png" width={30} height={30} className='img'/>
+                                <Image alt="" src="/search-window/switch.png" width={30} height={30} className='img' />
                             </button>
                         </header>
                         <footer>
                             <button className='txt'>
-                                <Image alt="" src="/search-window/plus.png" width={35} height={35} className='img'/>
+                                <Image alt="" src="/search-window/plus.png" width={35} height={35} className='img' />
                                 Добавить
                             </button>
                             <button className='txt'>
@@ -150,7 +61,7 @@ export default function SidePanel({ showCityPicker, currentCity }: { showCityPic
                             </button>
                         </footer>
                     </div>}
-                    <h1 className="h1 txt"><button onClick={() => showCityPicker(true)}>{currentCity}</button></h1>
+                    <h1 className="h1 txt"><button onClick={() => dispatch({ type: 'TOGGLE_PICKER', payload: true })}>{state.currentCity}</button></h1>
                     <h3 className="h3 txt">Категории</h3>
                     <div className="sidePanelCategories">
                         <CategoryButton categoryId='restaurants' categoryName="Рестораны" image="/search-window/restaurant-cat-icon.png" color="#FE8E43" />

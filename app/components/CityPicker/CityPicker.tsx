@@ -1,31 +1,29 @@
-import { Dispatch, SetStateAction } from 'react';
+import { ActionDispatch } from 'react';
 import Image from 'next/image'
 
 import './CityPicker.css'
+import { State, Action } from '../SidePanel/SidePanelTypes';
 
-export default function CityPicker({ isPickerVisible, showCityPicker, currentCity, setCity }:
+export default function CityPicker({ state, dispatch }:
     {
-        isPickerVisible: boolean
-        showCityPicker: Dispatch<SetStateAction<boolean>>
-        currentCity: string
-        setCity: Dispatch<SetStateAction<string>>
+        state: State, dispatch: ActionDispatch<[action: Action]>
     }) {
 
     const changeCity = (cityName: string) => {
-        if (currentCity != cityName) {
-            setCity(cityName);
+        if (state.currentCity != cityName) {
+            dispatch({ type: 'SET_CITY', payload: cityName })
         }
-        showCityPicker(false);
+        dispatch({ type: 'TOGGLE_PICKER', payload: false })
     }
 
     return (
         <>
-            {isPickerVisible && <div className='cityPickerBackground'>
+            {state.isPickerVisible && <div className='cityPickerBackground'>
                 <div className='cityPickerContainer'>
                     <div className='cityPickerHeader'>
                         <div className='cityPickerHeaderHeader'> 
-                            <h1 className='h1 txt'>Выберите город</h1>
-                            <button onClick={() => showCityPicker(false)}>
+                            <h1 className='txt'>Выберите город</h1>
+                            <button onClick={() => dispatch({ type: 'TOGGLE_PICKER', payload: false })}>
                                 <Image alt="" src="/search-window/close-button.svg" width={20} height={20} className='img'/>
                             </button>
                         </div>
