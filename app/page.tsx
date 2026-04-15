@@ -1,17 +1,27 @@
 'use client'
 
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 import SidePanel from "./components/SidePanel/SidePanel";
 import CityPicker from "./components/CityPicker/CityPicker";
 import SearchBar from "./components/SearchBar/SearchBar";
-import { reducer, RouteData } from "./components/SidePanel/SidePanelTypes";
-import { initialState, TestRoutes } from "./components/SidePanel/TestContent";
+import { RouteData } from "./components/SidePanel/SidePanelTypes";
+import { TestRoutes } from "./components/SidePanel/TestContent";
 import { RoutePanel } from "./components/SidePanel/RoutePanel";
+import { useLocalStorage, initialState, reducer } from "./components/LocalStore";
 
 export default function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [routes, setRoutes] = useState<RouteData[]>(TestRoutes);
+  const [cityName, setCityName] = useLocalStorage('city', 'Москва');
+
+  // function getRoutes(page: number, token: string) {
+  //     return fetch(`http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/route/cards/${page}`, {
+  //         headers: {
+  //             "Authorization": 'Bearer ' + token
+  //         }
+  //     }).then(r => r.json().then(j => setRoutes(j)))
+  // }
 
   function toggleLike(id: number | undefined) {
     if (id !== undefined) {
@@ -35,10 +45,16 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    //   getRoutes(2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6InVzZXIiLCJpYXQiOjE3NzYwMDQ1NTMsImV4cCI6MTc3NjA5MDk1M30.zGxVE5sJQtkf3claoQb7h1OU2Xa92Xu_FFOJReiHucU')
+    //   console.log(routes)
+    dispatch({ type: 'SET_CITY', payload: cityName })
+  }, [cityName])
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <SidePanel state={state} dispatch={dispatch} routes={routes} toggleLike={toggleLike}/>
-      <CityPicker state={state} dispatch={dispatch} />
+      <SidePanel state={state} dispatch={dispatch} routes={routes} toggleLike={toggleLike} />
+      <CityPicker state={state} dispatch={dispatch} setCityName={setCityName} />
       <SearchBar state={state} dispatch={dispatch} />
       <RoutePanel state={state} toggleLike={toggleLike} />
     </div>

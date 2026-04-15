@@ -4,13 +4,14 @@ import Image from 'next/image'
 import './CityPicker.css'
 import { State, Action } from '../SidePanel/SidePanelTypes';
 
-export default function CityPicker({ state, dispatch }:
+export default function CityPicker({ state, dispatch, setCityName }:
     {
-        state: State, dispatch: ActionDispatch<[action: Action]>
+        state: State, dispatch: ActionDispatch<[action: Action]>, setCityName: (value: unknown) => void
     }) {
 
     const changeCity = (cityName: string) => {
-        if (state.currentCity != cityName) {
+        if (state.currentCity != cityName) {    
+            setCityName(cityName)
             dispatch({ type: 'SET_CITY', payload: cityName })
         }
         dispatch({ type: 'TOGGLE_PICKER', payload: false })

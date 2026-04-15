@@ -10,7 +10,7 @@ function Point({ id, pointContents }: { id: number, pointContents: PointContents
     return (
         <div>
             <div className='routePanelPointHeader'>
-                <Image src='/search-window/alpaca.jpg' width={200} height={200} alt='' />
+                <Image src="/search-window/alpaca.jpg" width={200} height={200} alt='' />
                 <div className='routePanelPointInfoContainer'>
                     <div className='routePanelPointNumber'>{id}</div>
                     <div className='routePanelPointInfo'>
@@ -73,9 +73,9 @@ export function RoutePanel({ state, toggleLike }:
                     </div>
                 </div>
                 <div className='routePanelDescription'>
-                    <span className='txt'>{state.routeData?.routePanelDescriptionription}</span>
-                    <div className='routePanelTags'>
-                        {state.routeData?.routePanelTags.map((e, i) => (<span key={i} className='routePanelTag'>{e}</span>))}
+                    <span className='txt'>{state.routeData?.routeDescription}</span>
+                    <div className='routeTags'>
+                        {state.routeData?.routeTags.map((e, i) => (<span key={i} className='routePanelTag'>{e}</span>))}
                     </div>
                 </div>
                 <div className='routePoints'>

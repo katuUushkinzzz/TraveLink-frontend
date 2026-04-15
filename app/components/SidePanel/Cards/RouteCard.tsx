@@ -17,10 +17,10 @@ export default function RouteCard({ routeData, onLiked, onClick }:
             <Image className='cardThumbnail' alt="" src={routeData.image} width={200} height={200} onClick={onClick} />
             <div className='cardContent'>
                 <h1 className='cardName h1'>{routeData.routeName}</h1>
-                <span className='cardDesc'>{routeData.routePanelDescriptionription}</span>
+                <span className='cardDesc'>{routeData.routeDescription}</span>
                 <div className='cardFooter'>
                     <div className='routePanelTagContainer'>
-                        {routeData.routePanelTags.map((e, i) => (<span key={i} className='routePanelTag'>{e}</span>))}
+                        {routeData.routeTags.map((e, i) => (<span key={i} className='routePanelTag'>{e}</span>))}
                     </div>
                     <div className='interactContainer'>
                         <label className='txt interactTxt likeButton'>
