@@ -1,178 +1,178 @@
 .routePanelContainer {
-    position: absolute;
-    left: 534px;
-    top: 18px;
-    bottom: 10px;
-    width: 525px;
-    transition: left 0.5s ease-in-out;
-    background-color: white;
-    border-radius: 20px;
-    z-index: 2;
+  position: absolute;
+  left: 534px;
+  top: 18px;
+  bottom: 10px;
+  width: 525px;
+  transition: left 0.5s ease-in-out;
+  background-color: white;
+  border-radius: 20px;
+  z-index: 2;
 }
 
 .routePanelScrollArea {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    gap: 20px;
-    overflow: scroll;
-    padding: 10px 15px;
-    scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 20px;
+  overflow: scroll;
+  padding: 10px 15px;
+  scrollbar-width: none;
 }
 
 .routePanelScrollArea::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .routePanelHeader {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    width: 495px;
-    height: 63px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 495px;
+  height: 63px;
 }
 
 .routePanelProfile {
-    max-width: 247px;
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: center;
+  max-width: 247px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
 }
 
 .routePanelProfile>div {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .routePanelProfile>div>h2 {
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 20px;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 20px;
 }
 
 .routePanelProfile>div>h3 {
-    font-size: 10px;
+  font-size: 10px;
 }
 
 .routePanelProfile>img {
-    border-radius: 100%;
+  border-radius: 100%;
 }
 
 .routePanelInfo {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: end;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
 }
 
-.routePanelInfo > .interactContainer {
-    margin: 0;
+.routePanelInfo>.interactContainer {
+  margin: 0;
 }
 
 .routePanelInfo>div>span {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
 }
 
 .routePanelDescription {
-    display: flex;
-    flex-direction: column;
-    max-height: 165px;
-    max-width: 495px;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  max-height: 165px;
+  max-width: 495px;
+  gap: 10px;
 }
 
 .routePanelDescription>span {
-    font-size: 18px;
-    font-weight: 400;
+  font-size: 18px;
+  font-weight: 400;
 }
 
 .routePanelTag {
-    font-size: 16px !important;
-    font-weight: 300 !important;
+  font-size: 16px !important;
+  font-weight: 300 !important;
 }
 
-.routePanelContainer > .collapseContainer {
-    top: -8px;
-    right: -55px;
-    position: absolute;
-    height: 63px;
+.routePanelContainer>.collapseContainer {
+  top: -8px;
+  right: -55px;
+  position: absolute;
+  height: 63px;
 }
 
 .routePanelPointHeader {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .routePanelPointHeader>img {
-    object-fit: cover;
-    height: 200px;
-    border-radius: 5px;
+  object-fit: cover;
+  height: 200px;
+  border-radius: 5px;
 }
 
 .routePanelPointInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 5px
+  display: flex;
+  flex-direction: column;
+  gap: 5px
 }
 
 .routePanelPointInfo>h1 {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 .routePanelPointInfo>h2 {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .routePanelPointInfo>span {
-    font-size: 14px;
-    line-height: 1.3;
+  font-size: 14px;
+  line-height: 1.3;
 }
 
 .routePanelPointInfoContainer {
-    display: flex;
-    flex-direction: column;
-    width: 270px;
-    padding-right: 5px;
+  display: flex;
+  flex-direction: column;
+  width: 270px;
+  padding-right: 5px;
 }
 
 .routePanelPointInfoContainer>.interactContainer {
-    margin-top: 7px;
+  margin-top: 7px;
 }
 
 .routePanelPointNumber {
-    color: #393939;
-    background-color: #C9F3FF;
-    font-size: 30px;
-    height: 45px;
-    width: 45px;
-    text-align: center;
-    font-family: 'Molle';
-    border-radius: 100%;
-    align-self: end;
-    margin-bottom: auto;
+  color: #393939;
+  background-color: #C9F3FF;
+  font-size: 30px;
+  height: 45px;
+  width: 45px;
+  text-align: center;
+  font-family: 'Molle';
+  border-radius: 100%;
+  align-self: end;
+  margin-bottom: auto;
 }
 
 .routePanelPointDescription {
-    margin-top: 5px;
-    font-size: 16px;
-    line-height: 22px;
+  margin-top: 5px;
+  font-size: 16px;
+  line-height: 22px;
 }
 
 .routePanelPointDistance {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    border: dashed #53515E;
-    border-width: 2px 0;
-    margin: 20px 0;
-    gap: 5px;
-    font-size: 20px;
-    font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  border: dashed #53515E;
+  border-width: 2px 0;
+  margin: 20px 0;
+  gap: 5px;
+  font-size: 20px;
+  font-weight: 400;
 }

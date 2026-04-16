@@ -15,13 +15,13 @@ export default function Home() {
   const [routes, setRoutes] = useState<RouteData[]>(TestRoutes);
   const [cityName, setCityName] = useLocalStorage('city', 'Москва');
 
-  // function getRoutes(page: number, token: string) {
-  //     return fetch(`http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/route/cards/${page}`, {
-  //         headers: {
-  //             "Authorization": 'Bearer ' + token
-  //         }
-  //     }).then(r => r.json().then(j => setRoutes(j)))
-  // }
+  function getRoutes(page: number, token: string) {
+    return fetch(`http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/route/cards/${page}`, {
+      headers: {
+        "Authorization": 'Bearer ' + token
+      }
+    }).then(r => r.json().then(j => setRoutes(j)))
+  }
 
   function toggleLike(id: number | undefined) {
     if (id !== undefined) {
@@ -46,8 +46,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    //   getRoutes(2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6InVzZXIiLCJpYXQiOjE3NzYwMDQ1NTMsImV4cCI6MTc3NjA5MDk1M30.zGxVE5sJQtkf3claoQb7h1OU2Xa92Xu_FFOJReiHucU')
-    //   console.log(routes)
+    getRoutes(2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6InVzZXIiLCJpYXQiOjE3NzYzNDYxNzUsImV4cCI6MTc3NjQzMjU3NX0.3uFt-9N-UH_QHVHjQ2szNFqCHx3NBmnv1aeV-CK_Nx4')
     dispatch({ type: 'SET_CITY', payload: cityName })
   }, [cityName])
 
