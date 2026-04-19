@@ -115,13 +115,13 @@
   gap: 10px;
 }
 
-.sidePanelABRouteContainer>footer {
+.sidePanelABRouteContainer footer {
   display: flex;
   justify-content: space-between;
   padding-right: 39px;
 }
 
-.sidePanelABRouteContainer>footer>button {
+.sidePanelABRouteContainer footer button {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -129,19 +129,19 @@
   font-size: 14px;
 }
 
-.sidePanelABRouteContainer>header {
+.sidePanelABRouteContainer header {
   display: flex;
   gap: 9px;
 }
 
-.sidePanelABRouteContainer>header>.sidePanelABRouteInputs {
+.sidePanelABRouteContainer header .sidePanelABRouteInputs {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.sidePanelABRouteContainer>header>.sidePanelABRouteInputs>input {
+.sidePanelABRouteContainer input {
   padding: 0 25px;
   height: 50px;
   border-radius: 17px;
@@ -150,11 +150,22 @@
   outline: 0;
 }
 
-.sidePanelABRouteContainer>header>.sidePanelABRouteInputs>h2 {
+.sidePanelABRouteContainer h2 {
   font-weight: 400;
   font-size: 20px;
 }
 
-.sidePanelABRouteContainer>header>button {
+.sidePanelABRouteContainer header button {
   cursor: pointer;
+}
+
+.sidePanelABRouteInput {
+  display: flex;
+  flex-direction: row;
+  gap: 9px;
+  align-items: center;
+}
+
+.sidePanelABRouteInput input {
+  flex: 1;
 }

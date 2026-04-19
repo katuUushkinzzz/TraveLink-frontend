@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-import { PointContents, State } from './SidePanelTypes'
+import { PointContents, State } from '../LocalTypes'
 import LikeSvg from '@/public/search-window/like.svg'
 
 import './RoutePanel.css'

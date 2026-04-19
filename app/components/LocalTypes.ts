@@ -33,12 +33,14 @@ export interface State {
   currentCity: string;
   isPanelShown: boolean;
   isABRouteShown: boolean;
+  isABMultiRouteShown: boolean;
   routeData?: RouteData;
 }
 
 export type Action =
-  | { type: 'TOGGLE_PICKER'; payload?: boolean }
+  | { type: 'TOGGLE_PICKER'; payload: boolean }
   | { type: 'SET_CITY'; payload: string }
   | { type: 'SET_PANEL_SHOWN'; payload: boolean }
   | { type: 'SET_AB_ROUTE_SHOWN'; payload: boolean }
-  | { type: 'SET_ROUTE_DATA'; payload?: RouteData };
+  | { type: 'SET_AB_MULTIROUTE_SHOWN'; payload: boolean }
+  | { type: 'SET_ROUTE_DATA'; payload: RouteData };

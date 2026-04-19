@@ -3,23 +3,74 @@ import Image from 'next/image'
 
 import RouteCard from './Cards/RouteCard'
 import PointButton from './Cards/PointCard'
-import { Action, RouteData, State } from './SidePanelTypes'
+import { Action, RouteData, State } from '../LocalTypes'
 
 import './SidePanel.css'
+import React from 'react'
 
-/**
- * Collapsible main side panel
- *
- * @example
- * ```tsx
- *  <SidePanel/>
- * ```
- */
 export default function SidePanel({ state, dispatch, routes, toggleLike }:
   {
     state: State, dispatch: ActionDispatch<[action: Action]>, routes: RouteData[], toggleLike(id: number | undefined): void
   }) {
   const [currentRecTab, setRecTab] = useState(1);
+  const [multiPoints, setMultiPoints] = useState(['', '', '']);
+  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
+
+  function showRoutePanel(contents: RouteData) {
+    dispatch({ type: 'SET_ROUTE_DATA', payload: contents })
+    document.getElementById('routePanelContainer')?.classList.remove('sidePanelHidden')
+  }
+
+  function addSearchPoint() {
+    if (!state.isABMultiRouteShown) dispatch({ type: 'SET_AB_MULTIROUTE_SHOWN', payload: true })
+    else {
+      const newPoints = [...multiPoints];
+      newPoints.splice(multiPoints.length - 1, 0, '');
+      setMultiPoints(newPoints);
+    }
+  }
+
+  function resetSearchPoints() {
+    if (state.isABMultiRouteShown) dispatch({ type: 'SET_AB_MULTIROUTE_SHOWN', payload: false });
+    else {
+      (document.getElementById('fromPoint') as HTMLInputElement).value = '';
+      (document.getElementById('toPoint') as HTMLInputElement).value = ''
+    }
+
+    setMultiPoints(['', '', ''])
+  }
+
+  function swapSearchPoints() {
+    const newPoints = [...multiPoints];
+    const fromPoint = newPoints[0];
+
+    newPoints[0] = newPoints[newPoints.length - 1];
+    newPoints[newPoints.length - 1] = fromPoint;
+
+    setMultiPoints(newPoints);
+  }
+
+  function onDragStart(e: React.DragEvent<HTMLDivElement>, index: number) {
+    setDraggedItemIndex(index);
+  };
+
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    e.preventDefault();
+    if (draggedItemIndex === index || draggedItemIndex === null) return;
+
+    const newPoints = [...multiPoints];
+    const draggedItem = newPoints[draggedItemIndex];
+
+    newPoints.splice(draggedItemIndex, 1);
+    newPoints.splice(index, 0, draggedItem);
+
+    setDraggedItemIndex(index);
+    setMultiPoints(newPoints);
+  };
+
+  const onDragEnd = () => {
+    setDraggedItemIndex(null);
+  };
 
   useEffect(() => {
     if (state.isPanelShown)
@@ -28,33 +79,75 @@ export default function SidePanel({ state, dispatch, routes, toggleLike }:
       document.getElementById('sidePanelContainer')?.classList.add('sidePanelHidden')
   });
 
-  function showRoutePanel(contents: RouteData) {
-    dispatch({ type: 'SET_ROUTE_DATA', payload: contents })
-    document.getElementById('routePanelContainer')?.classList.remove('sidePanelHidden')
-  }
-
   return (
     <>
       <div id="sidePanelContainer" className="sidePanelContainer">
         <div className='sidePanelScrollArea'>
           {state.isABRouteShown && <div className='sidePanelABRouteContainer'>
             <header>
-              <div className='sidePanelABRouteInputs'>
-                <h2 className='txt'>Откуда</h2>
-                <input type='search' placeholder='Введите адрес' className='txt'></input>
-                <h2 className='txt'>Куда</h2>
-                <input type='search' placeholder='Введите адрес' className='txt'></input>
-              </div>
-              <button>
-                <Image alt="" src="/search-window/switch.png" width={30} height={30} className='img' />
-              </button>
+              {
+                !state.isABMultiRouteShown && <>
+                  <div className='sidePanelABRouteInputs'>
+                    <h2 className='txt'>Откуда</h2>
+                    <input id='fromPoint' type='search' placeholder='Введите адрес' className='txt' value={multiPoints[0]}
+                      onChange={(e) => {
+                        const newPoints = [...multiPoints];
+                        newPoints[0] = e.target.value;
+                        setMultiPoints(newPoints);
+                      }}
+                    />
+                    <h2 className='txt'>Куда</h2>
+                    <input id='toPoint' type='search' placeholder='Введите адрес' className='txt' value={multiPoints[multiPoints.length - 1]}
+                      onChange={(e) => {
+                        const newPoints = [...multiPoints];
+                        newPoints[newPoints.length - 1] = e.target.value;
+                        setMultiPoints(newPoints);
+                      }}
+                    />
+                  </div>
+                  <button onClick={() => swapSearchPoints()}>
+                    <Image alt="" src="/search-window/switch.png" width={30} height={30} className='img' />
+                  </button>
+                </>
+
+              }
+              {
+                state.isABMultiRouteShown &&
+                <div className='sidePanelABRouteInputs'>
+                  <h2 className='txt'>Откуда</h2>
+                  {multiPoints.map((point, index) => {
+                    return (
+                      <React.Fragment key={index}>
+                        {index === multiPoints.length - 1 && <h2 className='txt'>Куда</h2>}
+                        <div className='sidePanelABRouteInput'>
+                          <input id='fromPoint' type='search' placeholder='Введите адрес' className='txt'
+                            value={point}
+                            onChange={(e) => {
+                              const newPoints = [...multiPoints];
+                              newPoints[index] = e.target.value;
+                              setMultiPoints(newPoints);
+                            }}
+                          />
+                          <div draggable
+                            onDragStart={(e) => onDragStart(e, index)}
+                            onDragOver={(e) => onDragOver(e, index)}
+                            onDragEnd={onDragEnd}
+                          >
+                            <Image src='/search-window/handle.png' alt='' width={30} height={30} draggable={false} />
+                          </div>
+                        </div>
+                      </React.Fragment>
+                    )
+                  })}
+                </div>
+              }
             </header>
             <footer>
-              <button className='txt'>
+              <button className='txt' onClick={() => addSearchPoint()}>
                 <Image alt="" src="/search-window/plus.png" width={35} height={35} className='img' />
                 Добавить
               </button>
-              <button className='txt'>
+              <button className='txt' onClick={() => resetSearchPoints()}>
                 Сбросить
               </button>
             </footer>
@@ -106,7 +199,7 @@ export default function SidePanel({ state, dispatch, routes, toggleLike }:
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   )
 }

@@ -2,7 +2,7 @@ import { ActionDispatch } from 'react';
 import Image from 'next/image'
 
 import './CityPicker.css'
-import { State, Action } from '../SidePanel/SidePanelTypes';
+import { State, Action } from '../LocalTypes';
 
 export default function CityPicker({ state, dispatch, setCityName }:
   {

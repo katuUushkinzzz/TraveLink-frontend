@@ -1,4 +1,4 @@
-import { RouteData } from "./SidePanelTypes";
+import { RouteData } from "../LocalTypes";
 
 export const TestRoutes: RouteData[] = [
   {

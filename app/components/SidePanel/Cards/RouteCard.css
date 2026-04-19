@@ -1,19 +1,18 @@
 .routePanelTagContainer {
-    /* height: 32px; */
-    line-height: 15px;
-    overflow: hidden;
+  line-height: 15px;
+  overflow: hidden;
 }
 
 .routePanelTag {
-    display: inline;
-    font-size: 12px;
-    font-weight: 400;
-    color: #5BDAFF;
-    white-space: normal;
-    overflow-wrap: normal;
-    margin-right: 6px;
+  display: inline;
+  font-size: 12px;
+  font-weight: 400;
+  color: #5BDAFF;
+  white-space: normal;
+  overflow-wrap: normal;
+  margin-right: 6px;
 }
 
 .routePanelTag::before {
-    content: " #";
+  content: " #";
 }

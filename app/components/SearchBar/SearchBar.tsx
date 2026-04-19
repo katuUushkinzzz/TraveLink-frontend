@@ -2,7 +2,7 @@ import { ActionDispatch, useEffect } from 'react';
 import Image from 'next/image';
 
 import './SearchBar.css'
-import { State, Action } from '../SidePanel/SidePanelTypes';
+import { State, Action } from '../LocalTypes';
 
 /**
  * Search bar element with collapse button
