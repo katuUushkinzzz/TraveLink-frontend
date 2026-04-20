@@ -1,16 +1,18 @@
 import Image from 'next/image'
 
-import { PointContents, State } from '../LocalTypes'
+import { Action, PointData, State } from '../LocalTypes'
 import LikeSvg from '@/public/search-window/like.svg'
 
+import './Panel.css'
 import './RoutePanel.css'
 import './Cards/Card.css'
+import { ActionDispatch } from 'react'
 
-function Point({ id, pointContents }: { id: number, pointContents: PointContents }) {
+function Point({ id, pointContents }: { id: number, pointContents: PointData }) {
   return (
     <div>
       <div className='routePanelPointHeader'>
-        <Image src="/search-window/alpaca.jpg" width={200} height={200} alt='' />
+        <Image src={pointContents.image} width={200} height={200} alt='' />
         <div className='routePanelPointInfoContainer'>
           <div className='routePanelPointNumber'>{id}</div>
           <div className='routePanelPointInfo'>
@@ -41,14 +43,14 @@ function Point({ id, pointContents }: { id: number, pointContents: PointContents
   )
 }
 
-export function RoutePanel({ state, toggleLike }:
+export function RoutePanel({ state, dispatch, toggleLike }:
   {
-    state: State, toggleLike(id: number | undefined): void
+    state: State, dispatch: ActionDispatch<[action: Action]>, toggleLike(id: number | undefined): void
   }) {
 
   return (
-    <div className='routePanelContainer sidePanelHidden' id='routePanelContainer'>
-      <div className='routePanelScrollArea'>
+    <div className='panelContainer sidePanelHidden' id='routePanelContainer'>
+      <div className='panelScrollArea'>
         <div className='routePanelHeader'>
           <div className='routePanelProfile'>
             <Image src={state.routeData?.authorPfp ?? '/search-window/checker.png'} alt='' width={50} height={50} />
@@ -57,7 +59,7 @@ export function RoutePanel({ state, toggleLike }:
               <h3 className='txt'>{state.routeData?.creationDate}</h3>
             </div>
           </div>
-          <div className='routePanelInfo'>
+          <div className='panelInfo routePanelInfo'>
             <h1 className='txt'>{state.routeData?.routeName}</h1>
             <div className='interactContainer'>
               <label className='txt interactTxt likeButton'>
@@ -72,10 +74,12 @@ export function RoutePanel({ state, toggleLike }:
             </div>
           </div>
         </div>
-        <div className='routePanelDescription'>
+        <div className='panelDescription routePanelDescription'>
           <span className='txt'>{state.routeData?.routeDescription}</span>
           <div className='routeTags'>
-            {state.routeData?.routeTags.map((e, i) => (<span key={i} className='routePanelTag'>{e}</span>))}
+            {state.routeData?.routeTags.map((e, i) => (<button key={i} className='txt routePanelTag' onClick={
+              e => dispatch({ type: 'SET_QUERY', payload: e.currentTarget.innerText })}
+            >{e}</button>))}
           </div>
         </div>
         <div className='routePoints'>

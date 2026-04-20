@@ -3,14 +3,15 @@ import FavSvg from '@/public/search-window/fav.svg'
 import LikeSvg from '@/public/search-window/like.svg'
 import './Card.css'
 import './RouteCard.css'
-import { ChangeEventHandler, MouseEventHandler } from 'react'
-import { RouteData } from '../../LocalTypes'
+import { ActionDispatch, ChangeEventHandler, MouseEventHandler } from 'react'
+import { Action, RouteData } from '../../LocalTypes'
 
-export default function RouteCard({ routeData, onLiked, onClick }:
+export default function RouteCard({ routeData, onLiked, onClick, dispatch }:
   {
     routeData: RouteData
     onLiked: ChangeEventHandler<HTMLInputElement>,
     onClick: MouseEventHandler<HTMLDivElement>
+    dispatch: ActionDispatch<[action: Action]>
   }) {
   return (
     <div className='txt card'>
@@ -19,8 +20,10 @@ export default function RouteCard({ routeData, onLiked, onClick }:
         <h1 className='cardName h1'>{routeData.routeName}</h1>
         <span className='cardDesc'>{routeData.routeDescription}</span>
         <div className='cardFooter'>
-          <div className='routePanelTagContainer'>
-            {routeData.routeTags.map((e, i) => (<span key={i} className='routePanelTag'>{e}</span>))}
+          <div className='routeCardTagContainer'>
+            {routeData.routeTags.map((e, i) => (<button key={i} className='txt routeCardTag' onClick={
+              e => dispatch({ type: 'SET_QUERY', payload: e.currentTarget.innerText })}
+            >{e}</button>))}
           </div>
           <div className='interactContainer'>
             <label className='txt interactTxt likeButton'>

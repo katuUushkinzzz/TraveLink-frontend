@@ -2,15 +2,15 @@ import { ActionDispatch, useEffect, useState } from 'react'
 import Image from 'next/image'
 
 import RouteCard from './Cards/RouteCard'
-import PointButton from './Cards/PointCard'
-import { Action, RouteData, State } from '../LocalTypes'
+import PointCard from './Cards/PointCard'
+import { Action, PointData, RouteData, State } from '../LocalTypes'
 
 import './SidePanel.css'
 import React from 'react'
 
-export default function SidePanel({ state, dispatch, routes, toggleLike }:
+export default function SidePanel({ state, dispatch, routes, points, toggleLike }:
   {
-    state: State, dispatch: ActionDispatch<[action: Action]>, routes: RouteData[], toggleLike(id: number | undefined): void
+    state: State, dispatch: ActionDispatch<[action: Action]>, routes: RouteData[], points: PointData[], toggleLike(id: number | undefined): void
   }) {
   const [currentRecTab, setRecTab] = useState(1);
   const [multiPoints, setMultiPoints] = useState(['', '', '']);
@@ -18,7 +18,14 @@ export default function SidePanel({ state, dispatch, routes, toggleLike }:
 
   function showRoutePanel(contents: RouteData) {
     dispatch({ type: 'SET_ROUTE_DATA', payload: contents })
+    document.getElementById('pointPanelContainer')?.classList.add('sidePanelHidden')
     document.getElementById('routePanelContainer')?.classList.remove('sidePanelHidden')
+  }
+
+  function showPointPanel(contents: PointData) {
+    dispatch({ type: 'SET_POINT_DATA', payload: contents })
+    document.getElementById('routePanelContainer')?.classList.add('sidePanelHidden')
+    document.getElementById('pointPanelContainer')?.classList.remove('sidePanelHidden')
   }
 
   function addSearchPoint() {
@@ -109,11 +116,9 @@ export default function SidePanel({ state, dispatch, routes, toggleLike }:
                     <Image alt="" src="/search-window/switch.png" width={30} height={30} className='img' />
                   </button>
                 </>
-
               }
               {
-                state.isABMultiRouteShown &&
-                <div className='sidePanelABRouteInputs'>
+                state.isABMultiRouteShown && <div className='sidePanelABRouteInputs'>
                   <h2 className='txt'>Откуда</h2>
                   {multiPoints.map((point, index) => {
                     return (
@@ -183,19 +188,18 @@ export default function SidePanel({ state, dispatch, routes, toggleLike }:
                   routeData={route}
                   onLiked={() => toggleLike(route.id)}
                   onClick={() => showRoutePanel(route)}
+                  dispatch={dispatch}
                 />
               ))}
             </div>
             <div className='recommendsCards' style={{ display: currentRecTab === 2 ? 'flex' : 'none' }}>
-              <PointButton
-                pointName='Placeholder Point'
-                pointDescription='Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
-                pointType='Placeholder'
-                pointLocation='Placeholder st. 1'
-                rating={4.9}
-                rateCount={10223}
-                image='/search-window/checker.png'
-                isFav={true} />
+              {points.map(point => (
+                <PointCard
+                  key={point.id}
+                  pointData={point}
+                  onClick={() => showPointPanel(point)}
+                />
+              ))}
             </div>
           </div>
         </div>

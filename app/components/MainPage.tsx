@@ -6,13 +6,15 @@ import CityPicker from "./CityPicker/CityPicker";
 import SearchBar from "./SearchBar/SearchBar";
 import SidePanel from "./SidePanel/SidePanel";
 import { RoutePanel } from "./SidePanel/RoutePanel";
-import { TestRoutes } from "./SidePanel/TestContent";
+import { TestPoints, TestRoutes } from "./SidePanel/TestContent";
 import { reducer, initialState, useLocalStorage } from "./LocalStore";
-import { RouteData } from "./LocalTypes";
+import { PointData, RouteData } from "./LocalTypes";
+import { PointPanel } from "./SidePanel/PointPanel";
 
 export default function MainPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [routes, setRoutes] = useState<RouteData[]>(TestRoutes);
+  const [points, setPoints] = useState<PointData[]>(TestPoints);
   const [cityName, setCityName] = useLocalStorage('city', 'Москва');
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -22,6 +24,15 @@ export default function MainPage() {
         "Authorization": 'Bearer ' + token
       }
     }).then(r => r.json().then(j => setRoutes(j)))
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function getPoints(page: number, token: string) {
+    return fetch(`http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/point/cards/${page}`, {
+      headers: {
+        "Authorization": 'Bearer ' + token
+      }
+    }).then(r => r.json().then(j => setPoints(j)))
   }
 
   function toggleLike(id: number) {
@@ -51,10 +62,11 @@ export default function MainPage() {
 
   return (
     <>
-      <SidePanel state={state} dispatch={dispatch} routes={routes} toggleLike={toggleLike} />
-      <CityPicker state={state} dispatch={dispatch} setCityName={setCityName} />
+      <SidePanel state={state} dispatch={dispatch} routes={routes} points={points} toggleLike={toggleLike} />
       <SearchBar state={state} dispatch={dispatch} />
-      <RoutePanel state={state} toggleLike={toggleLike} />
+      <RoutePanel state={state} dispatch={dispatch} toggleLike={toggleLike} />
+      <PointPanel state={state} />
+      <CityPicker state={state} dispatch={dispatch} setCityName={setCityName} />
     </>
   )
 }

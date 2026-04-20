@@ -1,0 +1,43 @@
+.panelInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.panelDescription {
+  display: flex;
+  flex-direction: column;
+  /* max-height: 165px; */
+  max-width: 495px;
+}
+
+.panelScrollArea {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 20px;
+  overflow: scroll;
+  padding: 10px 15px;
+  scrollbar-width: none;
+}
+
+.panelScrollArea::-webkit-scrollbar {
+  display: none;
+}
+
+.panelContainer {
+  position: absolute;
+  left: 534px;
+  top: 18px;
+  bottom: 10px;
+  width: 525px;
+  transition: left 0.5s ease-in-out;
+  background-color: white;
+  border-radius: 20px;
+}
+
+.panelContainer>.collapseContainer {
+  top: -8px;
+  right: -55px;
+  position: absolute;
+  height: 63px;
+}

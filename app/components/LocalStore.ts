@@ -7,7 +7,9 @@ export const initialState: State = {
   isABMultiRouteShown: false,
   isPanelShown: true,
   currentCity: '',
+  searchQuery: '',
   routeData: undefined,
+  pointData: undefined
 }
 
 export function reducer(state: State, action: Action): State {
@@ -16,6 +18,8 @@ export function reducer(state: State, action: Action): State {
       return { ...state, isPickerVisible: action.payload ?? !state.isPickerVisible };
     case 'SET_CITY':
       return { ...state, currentCity: action.payload };
+    case 'SET_QUERY':
+      return { ...state, searchQuery: action.payload };
     case 'SET_PANEL_SHOWN':
       return { ...state, isPanelShown: action.payload };
     case 'SET_AB_ROUTE_SHOWN':
@@ -24,6 +28,8 @@ export function reducer(state: State, action: Action): State {
       return { ...state, isABMultiRouteShown: action.payload };
     case 'SET_ROUTE_DATA':
       return { ...state, routeData: action.payload };
+    case 'SET_POINT_DATA':
+      return { ...state, pointData: action.payload };
     default:
       return state;
   }

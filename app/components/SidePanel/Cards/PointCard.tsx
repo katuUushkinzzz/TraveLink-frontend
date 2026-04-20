@@ -2,40 +2,32 @@ import Image from 'next/image'
 import FavSvg from '@/public/search-window/fav.svg'
 import './Card.css'
 import './PointCard.css'
+import { PointData } from '../../LocalTypes'
+import { MouseEventHandler } from 'react'
 
-export default function PointButton({ pointName, pointType, pointLocation, pointDescription, image, rating, rateCount, isFav = false }:
-  {
-    pointName: string,
-    pointType: string,
-    pointLocation: string,
-    pointDescription: string,
-    image: string,
-    rating: number,
-    rateCount: number,
-    isFav: boolean
-  }) {
+export default function PointCard({ pointData, onClick }: { pointData: PointData, onClick: MouseEventHandler<HTMLDivElement> }) {
   return (
     <div className='txt card'>
-      <Image className='cardThumbnail' alt="" src={image} width={200} height={200} />
+      <Image className='cardThumbnail' alt="" src={pointData.image} width={200} height={200} onClick={onClick} />
       <div className='cardContent'>
-        <h1 className='cardName'>{pointName}</h1>
-        <h2 className='pointType'>{pointType}</h2>
-        <span className='pointLocation'>{pointLocation}</span>
+        <h1 className='cardName'>{pointData.pointName}</h1>
+        <h2 className='pointType'>{pointData.pointType}</h2>
+        <span className='pointLocation'>{pointData.pointLocation}</span>
         <span className='cardDesc pointDesc'>
           О месте:<br />
-          {pointDescription}
+          {pointData.pointDescription}
         </span>
         <div className='cardFooter'>
           <div className='interactContainer'>
             <span className='txt interactTxt'>
-              {rating}
+              {pointData.pointRating}
               <Image alt="" src='/search-window/star.svg' width={18.9} height={16.23}></Image>
-              ({rateCount})
+              ({pointData.ratingCount})
             </span>
           </div>
         </div>
         <label className='favButton'>
-          <input type='checkbox' defaultChecked={isFav}></input>
+          <input type='checkbox'></input>
           <FavSvg width={17} height={21} />
         </label>
       </div>

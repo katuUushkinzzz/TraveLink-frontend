@@ -34,7 +34,9 @@ export default function SearchBar({ state, dispatch }:
     <div className='searchContainer'>
       <div className='searchBar'>
         <Image alt="" src="/search-window/search-route.png" width={30} height={30} />
-        <input type='search' className='searchField' placeholder='Поиск'></input>
+        <input type='search' className='searchField' placeholder='Поиск' value={state.searchQuery}
+          onChange={e => dispatch({ type: 'SET_QUERY', payload: e.target.value })}
+        />
         <div className='searchButton'>
           <button className='barButton' onClick={() => {
             // TODO: Make search implementation

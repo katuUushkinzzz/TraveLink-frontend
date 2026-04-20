@@ -8,6 +8,9 @@
   font-size: 14px;
   font-weight: 400;
   height: 17px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .pointDesc {
