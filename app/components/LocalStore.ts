@@ -4,6 +4,7 @@ import { useState } from 'react';
 export const initialState: State = {
   isPickerVisible: false,
   isABRouteShown: false,
+  isCommentVisible: false,
   isABMultiRouteShown: false,
   isPanelShown: true,
   currentCity: '',
@@ -22,6 +23,8 @@ export function reducer(state: State, action: Action): State {
       return { ...state, searchQuery: action.payload };
     case 'SET_PANEL_SHOWN':
       return { ...state, isPanelShown: action.payload };
+    case 'SET_COMMENT_SHOWN':
+      return { ...state, isCommentVisible: action.payload };
     case 'SET_AB_ROUTE_SHOWN':
       return { ...state, isABRouteShown: action.payload };
     case 'SET_AB_MULTIROUTE_SHOWN':

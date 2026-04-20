@@ -76,6 +76,17 @@ export const TestPoints: PointData[] = [
     pointDescription: 'Самарская государственная филармония — государственное учреждение культуры городского округа Самара',
     imageCarousel: ['/search-window/point-previews/filarmony.png', '/search-window/point-previews/filarmony.png', '/search-window/point-previews/filarmony.png'],
     image: '/search-window/point-previews/filarmony.png'
+  },
+  {
+    id: 6,
+    pointName: 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.',
+    pointType: 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.',
+    pointLocation: 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.',
+    pointRating: 4.9,
+    ratingCount: 2935649087349732906723923912,
+    pointDescription: 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.',
+    imageCarousel: ['/search-window/point-previews/filarmony.png', '/search-window/point-previews/filarmony.png', '/search-window/point-previews/filarmony.png'],
+    image: '/search-window/point-previews/filarmony.png'
   }
 ]
 

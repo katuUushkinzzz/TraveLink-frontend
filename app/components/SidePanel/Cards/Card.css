@@ -84,6 +84,8 @@
 .interactTxt {
   font-weight: 400;
   font-size: 18px;
+  overflow: hidden;
+  line-height: 18px;
 }
 
 .likeButton {

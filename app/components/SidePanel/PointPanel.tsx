@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
+import { ActionDispatch, useEffect, useState } from 'react'
 import Image from 'next/image'
 
-import { State } from '../LocalTypes'
+import { Action, State } from '../LocalTypes'
 
 import './Panel.css'
 import './PointPanel.css'
 import './Cards/Card.css'
 
-export function PointPanel({ state }: { state: State }) {
+export function PointPanel({ state, dispatch }: { state: State, dispatch: ActionDispatch<[action: Action]> }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   function swipeLeft() {
@@ -33,7 +33,7 @@ export function PointPanel({ state }: { state: State }) {
             <h2 className='txt'>Адрес:</h2>
             <h3 className='txt'>{state.pointData?.pointLocation}</h3>
           </div>
-          <div className='interactContainer'>
+          <div className='interactContainer commentButton' onClick={() => dispatch({ type: 'SET_COMMENT_SHOWN', payload: true })}>
             <span className='txt interactTxt'>
               {state.pointData?.pointRating}
               <Image alt="" src='/search-window/star.svg' width={18.9} height={16.23}></Image>

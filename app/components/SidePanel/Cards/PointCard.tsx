@@ -5,7 +5,7 @@ import './PointCard.css'
 import { PointData } from '../../LocalTypes'
 import { MouseEventHandler } from 'react'
 
-export default function PointCard({ pointData, onClick }: { pointData: PointData, onClick: MouseEventHandler<HTMLDivElement> }) {
+export default function PointCard({ pointData, onClick, onComment }: { pointData: PointData, onClick: MouseEventHandler<HTMLDivElement>, onComment: MouseEventHandler<HTMLDivElement> }) {
   return (
     <div className='txt card'>
       <Image className='cardThumbnail' alt="" src={pointData.image} width={200} height={200} onClick={onClick} />
@@ -18,7 +18,7 @@ export default function PointCard({ pointData, onClick }: { pointData: PointData
           {pointData.pointDescription}
         </span>
         <div className='cardFooter'>
-          <div className='interactContainer'>
+          <div className='interactContainer commentButton' onClick={onComment}>
             <span className='txt interactTxt'>
               {pointData.pointRating}
               <Image alt="" src='/search-window/star.svg' width={18.9} height={16.23}></Image>

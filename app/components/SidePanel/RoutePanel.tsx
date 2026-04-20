@@ -8,7 +8,12 @@ import './RoutePanel.css'
 import './Cards/Card.css'
 import { ActionDispatch } from 'react'
 
-function Point({ id, pointContents }: { id: number, pointContents: PointData }) {
+function Point({ id, pointContents, dispatch }: { id: number, pointContents: PointData, dispatch: ActionDispatch<[action: Action]> }) {
+  function showCommentSection() {
+    dispatch({ type: 'SET_POINT_DATA', payload: pointContents })
+    dispatch({ type: 'SET_COMMENT_SHOWN', payload: true })
+  }
+
   return (
     <div>
       <div className='routePanelPointHeader'>
@@ -20,7 +25,7 @@ function Point({ id, pointContents }: { id: number, pointContents: PointData }) 
             <h2 className='txt'>{pointContents.pointType}</h2>
             <span className='txt'>{pointContents.pointLocation}</span>
           </div>
-          <div className='interactContainer'>
+          <div className='interactContainer commentButton' onClick={() => showCommentSection()}>
             <span className='txt interactTxt'>
               {pointContents.pointRating}
               <Image alt="" src='/search-window/star.svg' width={18.9} height={16.23}></Image>
@@ -84,7 +89,7 @@ export function RoutePanel({ state, dispatch, toggleLike }:
         </div>
         <div className='routePoints'>
           {state.routeData?.points.map((point, id) => {
-            return <Point key={id} id={id + 1} pointContents={point} />
+            return <Point key={id} id={id + 1} pointContents={point} dispatch={dispatch} />
           })}
         </div>
       </div>

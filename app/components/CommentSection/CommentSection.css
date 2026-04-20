@@ -1,0 +1,15 @@
+.cityPickerHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cityPickerHeaderHeader {
+  display: flex;
+}
+
+.cityPickerHeaderHeader>h1 {
+  flex: 1;
+  font-weight: 400;
+  font-size: 35px;
+}

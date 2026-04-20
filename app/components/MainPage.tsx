@@ -10,6 +10,7 @@ import { TestPoints, TestRoutes } from "./SidePanel/TestContent";
 import { reducer, initialState, useLocalStorage } from "./LocalStore";
 import { PointData, RouteData } from "./LocalTypes";
 import { PointPanel } from "./SidePanel/PointPanel";
+import CommentSection from "./CommentSection/CommentSection";
 
 export default function MainPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -65,8 +66,9 @@ export default function MainPage() {
       <SidePanel state={state} dispatch={dispatch} routes={routes} points={points} toggleLike={toggleLike} />
       <SearchBar state={state} dispatch={dispatch} />
       <RoutePanel state={state} dispatch={dispatch} toggleLike={toggleLike} />
-      <PointPanel state={state} />
+      <PointPanel state={state} dispatch={dispatch} />
       <CityPicker state={state} dispatch={dispatch} setCityName={setCityName} />
+      <CommentSection state={state} dispatch={dispatch} />
     </>
   )
 }

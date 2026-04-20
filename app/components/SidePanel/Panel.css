@@ -41,3 +41,7 @@
   position: absolute;
   height: 63px;
 }
+
+.commentButton {
+  cursor: pointer;
+}

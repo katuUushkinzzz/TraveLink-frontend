@@ -35,6 +35,7 @@ export interface State {
   isPanelShown: boolean;
   isABRouteShown: boolean;
   isPickerVisible: boolean;
+  isCommentVisible: boolean;
   isABMultiRouteShown: boolean;
   routeData?: RouteData;
   pointData?: PointData;
@@ -44,6 +45,7 @@ export type Action =
   | { type: 'SET_CITY'; payload: string }
   | { type: 'SET_QUERY'; payload: string }
   | { type: 'SET_PANEL_SHOWN'; payload: boolean }
+  | { type: 'SET_COMMENT_SHOWN'; payload: boolean }
   | { type: 'SET_AB_ROUTE_SHOWN'; payload: boolean }
   | { type: 'TOGGLE_PICKER'; payload: boolean }
   | { type: 'SET_AB_MULTIROUTE_SHOWN'; payload: boolean }

@@ -28,6 +28,11 @@ export default function SidePanel({ state, dispatch, routes, points, toggleLike 
     document.getElementById('pointPanelContainer')?.classList.remove('sidePanelHidden')
   }
 
+  function showCommentSection(contents: PointData) {
+    dispatch({ type: 'SET_POINT_DATA', payload: contents })
+    dispatch({ type: 'SET_COMMENT_SHOWN', payload: true })
+  }
+
   function addSearchPoint() {
     if (!state.isABMultiRouteShown) dispatch({ type: 'SET_AB_MULTIROUTE_SHOWN', payload: true })
     else {
@@ -198,6 +203,7 @@ export default function SidePanel({ state, dispatch, routes, points, toggleLike 
                   key={point.id}
                   pointData={point}
                   onClick={() => showPointPanel(point)}
+                  onComment={() => showCommentSection(point)}
                 />
               ))}
             </div>
