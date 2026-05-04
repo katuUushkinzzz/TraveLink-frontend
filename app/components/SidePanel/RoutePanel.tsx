@@ -60,7 +60,7 @@ export function RoutePanel({ state, dispatch, toggleLike }:
       <div className='panelScrollArea'>
         <div className='routePanelHeader'>
           <div className='routePanelProfile'>
-            <Image src={state.routeData?.authorPfp ?? '/search-window/checker.png'} alt='' width={50} height={50} />
+            <Image src={state.routeData?.authorPfp ?? '/search-window/route-previews/checker.png'} alt='' width={50} height={50} />
             <div>
               <h2 className='txt'>{state.routeData?.author}</h2>
               <h3 className='txt'>{state.routeData?.creationDate}</h3>
