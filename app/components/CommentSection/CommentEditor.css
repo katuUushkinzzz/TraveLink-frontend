@@ -1,0 +1,68 @@
+.editorContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  overflow: scroll;
+  height: 100%;
+}
+
+.editorTitle {
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1;
+  text-align: center;
+}
+
+.editorHeader {
+  display: flex;
+}
+
+.editorInfo {
+  display: flex;
+  width: 484px;
+  margin-left: auto;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .starsRow {
+    cursor: pointer;
+  }
+}
+
+.editorInfo h1 {
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.editorHeader img {
+  border-radius: 5px;
+  max-height: 152px;
+  object-fit: cover;
+}
+
+.editorText {
+  outline: none;
+  border: 2px solid #605F6D66;
+  border-radius: 17px;
+  padding: 16px 16px;
+  min-height: 150px;
+  font-size: 20px;
+  font-weight: 400;
+  resize: none;
+}
+
+.editorSend {
+  color: white;
+  background-color: #53515E;
+  border-radius: 17px;
+  height: 50px;
+  width: 456px;
+  cursor: pointer;
+  align-self: center;
+  min-height: 50px;
+}
+
+.editorPhotoContainer {
+  min-height: 170px;
+}

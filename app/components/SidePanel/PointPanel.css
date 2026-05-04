@@ -1,0 +1,62 @@
+.pointPanelInfo {
+  flex: 0;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.pointPanelInfo h1 {
+  font-size: 32px;
+}
+
+.pointPanelInfo h2 {
+  font-size: 20px;
+}
+
+.pointPanelInfo h3 {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.pointPanelDescription {
+  gap: 0;
+}
+
+.pointPanelDescription h2 {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.pointPanelDescription span {
+  font-size: 20px;
+}
+
+.pointCarouselContainer {
+  display: flex;
+  height: 220px;
+  align-items: center;
+}
+
+.pointCarouselContainer button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.pointCarouselFrame {
+  flex: 1;
+  overflow: hidden;
+}
+
+.innerCarousel {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+.innerCarousel img {
+  flex: 0 0 100%;
+  height: 220px;
+  object-fit: contain;
+}

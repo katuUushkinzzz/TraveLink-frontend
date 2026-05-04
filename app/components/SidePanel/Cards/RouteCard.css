@@ -1,0 +1,28 @@
+.routeCardTagContainer {
+  display: -webkit-box;
+  line-height: 15px;
+  overflow: hidden;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  color: #5BDAFF;
+  margin-bottom: 15px;
+}
+
+.routeCardTag,
+.routePanelTag {
+  display: inline;
+  font-size: 15px;
+  font-weight: 400;
+  color: #5BDAFF;
+  white-space: normal;
+  overflow-wrap: normal;
+  margin-right: 6px;
+  cursor: pointer;
+  line-height: 18px;
+}
+
+.routeCardTag::before,
+.routePanelTag::before {
+  content: " #";
+}
