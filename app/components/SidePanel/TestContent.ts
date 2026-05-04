@@ -94,7 +94,7 @@ export const TestRoutes: RouteData[] = [
   {
     id: 100,
     author: 'Jonh Doe',
-    authorPfp: '/search-window/checker.png',
+    authorPfp: '/search-window/route-previews/checker.png',
     creationDate: '01 января 1970',
     routeName: 'Сердце Ростова',
     routeDescription: 'Маршрут, где встречаются неожиданные радости: от обаятельных альпак и итальянской пиццы к высокому искусству в легендарном театре и безудержному веселью в аквапарке. Откройте для себя Ростов, где природа, гастрономия, культура и адреналин бьются в одном сердце.',
@@ -108,7 +108,7 @@ export const TestRoutes: RouteData[] = [
   {
     id: 101,
     author: 'Jane Doe',
-    authorPfp: '/search-window/checker.png',
+    authorPfp: '/search-window/route-previews/checker.png',
     creationDate: '02 января 1970',
     routeName: 'Таганрогский бриз',
     routeDescription: 'Этот маршрут проведёт вас через все фазы идеального отдыха: релакс в пляжной беседке, адреналин на картинге «Формула», гастрономическое наслаждение в «Мидийном Месте» и лирическое завершение на Пушкинской набережной. Погрузитесь в многогранный Таганрог.',
@@ -122,7 +122,7 @@ export const TestRoutes: RouteData[] = [
   {
     id: 102,
     author: 'Jonh Doe',
-    authorPfp: '/search-window/checker.png',
+    authorPfp: '/search-window/route-previews/checker.png',
     creationDate: '01 января 1970',
     routeName: 'Парк. Пироги. Пони.',
     routeDescription: 'Идеальный маршрут для неторопливого отдыха в Таганроге. Начните с прогулки по тенистым аллеям парка 300-летия, выпейте ароматный кофе в уютной кофейне на его территории и попробуйте знаменитые осетинские пироги. А кульминацией дня станет конная прогулка по берегу моря — лучший способ ощутить свободу и единение с природой.',
@@ -136,7 +136,7 @@ export const TestRoutes: RouteData[] = [
   {
     id: 103,
     author: 'Jane Doe',
-    authorPfp: '/search-window/checker.png',
+    authorPfp: '/search-window/route-previews/checker.png',
     creationDate: '02 января 1970',
     routeName: 'New Placeholder Route',
     routeDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
