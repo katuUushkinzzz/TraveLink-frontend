@@ -92,7 +92,7 @@ export const TestPoints: PointData[] = [
 
 export const TestRoutes: RouteData[] = [
   {
-    id: 0,
+    id: 100,
     author: 'Jonh Doe',
     authorPfp: '/search-window/checker.png',
     creationDate: '01 января 1970',
@@ -106,7 +106,7 @@ export const TestRoutes: RouteData[] = [
     image: '/search-window/point-previews/alpaca.jpg'
   },
   {
-    id: 1,
+    id: 101,
     author: 'Jane Doe',
     authorPfp: '/search-window/checker.png',
     creationDate: '02 января 1970',
@@ -120,7 +120,7 @@ export const TestRoutes: RouteData[] = [
     image: '/search-window/route-previews/park.jpg'
   },
   {
-    id: 2,
+    id: 102,
     author: 'Jonh Doe',
     authorPfp: '/search-window/checker.png',
     creationDate: '01 января 1970',
@@ -134,7 +134,7 @@ export const TestRoutes: RouteData[] = [
     image: '/search-window/route-previews/horse.png'
   },
   {
-    id: 3,
+    id: 103,
     author: 'Jane Doe',
     authorPfp: '/search-window/checker.png',
     creationDate: '02 января 1970',

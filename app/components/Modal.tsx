@@ -12,7 +12,7 @@ export default function Modal({ stateSwitch, dispatch, action, children }:
     <>
       {stateSwitch && <div className='modalBackground'>
         <div className='modalContainer'>
-          <button onClick={() => dispatch(action)}>
+          <button className='modalClose' onClick={() => dispatch(action)}>
             <Image alt="" src="/search-window/close-button.svg" width={20} height={20} className='img' />
           </button>
           {children}

@@ -1,10 +1,11 @@
-import { State, Action } from "./LocalTypes";
-import { useState } from 'react';
+import { State, Action, RouteData } from "./LocalTypes";
+import { useCallback, useState } from 'react';
 
 export const initialState: State = {
   isPickerVisible: false,
   isABRouteShown: false,
   isCommentVisible: false,
+  isCommentEditorVisible: false,
   isABMultiRouteShown: false,
   isPanelShown: true,
   currentCity: '',
@@ -25,6 +26,8 @@ export function reducer(state: State, action: Action): State {
       return { ...state, isPanelShown: action.payload };
     case 'SET_COMMENT_SHOWN':
       return { ...state, isCommentVisible: action.payload };
+    case 'SET_COMMENT_EDITOR':
+      return { ...state, isCommentEditorVisible: action.payload }
     case 'SET_AB_ROUTE_SHOWN':
       return { ...state, isABRouteShown: action.payload };
     case 'SET_AB_MULTIROUTE_SHOWN':
@@ -60,4 +63,42 @@ export function useLocalStorage(key: string, initialValue: string) {
   };
 
   return [storedValue, setValue];
+}
+
+export function useRoutes(initialValue: RouteData[] = []) {
+  const [routes, setRoutes] = useState<RouteData[]>(initialValue);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetchRoutes = useCallback(async (page: number, token: string) => {
+    const baseUrl = `http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}`;
+    const url = `${baseUrl}/route/cards/${page}`;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const json = await response.json();
+
+      setRoutes((prev) => (page === 1 ? json : [...prev, ...json]));
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Unknown error occurred'));
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  return { routes, setRoutes, isLoading, error, fetchRoutes };
 }

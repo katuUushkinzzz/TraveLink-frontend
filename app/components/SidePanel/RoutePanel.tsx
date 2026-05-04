@@ -38,11 +38,13 @@ function Point({ id, pointContents, dispatch }: { id: number, pointContents: Poi
         О месте:<br />
         {pointContents.pointDescription}
       </div>
-      <div className='routePanelPointDistance txt' hidden={pointContents.nextDistance ? false : true}>
-        <Image src={'/search-window/walking.png'} alt='' width={25} height={25}></Image>
-        <span>{pointContents.nextDistance as number >= 1000 ? pointContents.nextDistance as number / 1000 + ' км' : pointContents.nextDistance + ' м'}</span>
-        <span>~</span>
-        <span>{pointContents.nextTime as number >= 60 ? pointContents.nextTime as number / 60 + ' ч' : pointContents.nextTime + ' мин'}</span>
+      <div className='routePanelPointDistance txt' style={!pointContents.nextDistance ? { border: 'none', height: 0, marginTop: 0 } : {}}>
+        {pointContents.nextDistance && <>
+          <Image src={'/search-window/walking.png'} alt='' width={25} height={25}></Image>
+          <span>{pointContents.nextDistance as number >= 1000 ? pointContents.nextDistance as number / 1000 + ' км' : pointContents.nextDistance + ' м'}</span>
+          <span>~</span>
+          <span>{pointContents.nextTime as number >= 60 ? pointContents.nextTime as number / 60 + ' ч' : pointContents.nextTime + ' мин'}</span>
+        </>}
       </div>
     </div>
   )

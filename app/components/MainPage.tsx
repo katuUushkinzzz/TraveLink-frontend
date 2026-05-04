@@ -7,25 +7,17 @@ import SearchBar from "./SearchBar/SearchBar";
 import SidePanel from "./SidePanel/SidePanel";
 import { RoutePanel } from "./SidePanel/RoutePanel";
 import { TestPoints, TestRoutes } from "./SidePanel/TestContent";
-import { reducer, initialState, useLocalStorage } from "./LocalStore";
-import { PointData, RouteData } from "./LocalTypes";
+import { reducer, initialState, useLocalStorage, useRoutes } from "./LocalStore";
+import { PointData } from "./LocalTypes";
 import { PointPanel } from "./SidePanel/PointPanel";
 import CommentSection from "./CommentSection/CommentSection";
+import CommentEditor from "./CommentSection/CommentEditor";
 
 export default function MainPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [routes, setRoutes] = useState<RouteData[]>(TestRoutes);
+  const { routes, setRoutes, fetchRoutes } = useRoutes(TestRoutes);
   const [points, setPoints] = useState<PointData[]>(TestPoints);
   const [cityName, setCityName] = useLocalStorage('city', 'Москва');
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function getRoutes(page: number, token: string) {
-    return fetch(`http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/route/cards/${page}`, {
-      headers: {
-        "Authorization": 'Bearer ' + token
-      }
-    }).then(r => r.json().then(j => setRoutes(j)))
-  }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function getPoints(page: number, token: string) {
@@ -33,7 +25,9 @@ export default function MainPage() {
       headers: {
         "Authorization": 'Bearer ' + token
       }
-    }).then(r => r.json().then(j => setPoints(j)))
+    })
+      .then(r => { console.log(r); return r.json() })
+      .then(j => setPoints(j))
   }
 
   function toggleLike(id: number) {
@@ -57,9 +51,10 @@ export default function MainPage() {
   };
 
   useEffect(() => {
-    // getRoutes(2, NEXT_PUBLIC_TEST_KEY)
+    fetchRoutes(0, process.env.NEXT_PUBLIC_TEST_KEY as string)
+    // getRoutes(0, process.env.NEXT_PUBLIC_TEST_KEY as string)
     dispatch({ type: 'SET_CITY', payload: cityName })
-  }, [cityName])
+  }, [cityName, fetchRoutes])
 
   return (
     <>
@@ -69,6 +64,7 @@ export default function MainPage() {
       <PointPanel state={state} dispatch={dispatch} />
       <CityPicker state={state} dispatch={dispatch} setCityName={setCityName} />
       <CommentSection state={state} dispatch={dispatch} />
+      <CommentEditor state={state} dispatch={dispatch} />
     </>
   )
 }

@@ -1,15 +1,133 @@
-.cityPickerHeader {
+.commentSectionHeader {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.cityPickerHeaderHeader {
+.commentSectionHeaderHeader {
   display: flex;
 }
 
-.cityPickerHeaderHeader>h1 {
+.commentSectionHeaderHeader>h1 {
   flex: 1;
   font-weight: 400;
   font-size: 35px;
+}
+
+.ratingContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ratingContainer h1 {
+  font-size: 45px;
+  font-weight: 400;
+  margin-right: 5%;
+}
+
+.ratingContainer button {
+  position: absolute;
+  width: 215px;
+  height: 50px;
+  border-radius: 17px;
+  border: 2px solid #53515E;
+  right: 0;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.ratingContainer button:hover {
+  color: white;
+  background-color: #53515E;
+}
+
+.starsContainer span {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.starsRow {
+  display: flex;
+  position: relative;
+  gap: 5px;
+}
+
+.ratingStar {
+  width: '25px';
+  height: '23.75px';
+  mask-image: "url('/search-window/star.svg')";
+  -webkit-mask-image: "url('/search-window/star.svg')";
+  mask-repeat: 'no-repeat';
+  -webkit-mask-repeat: 'no-repeat';
+  mask-size: 'contain';
+  -webkit-mask-size: 'contain';
+  background-color: '#e6e6e6';
+}
+
+.ratingStar>path {
+  fill: none !important;
+}
+
+.commentSectionScroll {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  gap: 20px;
+}
+
+.commentContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.commentProfile {
+  display: flex;
+  gap: 10px;
+}
+
+.commentProfile img {
+  border-radius: 100%;
+}
+
+.commentName {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.commentRank {
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.commentRatingContainer {
+  display: flex;
+  gap: 10px
+}
+
+.commentRatingContainer span {
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.commentPhotos {
+  height: 140px;
+  display: flex;
+  overflow: scroll;
+  gap: 8px;
+}
+
+.commentPhotos a {
+  aspect-ratio: 1;
+}
+
+.commentPhotos img {
+  object-fit: cover;
+  aspect-ratio: 1;
+  border-radius: 17px;
+  border: 2px solid #605F6D66;
 }

@@ -21,7 +21,7 @@
   gap: 15px;
 }
 
-.modalContainer>button {
+.modalClose {
   position: absolute;
   width: 20px;
   height: 48px;

@@ -10,7 +10,7 @@ import React from 'react'
 
 export default function SidePanel({ state, dispatch, routes, points, toggleLike }:
   {
-    state: State, dispatch: ActionDispatch<[action: Action]>, routes: RouteData[], points: PointData[], toggleLike(id: number | undefined): void
+    state: State, dispatch: ActionDispatch<[action: Action]>, routes: RouteData[] | undefined, points: PointData[], toggleLike(id: number | undefined): void
   }) {
   const [currentRecTab, setRecTab] = useState(1);
   const [multiPoints, setMultiPoints] = useState(['', '', '']);
@@ -165,18 +165,18 @@ export default function SidePanel({ state, dispatch, routes, points, toggleLike 
           <h1 className="h1 txt"><button onClick={() => dispatch({ type: 'TOGGLE_PICKER', payload: true })}>{state.currentCity}</button></h1>
           <h3 className="h3 txt">Категории</h3>
           <div className="sidePanelCategories">
-            <CategoryButton categoryId='restaurants' categoryName="Рестораны" image="/search-window/restaurant-cat-icon.png" color="#FE8E43" />
-            <CategoryButton categoryId='architechture' categoryName="Архитектура" image="/search-window/architechture-cat-icon.png" color="#FFE898" />
-            <CategoryButton categoryId='parks' categoryName="Парки" image="/search-window/park-cat-icon.png" color="#85DB85" />
-            <CategoryButton categoryId='medicine' categoryName="Медицина" image="/search-window/medicine-cat-icon.png" color="#FF7070" />
-            <CategoryButton categoryId='groceries' categoryName="Продукты" image="/search-window/groceries-cat-icon.png" color="#FE8E43" />
-            <CategoryButton categoryId='malls' categoryName="Торговые центры" image="/search-window/mall-cat-icon.png" color="#67999C" />
-            <CategoryButton categoryId='rest' categoryName="Отдых" image="/search-window/rest-cat-icon.png" color="#FF7070" />
-            <CategoryButton categoryId='laudries' categoryName="Прачечные" image="/search-window/laudry-cat-icon.png" color="#67999C" />
-            <CategoryButton categoryId='ent' categoryName="Развлечения" image="/search-window/ent-cat-icon.png" color="#CB3466" />
-            <CategoryButton categoryId='cafes' categoryName="Кофейни" image="/search-window/cafe-cat-icon.png" color="#BE8667" />
-            <CategoryButton categoryId='beaches' categoryName="Пляжи" image="/search-window/beach-cat-icon.png" color="#FFE897" />
-            <CategoryButton categoryId='beauty' categoryName="Салоны красоты" image="/search-window/beauty-cat-icon.png" color="#FF7070" />
+            <CategoryButton categoryId='restaurants' categoryName="Рестораны" image="/search-window/category-icons/restaurant-cat-icon.png" color="#FE8E43" />
+            <CategoryButton categoryId='architechture' categoryName="Архитектура" image="/search-window/category-icons/architechture-cat-icon.png" color="#FFE898" />
+            <CategoryButton categoryId='parks' categoryName="Парки" image="/search-window/category-icons/park-cat-icon.png" color="#85DB85" />
+            <CategoryButton categoryId='medicine' categoryName="Медицина" image="/search-window/category-icons/medicine-cat-icon.png" color="#FF7070" />
+            <CategoryButton categoryId='groceries' categoryName="Продукты" image="/search-window/category-icons/groceries-cat-icon.png" color="#FE8E43" />
+            <CategoryButton categoryId='malls' categoryName="Торговые центры" image="/search-window/category-icons/mall-cat-icon.png" color="#67999C" />
+            <CategoryButton categoryId='rest' categoryName="Отдых" image="/search-window/category-icons/rest-cat-icon.png" color="#FF7070" />
+            <CategoryButton categoryId='laudries' categoryName="Отели" image="/search-window/category-icons/hotel-cat-icon.png" color="#67999C" />
+            <CategoryButton categoryId='ent' categoryName="Развлечения" image="/search-window/category-icons/ent-cat-icon.png" color="#CB3466" />
+            <CategoryButton categoryId='cafes' categoryName="Кофейни" image="/search-window/category-icons/cafe-cat-icon.png" color="#BE8667" />
+            <CategoryButton categoryId='beaches' categoryName="Пляжи" image="/search-window/category-icons/beach-cat-icon.png" color="#FFE897" />
+            <CategoryButton categoryId='beauty' categoryName="Салоны красоты" image="/search-window/category-icons/beauty-cat-icon.png" color="#FF7070" />
           </div>
           <h1 className="h1 txt">Рекомендации</h1>
           <div className="recommendsContainer">
@@ -187,7 +187,7 @@ export default function SidePanel({ state, dispatch, routes, points, toggleLike 
               <label htmlFor='recommendsTabPoints' className='txt recommendsTab'>Точки</label>
             </div>
             <div className='recommendsCards' style={{ display: currentRecTab === 1 ? 'flex' : 'none' }}>
-              {routes.map(route => (
+              {routes && routes.map(route => (
                 <RouteCard
                   key={route.id}
                   routeData={route}
