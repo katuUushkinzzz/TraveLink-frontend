@@ -1,9 +1,9 @@
-'use client';
+import MainPage from "./components/MainPage";
 
-import dynamic from 'next/dynamic';
-
-const Map = dynamic(() => import('./components/map'), { ssr: false });
-
-export default function Page() {
-  return <Map />;
+export default function Home() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <MainPage />
+    </div>
+  );
 }
