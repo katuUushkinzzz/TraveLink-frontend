@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
+
 import './login.css';
+import Image from 'next/image';
 
 function AuthModal({ onClose }) {
   const [mode, setMode] = useState('login');
@@ -25,16 +27,18 @@ function AuthModal({ onClose }) {
       <div className="login-modal">
 
         {mode === 'register' && (
-          <img
+          <Image
             src="/arrow-back.svg"
             alt="Назад"
             className="back-arrow"
             onClick={() => setMode('login')}
+            width={20}
+            height={20}
           />
         )}
 
         <button className="login-close" type="button" onClick={onClose}>
-          <img src="/close.svg" alt="закрыть" width={20} height={20} />
+          <Image src="/close.svg" alt="закрыть" width={20} height={20} />
         </button>
 
         <h2 className="login-title">
@@ -61,10 +65,12 @@ function AuthModal({ onClose }) {
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button className="eye-button" type="button" onClick={() => setShowPassword(!showPassword)}>
-                <img
+                <Image
                   src={showPassword ? "/eye-open.svg" : "/eye-closed.svg"}
                   alt="показать пароль"
                   className="eye-icon"
+                  width={24}
+                  height={24}
                 />
               </button>
             </div>
@@ -74,7 +80,7 @@ function AuthModal({ onClose }) {
                 <div className={`custom-checkbox ${remember ? 'checked' : ''}`} onClick={() => setRemember(!remember)}>
                   {remember && (
                     <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
-                      <path d="M1 5L4.5 8.5L11 1" stroke="#53515E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M1 5L4.5 8.5L11 1" stroke="#53515E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   )}
                 </div>
@@ -90,7 +96,7 @@ function AuthModal({ onClose }) {
             <div className="login-or">или</div>
 
             <button className="login-btn-vk" type="button">
-              <img src="/VK.svg" alt="vk" width={28} height={28} />
+              <Image src="/VK.svg" alt="vk" width={28} height={28} />
               Войти с VK ID
             </button>
 
@@ -120,7 +126,7 @@ function AuthModal({ onClose }) {
               onChange={(e) =>
 
 
-setEmail(e.target.value)}
+                setEmail(e.target.value)}
             />
 
             <div className="password-container-reg">
@@ -132,9 +138,12 @@ setEmail(e.target.value)}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button className="eye-button" type="button" onClick={() => setShowPassword(!showPassword)}>
-                <img
+                <Image
                   src={showPassword ? "/eye-open.svg" : "/eye-closed.svg"}
                   className="eye-icon"
+                  alt=''
+                  width={24}
+                  height={24}
                 />
               </button>
             </div>
@@ -148,9 +157,12 @@ setEmail(e.target.value)}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
               <button className="eye-button" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                <img
+                <Image
                   src={showConfirmPassword ? "/eye-open.svg" : "/eye-closed.svg"}
                   className="eye-icon"
+                  alt=''
+                  width={24}
+                  height={24}
                 />
               </button>
             </div>
