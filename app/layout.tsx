@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+import 'leaflet/dist/leaflet.css';
+import './components/map.css';
 
 const montserrat = Montserrat({
   subsets: ["latin", "cyrillic"],

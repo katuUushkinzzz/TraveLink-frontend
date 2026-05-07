@@ -1,0 +1,142 @@
+.routePanelHeader {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  min-height: fit-content;
+  gap: 10px;
+}
+
+.routePanelProfile {
+  max-width: 247px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.routePanelProfile>div {
+  display: flex;
+  flex-direction: column;
+}
+
+.routePanelProfile>div>h2 {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 20px;
+}
+
+.routePanelProfile>div>h3 {
+  font-size: 10px;
+}
+
+.routePanelProfile>img {
+  border-radius: 100%;
+}
+
+.routePanelInfo {
+  flex: 1;
+  align-items: end;
+  text-align: end;
+  gap: 10px;
+  line-height: 1.3;
+}
+
+.routePanelInfo>.interactContainer {
+  margin: 0;
+}
+
+.routePanelInfo>div>span {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.routePanelDescription {
+  gap: 10px;
+}
+
+.routePanelDescription>span {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.routePanelTag {
+  font-size: 16px !important;
+  font-weight: 300 !important;
+}
+
+.routePanelPointHeader {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.routePanelPointHeader>img {
+  object-fit: cover;
+  height: 200px;
+  border-radius: 5px;
+}
+
+.routePanelPointInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px
+}
+
+.routePanelPointInfo>h1 {
+  font-size: 20px;
+}
+
+.routePanelPointInfo>h2 {
+  font-size: 16px;
+}
+
+.routePanelPointInfo>span {
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.routePanelPointInfoContainer {
+  display: flex;
+  flex-direction: column;
+  width: 270px;
+  padding-right: 5px;
+}
+
+.routePanelPointInfoContainer>.interactContainer {
+  margin-top: 7px;
+}
+
+.routePanelPointNumber {
+  color: #393939;
+  background-color: #C9F3FF;
+  font-size: 30px;
+  height: 45px;
+  width: 45px;
+  text-align: center;
+  font-family: 'Molle';
+  border-radius: 100%;
+  align-self: end;
+  margin-bottom: auto;
+}
+
+.routePanelPointDescription {
+  margin-top: 5px;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.routePanelPointDistance {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  border: dashed #53515E;
+  border-width: 2px 0;
+  margin: 20px 0;
+  gap: 5px;
+  font-size: 20px;
+  font-weight: 400;
+}
