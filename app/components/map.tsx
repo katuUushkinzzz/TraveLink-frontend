@@ -90,13 +90,6 @@ function MapMoveHandler({
   return null;
 }
 
-interface DisplayedPoint {
-  id:number,
-  category:string, 
-  lat: number,
-  lng: number
-}
-
 export default function Map() {
   const [activePointId, setActivePointId] = useState<number | null>(null);
 
