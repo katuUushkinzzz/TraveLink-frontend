@@ -97,82 +97,82 @@ export default function Map() {
   const [zoom, setZoom] = useState(12);
 
   const [activeRouteId, setActiveRouteId] = useState<number>(1);
-  
 
-const activeRoute = routes.find((route) => route.id === activeRouteId) ?? routes[0];
 
-const routePointIds = activeRoute.stops.map((stop) => stop.pointId);
+  const activeRoute = routes.find((route) => route.id === activeRouteId) ?? routes[0];
 
-const [routeCoords, setRouteCoords] = useState<[number, number][]>([]);
+  const routePointIds = activeRoute.stops.map((stop) => stop.pointId);
 
-useEffect(() => {
-  const fetchRoute = async () => {
-    if (!activeRoute || activeRoute.stops.length < 2) {
-      setRouteCoords([]);
-      return;
-    }
+  const [routeCoords, setRouteCoords] = useState<[number, number][]>([]);
 
-    const coords = activeRoute.stops
-      .map((stop) => `${stop.lng},${stop.lat}`)
-      .join(';');
-
-    const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`;
-
-    try {
-      setRouteCoords([]);
-
-      const res = await fetch(url);
-
-      if (!res.ok) {
-        console.error('OSRM error:', res.status, res.statusText);
+  useEffect(() => {
+    const fetchRoute = async () => {
+      if (!activeRoute || activeRoute.stops.length < 2) {
+        setRouteCoords([]);
         return;
       }
 
-      const data = await res.json();
+      const coords = activeRoute.stops
+        .map((stop) => `${stop.lng},${stop.lat}`)
+        .join(';');
 
-      if (!data.routes?.[0]?.geometry?.coordinates) {
-        console.error('Маршрут не найден:', data);
-        return;
+      const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`;
+
+      try {
+        setRouteCoords([]);
+
+        const res = await fetch(url);
+
+        if (!res.ok) {
+          console.error('OSRM error:', res.status, res.statusText);
+          return;
+        }
+
+        const data = await res.json();
+
+        if (!data.routes?.[0]?.geometry?.coordinates) {
+          console.error('Маршрут не найден:', data);
+          return;
+        }
+
+        const path: [number, number][] = data.routes[0].geometry.coordinates.map(
+          ([lng, lat]: [number, number]) => [lat, lng]
+        );
+
+        setRouteCoords(path);
+      } catch (err) {
+        console.error('Ошибка загрузки маршрута:', err);
+        setRouteCoords([]);
       }
+    };
 
-      const path: [number, number][] = data.routes[0].geometry.coordinates.map(
-        ([lng, lat]: [number, number]) => [lat, lng]
-      );
-
-      setRouteCoords(path);
-    } catch (err) {
-      console.error('Ошибка загрузки маршрута:', err);
-      setRouteCoords([]);
-    }
-  };
-
-  fetchRoute();
-}, [activeRouteId]);
+    fetchRoute();
+  }, [activeRoute, activeRouteId]);
 
 
   const circleSize =
-  zoom <= 12 ? 3 :
-  zoom <= 13 ? 4 :
-  zoom <= 14 ? 6 :
-  zoom <= 15 ? 10 :
-  zoom <= 16 ? 16 :
-  24;
+    zoom <= 12 ? 3 :
+      zoom <= 13 ? 4 :
+        zoom <= 14 ? 6 :
+          zoom <= 15 ? 10 :
+            zoom <= 16 ? 16 :
+              24;
 
-const pinWidth =
-  zoom <= 12 ? 10 :
-  zoom <= 13 ? 12 :
-  zoom <= 14 ? 16 :
-  zoom <= 15 ? 22 :
-  zoom <= 16 ? 30 :
-  40;
+  const pinWidth =
+    zoom <= 12 ? 10 :
+      zoom <= 13 ? 12 :
+        zoom <= 14 ? 16 :
+          zoom <= 15 ? 22 :
+            zoom <= 16 ? 30 :
+              40;
 
-const pinHeight =
-  zoom <= 12 ? 14 :
-  zoom <= 13 ? 16 :
-  zoom <= 14 ? 22 :
-  zoom <= 15 ? 30 :
-  zoom <= 16 ? 42 :
-  56;
+  const pinHeight =
+    zoom <= 12 ? 14 :
+      zoom <= 13 ? 16 :
+        zoom <= 14 ? 22 :
+          zoom <= 15 ? 30 :
+            zoom <= 16 ? 42 :
+              56;
 
   const icons = useMemo(() => {
     return {
@@ -233,16 +233,12 @@ const pinHeight =
       zoom={12}
       zoomControl={false}
       style={{ height: '100vh', width: '100%' }}
-      
+
     >
       <ZoomHandler onZoomChange={setZoom} />
 
-       <MapMoveHandler
+      <MapMoveHandler
         onMapMoveEnd={(bounds) => {
-          //console.log('Map dragged. New bounds:', bounds);
-
-          console.log(bounds)
-
           fetch("http://217.60.36.77:4000/point/getPolyPoint", {
             method: "post",
             headers: {
@@ -253,7 +249,7 @@ const pinHeight =
             body: JSON.stringify(bounds)
           }).then(r => r.json())
             .then((j) => setDisplayedPoints(
-              j.map((p: any) => {
+              j.map((p: { id: number, category: string, coordinates: { coordinates: number[] } }) => {
                 const localPoint = points.find((point) => point.id === p.id);
 
                 return {
@@ -264,7 +260,7 @@ const pinHeight =
                 };
               })
             )
-          )
+            )
 
           // send your request here
           // fetch(`/api/places?neLat=${bounds.northEast.lat}&neLng=${bounds.northEast.lng}&swLat=${bounds.southWest.lat}&swLng=${bounds.southWest.lng}`)
@@ -272,7 +268,7 @@ const pinHeight =
       />
 
       <TileLayer
-    
+
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="© OpenStreetMap contributors"
       />
@@ -281,37 +277,37 @@ const pinHeight =
       <ZoomControl position="topright" />
 
       <div
-      style={{
-        position: 'absolute',
-        top: 20,
-        left: 20,
-        zIndex: 1000,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 8,
-      }}
-    >
-      {routes.map((route) => (
-        <button
-          key={route.id}
-          type="button"
-          onClick={() => setActiveRouteId(route.id)}
-          style={{
-            border: 'none',
-            borderRadius: 14,
-            padding: '10px 14px',
-            cursor: 'pointer',
-            background: activeRouteId === route.id ? route.color : '#ffffff',
-            color: activeRouteId === route.id ? '#ffffff' : '#333333',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            fontWeight: 700,
-            textAlign: 'left',
-          }}
-        >
-          {route.name}
-        </button>
-      ))}
-    </div>
+        style={{
+          position: 'absolute',
+          top: 20,
+          left: 20,
+          zIndex: 1000,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 8,
+        }}
+      >
+        {routes.map((route) => (
+          <button
+            key={route.id}
+            type="button"
+            onClick={() => setActiveRouteId(route.id)}
+            style={{
+              border: 'none',
+              borderRadius: 14,
+              padding: '10px 14px',
+              cursor: 'pointer',
+              background: activeRouteId === route.id ? route.color : '#ffffff',
+              color: activeRouteId === route.id ? '#ffffff' : '#333333',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              fontWeight: 700,
+              textAlign: 'left',
+            }}
+          >
+            {route.name}
+          </button>
+        ))}
+      </div>
 
       {routeCoords.length > 1 && (
         <Polyline
@@ -327,40 +323,40 @@ const pinHeight =
       )}
 
       {activeRoute.stops.map((stop) => (
-      <Marker
-        key={`route-stop-${activeRoute.id}-${stop.pointId}`}
-        position={[stop.lat, stop.lng]}
-        icon={createNumberedIcon(stop.order, activeRoute.color, 32)}
-        zIndexOffset={3000}
-      />
-    ))}
-
-    {displayedPoints &&
-    displayedPoints.map((point) => {
-      const isActive = activePointId === point.id;
-      const isRoutePoint = routePointIds.includes(point.id);
-
-      const pointIcons = icons[point.category] ?? icons.architecture;
-
-      const pointIcon =
-        isActive || isRoutePoint
-          ? pointIcons.pin
-          : pointIcons.circle;
-
-      return (
         <Marker
-          key={point.id}
-          position={[point.lat, point.lng]}
-          icon={pointIcon}
-          zIndexOffset={isRoutePoint ? 1000 : 0}
-          eventHandlers={{
-            click: () => {
-              setActivePointId(activePointId === point.id ? null : point.id);
-            },
-          }}
+          key={`route-stop-${activeRoute.id}-${stop.pointId}`}
+          position={[stop.lat, stop.lng]}
+          icon={createNumberedIcon(stop.order, activeRoute.color, 32)}
+          zIndexOffset={3000}
         />
-      );
-    })}  
+      ))}
+
+      {displayedPoints &&
+        displayedPoints.map((point) => {
+          const isActive = activePointId === point.id;
+          const isRoutePoint = routePointIds.includes(point.id);
+
+          const pointIcons = icons[point.category] ?? icons.architecture;
+
+          const pointIcon =
+            isActive || isRoutePoint
+              ? pointIcons.pin
+              : pointIcons.circle;
+
+          return (
+            <Marker
+              key={point.id}
+              position={[point.lat, point.lng]}
+              icon={pointIcon}
+              zIndexOffset={isRoutePoint ? 1000 : 0}
+              eventHandlers={{
+                click: () => {
+                  setActivePointId(activePointId === point.id ? null : point.id);
+                },
+              }}
+            />
+          );
+        })}
     </MapContainer>
   );
 }
