@@ -1,0 +1,28 @@
+.pointType {
+  font-size: 16px;
+  font-weight: 400;
+  height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 16px;
+}
+
+.pointLocation {
+  font-size: 14px;
+  font-weight: 400;
+  height: 17px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 17px;
+}
+
+.pointDesc {
+  height: 85px;
+  font-size: 14px;
+}
+
+.commentButton {
+  cursor: pointer;
+}
