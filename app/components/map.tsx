@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
+
 import {
   MapContainer,
   TileLayer,
@@ -9,6 +10,7 @@ import {
   Polyline,
   useMapEvents,
 } from 'react-leaflet';
+
 import L from 'leaflet';
 
 import { points } from '../data/points';

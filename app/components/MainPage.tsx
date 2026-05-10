@@ -12,6 +12,11 @@ import { PointData } from "./LocalTypes";
 import { PointPanel } from "./SidePanel/PointPanel";
 import CommentSection from "./CommentSection/CommentSection";
 import CommentEditor from "./CommentSection/CommentEditor";
+import dynamic from "next/dynamic";
+
+const Map = dynamic(() => import('./map'), {
+  ssr: false // This ensures the component is not SSR'd
+});
 
 export default function MainPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -52,7 +57,6 @@ export default function MainPage() {
 
   useEffect(() => {
     fetchRoutes(0, process.env.NEXT_PUBLIC_TEST_KEY as string)
-    // getRoutes(0, process.env.NEXT_PUBLIC_TEST_KEY as string)
     dispatch({ type: 'SET_CITY', payload: cityName })
   }, [cityName, fetchRoutes])
 
@@ -65,6 +69,7 @@ export default function MainPage() {
       <CityPicker state={state} dispatch={dispatch} setCityName={setCityName} />
       <CommentSection state={state} dispatch={dispatch} />
       <CommentEditor state={state} dispatch={dispatch} />
+      <Map />
     </>
   )
 }
