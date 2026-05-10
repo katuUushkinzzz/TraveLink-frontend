@@ -234,7 +234,7 @@ export default function Map() {
       center={[47.219, 38.925]}
       zoom={12}
       zoomControl={false}
-      style={{ height: '100vh', width: '100%' }}
+      style={{ height: '100vh', width: '100%', zIndex: 0 }}
 
     >
       <ZoomHandler onZoomChange={setZoom} />
@@ -282,7 +282,7 @@ export default function Map() {
         style={{
           position: 'absolute',
           top: 20,
-          left: 20,
+          right: 20,
           zIndex: 1000,
           display: 'flex',
           flexDirection: 'column',

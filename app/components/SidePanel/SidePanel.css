@@ -15,7 +15,8 @@
   padding: 10px 10px 0 0;
   gap: 9px;
   height: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .sidePanelScrollArea>h1>button {

@@ -62,6 +62,7 @@ export default function MainPage() {
 
   return (
     <>
+      <Map />
       <SidePanel state={state} dispatch={dispatch} routes={routes} points={points} toggleLike={toggleLike} />
       <SearchBar state={state} dispatch={dispatch} />
       <RoutePanel state={state} dispatch={dispatch} toggleLike={toggleLike} />
@@ -69,7 +70,6 @@ export default function MainPage() {
       <CityPicker state={state} dispatch={dispatch} setCityName={setCityName} />
       <CommentSection state={state} dispatch={dispatch} />
       <CommentEditor state={state} dispatch={dispatch} />
-      <Map />
     </>
   )
 }
