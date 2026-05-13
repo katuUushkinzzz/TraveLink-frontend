@@ -1,4 +1,19 @@
-import type { Route } from '../types/map';
+export type RouteStop = {
+  order: number;
+  pointId: number;
+  lat: number;
+  lng: number;
+  name: string;
+};
+
+export type Route = {
+  id: number;
+  name: string;
+  description: string;
+  color: string;
+  tags: string[];
+  stops: RouteStop[];
+};
 
 export const routes: Route[] = [
   {

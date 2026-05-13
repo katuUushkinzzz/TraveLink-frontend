@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-import { Action } from './LocalTypes'
+import { Action } from '../types/LocalTypes'
 import './Modal.css'
 import { ReactNode } from 'react'
 

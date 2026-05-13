@@ -4,7 +4,7 @@ import LikeSvg from '@/public/search-window/like.svg'
 import './Card.css'
 import './RouteCard.css'
 import { ActionDispatch, ChangeEventHandler, MouseEventHandler } from 'react'
-import { Action, RouteData } from '../../LocalTypes'
+import { Action, RouteData } from '../../../types/LocalTypes'
 
 export default function RouteCard({ routeData, onLiked, onClick, dispatch }:
   {

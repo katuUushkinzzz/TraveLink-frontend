@@ -1,5 +1,5 @@
 import { ActionDispatch } from 'react'
-import { State, Action } from '../LocalTypes'
+import { State, Action } from '../../types/LocalTypes'
 import Image from 'next/image'
 
 import './CommentSection.css'

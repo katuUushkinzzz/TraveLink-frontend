@@ -2,7 +2,7 @@ import Image from 'next/image'
 import FavSvg from '@/public/search-window/fav.svg'
 import './Card.css'
 import './PointCard.css'
-import { PointData } from '../../LocalTypes'
+import { PointData } from '../../../types/LocalTypes'
 import { MouseEventHandler } from 'react'
 
 export default function PointCard({ pointData, onClick, onComment }: { pointData: PointData, onClick: MouseEventHandler<HTMLDivElement>, onComment: MouseEventHandler<HTMLDivElement> }) {

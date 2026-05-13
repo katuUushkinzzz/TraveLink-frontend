@@ -1,9 +1,9 @@
 import { ActionDispatch, useEffect, useState } from 'react'
 import Image from 'next/image'
 
-import RouteCard from './Cards/RouteCard'
-import PointCard from './Cards/PointCard'
-import { Action, PointData, RouteData, State } from '../LocalTypes'
+import RouteCard from '../Cards/RouteCard'
+import PointCard from '../Cards/PointCard'
+import { Action, PointData, RouteData, State } from '../../types/LocalTypes'
 
 import './SidePanel.css'
 import React from 'react'
@@ -18,12 +18,14 @@ export default function SidePanel({ state, dispatch, routes, points, toggleLike 
 
   function showRoutePanel(contents: RouteData) {
     dispatch({ type: 'SET_ROUTE_DATA', payload: contents })
+    dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: true })
     document.getElementById('pointPanelContainer')?.classList.add('sidePanelHidden')
     document.getElementById('routePanelContainer')?.classList.remove('sidePanelHidden')
   }
 
   function showPointPanel(contents: PointData) {
     dispatch({ type: 'SET_POINT_DATA', payload: contents })
+    dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: true })
     document.getElementById('routePanelContainer')?.classList.add('sidePanelHidden')
     document.getElementById('pointPanelContainer')?.classList.remove('sidePanelHidden')
   }
@@ -191,8 +193,8 @@ export default function SidePanel({ state, dispatch, routes, points, toggleLike 
                 <RouteCard
                   key={route.id}
                   routeData={route}
-                  onLiked={() => toggleLike(route.id)}
                   onClick={() => showRoutePanel(route)}
+                  onLiked={() => toggleLike(route.id)}
                   dispatch={dispatch}
                 />
               ))}

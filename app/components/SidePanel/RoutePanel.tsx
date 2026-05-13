@@ -1,11 +1,11 @@
 import Image from 'next/image'
 
-import { Action, PointData, State } from '../LocalTypes'
+import { Action, PointData, State } from '../../types/LocalTypes'
 import LikeSvg from '@/public/search-window/like.svg'
 
 import './Panel.css'
 import './RoutePanel.css'
-import './Cards/Card.css'
+import '../Cards/Card.css'
 import { ActionDispatch } from 'react'
 
 function Point({ id, pointContents, dispatch }: { id: number, pointContents: PointData, dispatch: ActionDispatch<[action: Action]> }) {
@@ -98,6 +98,7 @@ export function RoutePanel({ state, dispatch, toggleLike }:
       <div className='collapseContainer'>
         <button className='collapseButton' onClick={() => {
           document.getElementById('routePanelContainer')?.classList.add('sidePanelHidden')
+          dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: false })
         }}>
           <Image alt='' src='/search-window/collapse-button.svg' width={25} height={25} />
         </button>

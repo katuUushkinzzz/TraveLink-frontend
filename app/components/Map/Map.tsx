@@ -1,6 +1,4 @@
-'use client';
-
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, ActionDispatch } from 'react';
 
 import {
   MapContainer,
@@ -9,14 +7,12 @@ import {
   Marker,
   Polyline,
   useMapEvents,
+  useMap,
 } from 'react-leaflet';
 
 import L from 'leaflet';
 
-import { points } from '../data/points';
-import { routes } from '../data/routes';
-import type { Category, DisplayedPoint } from '../types/map';
-
+import { Action, Category, PinData, State } from '@/app/types/LocalTypes';
 
 function createIcon(
   iconUrl: string,
@@ -49,14 +45,10 @@ function createNumberedIcon(number: number, color: string, size: number) {
 }
 
 
-function ZoomHandler({
-  onZoomChange,
-}: {
-  onZoomChange: (zoom: number) => void;
-}) {
+function ZoomHandler({ dispatch }: { dispatch: ActionDispatch<[action: Action]> }) {
   const map = useMapEvents({
     zoomend: () => {
-      onZoomChange(map.getZoom());
+      dispatch({ type: 'SET_MAP_SIZE', payload: map.getZoom() })
     },
   });
 
@@ -92,88 +84,100 @@ function MapMoveHandler({
   return null;
 }
 
-export default function Map() {
+function ResetMapCenterHandler({ routePath, panelShown, addPanelShown }:
+  {
+    routePath: [number, number][], panelShown: boolean, addPanelShown: boolean
+  }) {
+  const map = useMap()
+
+  useEffect(() => {
+    if (routePath.length < 1) return
+
+    const bounds = [
+      routePath.reduce((min, curr) => [min[0] <= curr[0] ? min[0] : curr[0], min[1] <= curr[1] ? min[1] : curr[1]]),
+      routePath.reduce((max, curr) => [max[0] >= curr[0] ? max[0] : curr[0], max[1] >= curr[1] ? max[1] : curr[1]])
+    ]
+
+    console.log((panelShown ? 525 : 0) + (addPanelShown ? 525 : 0))
+    map.fitBounds(bounds, {
+      paddingTopLeft: [(panelShown ? 525 : 0) + (addPanelShown ? 525 : 0), 0]
+    })
+  }, [routePath, panelShown, addPanelShown, map])
+
+  return null
+}
+
+export default function Map({ state, dispatch }:
+  {
+    state: State, dispatch: ActionDispatch<[action: Action]>
+  }) {
   const [activePointId, setActivePointId] = useState<number | null>(null);
+  const [displayedPoints, setDisplayedPoints] = useState<PinData[] | null>(null);
 
-  const [displayedPoints, setDisplayedPoints] = useState<DisplayedPoint[] | null>(null);
-  const [zoom, setZoom] = useState(12);
-
-  const [activeRouteId, setActiveRouteId] = useState<number>(1);
-
-
-  const activeRoute = routes.find((route) => route.id === activeRouteId) ?? routes[0];
-
-  const routePointIds = activeRoute.stops.map((stop) => stop.pointId);
-
+  const [routePointIds, setRoutePointIds] = useState<number[]>([]);
   const [routeCoords, setRouteCoords] = useState<[number, number][]>([]);
 
   useEffect(() => {
-    const fetchRoute = async () => {
-      if (!activeRoute || activeRoute.stops.length < 2) {
+    async function fetchPath() {
+      if (!state.routeData || state.routeData?.stops.length < 2) {
         setRouteCoords([]);
         return;
       }
 
-      const coords = activeRoute.stops
+      const coords = state.routeData.stops
         .map((stop) => `${stop.lng},${stop.lat}`)
         .join(';');
 
-      const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`;
+      setRouteCoords([]);
 
-      try {
-        setRouteCoords([]);
+      const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`)
 
-        const res = await fetch(url);
-
-        if (!res.ok) {
-          console.error('OSRM error:', res.status, res.statusText);
-          return;
-        }
-
-        const data = await res.json();
-
-        if (!data.routes?.[0]?.geometry?.coordinates) {
-          console.error('Маршрут не найден:', data);
-          return;
-        }
-
-        const path: [number, number][] = data.routes[0].geometry.coordinates.map(
-          ([lng, lat]: [number, number]) => [lat, lng]
-        );
-
-        setRouteCoords(path);
-      } catch (err) {
-        console.error('Ошибка загрузки маршрута:', err);
-        setRouteCoords([]);
+      if (!res.ok) {
+        console.error('OSRM error:', res.status, res.statusText);
+        return;
       }
+
+      const data = await res.json()
+
+      if (!data.routes?.[0]?.geometry?.coordinates) {
+        console.error('Маршрут не найден:', data);
+        return;
+      }
+
+      const path: [number, number][] = data.routes[0].geometry.coordinates.map(
+        ([lng, lat]: [number, number]) => [lat, lng]
+      );
+
+      setRouteCoords(path);
+      setRoutePointIds(state.routeData.stops.map(s => s.id))
     };
 
-    fetchRoute();
-  }, [activeRoute, activeRouteId]);
+    fetchPath()
+  }, [state.routeData, dispatch]);
 
 
   const circleSize =
-    zoom <= 12 ? 3 :
-      zoom <= 13 ? 4 :
-        zoom <= 14 ? 6 :
-          zoom <= 15 ? 10 :
-            zoom <= 16 ? 16 :
+    state.mapZoom <= 12 ? 3 :
+      state.mapZoom <= 13 ? 4 :
+        state.mapZoom <= 14 ? 6 :
+          state.mapZoom <= 15 ? 10 :
+            state.mapZoom <= 16 ? 16 :
               24;
 
   const pinWidth =
-    zoom <= 12 ? 10 :
-      zoom <= 13 ? 12 :
-        zoom <= 14 ? 16 :
-          zoom <= 15 ? 22 :
-            zoom <= 16 ? 30 :
+    state.mapZoom <= 12 ? 10 :
+      state.mapZoom <= 13 ? 12 :
+        state.mapZoom <= 14 ? 16 :
+          state.mapZoom <= 15 ? 22 :
+            state.mapZoom <= 16 ? 30 :
               40;
 
   const pinHeight =
-    zoom <= 12 ? 14 :
-      zoom <= 13 ? 16 :
-        zoom <= 14 ? 22 :
-          zoom <= 15 ? 30 :
-            zoom <= 16 ? 42 :
+    state.mapZoom <= 12 ? 14 :
+      state.mapZoom <= 13 ? 16 :
+        state.mapZoom <= 14 ? 22 :
+          state.mapZoom <= 15 ? 30 :
+            state.mapZoom <= 16 ? 42 :
               56;
 
   const icons = useMemo(() => {
@@ -226,18 +230,24 @@ export default function Map() {
         circle: createIcon('/map-icons/beauty-circle.svg', [circleSize, circleSize], [circleSize / 2, circleSize / 2]),
         pin: createIcon('/map-icons/beauty-pin.svg', [pinWidth, pinHeight], [pinWidth / 2, pinHeight]),
       },
+      unknown: {
+        circle: createIcon('/search-window/route-previews/checker.png', [circleSize, circleSize], [circleSize / 2, circleSize / 2]),
+        pin: createIcon('/search-window/route-previews/checker.png', [pinWidth, pinHeight], [pinWidth / 2, pinHeight]),
+      }
     };
   }, [circleSize, pinWidth, pinHeight]);
 
   return (
     <MapContainer
-      center={[47.219, 38.925]}
-      zoom={12}
+      center={state.mapCenter}
+      zoom={state.mapZoom}
       zoomControl={false}
       style={{ height: '100vh', width: '100%', zIndex: 0 }}
-
+      attributionControl={false}
     >
-      <ZoomHandler onZoomChange={setZoom} />
+      <ZoomHandler dispatch={dispatch} />
+      <ZoomControl position="topright" />
+      <ResetMapCenterHandler routePath={routeCoords} panelShown={state.isPanelShown} addPanelShown={state.isAddPanelShown} />
 
       <MapMoveHandler
         onMapMoveEnd={(bounds) => {
@@ -249,108 +259,70 @@ export default function Map() {
             },
 
             body: JSON.stringify(bounds)
-          }).then(r => r.json())
-            .then((j) => setDisplayedPoints(
-              j.map((p: { id: number, category: string, coordinates: { coordinates: number[] } }) => {
-                const localPoint = points.find((point) => point.id === p.id);
+          })
+            .then(r => r.json())
+            .then((j) => {
+              setDisplayedPoints(
+                j.map((p: { id: number, category: Category, coordinates: { coordinates: number[] } }) => {
 
-                return {
-                  id: p.id,
-                  category: (p.category ?? localPoint?.category ?? 'architecture') as Category,
-                  lat: p.coordinates.coordinates[1],
-                  lng: p.coordinates.coordinates[0],
-                };
-              })
-            )
-            )
-
-          // send your request here
-          // fetch(`/api/places?neLat=${bounds.northEast.lat}&neLng=${bounds.northEast.lng}&swLat=${bounds.southWest.lat}&swLng=${bounds.southWest.lng}`)
+                  return {
+                    id: p.id - 1,
+                    category: (p.category ?? 'unknown'),
+                    lat: p.coordinates.coordinates[1],
+                    lng: p.coordinates.coordinates[0],
+                  };
+                })
+              )
+            })
         }}
       />
 
       <TileLayer
-
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="© OpenStreetMap contributors"
       />
 
-
-      <ZoomControl position="topright" />
-
-      <div
-        style={{
-          position: 'absolute',
-          top: 20,
-          right: 20,
-          zIndex: 1000,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 8,
+      <Polyline
+        positions={routeCoords}
+        pathOptions={{
+          color: "#922b2b",
+          weight: 5,
+          opacity: 0.85,
+          lineCap: 'round',
+          lineJoin: 'round',
         }}
-      >
-        {routes.map((route) => (
-          <button
-            key={route.id}
-            type="button"
-            onClick={() => setActiveRouteId(route.id)}
-            style={{
-              border: 'none',
-              borderRadius: 14,
-              padding: '10px 14px',
-              cursor: 'pointer',
-              background: activeRouteId === route.id ? route.color : '#ffffff',
-              color: activeRouteId === route.id ? '#ffffff' : '#333333',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-              fontWeight: 700,
-              textAlign: 'left',
-            }}
-          >
-            {route.name}
-          </button>
-        ))}
-      </div>
+      />
 
-      {routeCoords.length > 1 && (
-        <Polyline
-          positions={routeCoords}
-          pathOptions={{
-            color: activeRoute.color,
-            weight: 5,
-            opacity: 0.85,
-            lineCap: 'round',
-            lineJoin: 'round',
-          }}
-        />
-      )}
-
-      {activeRoute.stops.map((stop) => (
+      {state.routeData?.stops.map((stop) => (
         <Marker
-          key={`route-stop-${activeRoute.id}-${stop.pointId}`}
+          key={`route-stop-${state.routeData?.id}-${stop.id}`}
           position={[stop.lat, stop.lng]}
-          icon={createNumberedIcon(stop.order, activeRoute.color, 32)}
+          icon={createNumberedIcon(stop.order, "#922b2b", 32)}
           zIndexOffset={3000}
+          eventHandlers={{
+            click: () => {
+              setActivePointId(activePointId === stop.id ? null : stop.id);
+            },
+          }}
         />
       ))}
 
       {displayedPoints &&
         displayedPoints.map((point) => {
+          if (routePointIds.includes(point.id)) return
+
+          const pointIcons = icons[point.category];
+
           const isActive = activePointId === point.id;
-          const isRoutePoint = routePointIds.includes(point.id);
-
-          const pointIcons = icons[point.category] ?? icons.architecture;
-
-          const pointIcon =
-            isActive || isRoutePoint
-              ? pointIcons.pin
-              : pointIcons.circle;
+          const pointIcon = isActive ? pointIcons.pin : pointIcons.circle;
 
           return (
             <Marker
+              alt={point.id.toString()}
               key={point.id}
               position={[point.lat, point.lng]}
               icon={pointIcon}
-              zIndexOffset={isRoutePoint ? 1000 : 0}
+              zIndexOffset={0}
               eventHandlers={{
                 click: () => {
                   setActivePointId(activePointId === point.id ? null : point.id);

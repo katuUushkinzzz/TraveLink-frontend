@@ -1,4 +1,4 @@
-import { State, Action, RouteData } from "./LocalTypes";
+import { State, Action, RouteData } from "../types/LocalTypes";
 import { useCallback, useState } from 'react';
 
 export const initialState: State = {
@@ -8,10 +8,14 @@ export const initialState: State = {
   isCommentEditorVisible: false,
   isABMultiRouteShown: false,
   isPanelShown: true,
+  isAddPanelShown: false,
+  isAuthModalShown: false,
   currentCity: '',
   searchQuery: '',
   routeData: undefined,
-  pointData: undefined
+  pointData: undefined,
+  mapCenter: [47.219, 38.925],
+  mapZoom: 12
 }
 
 export function reducer(state: State, action: Action): State {
@@ -24,6 +28,8 @@ export function reducer(state: State, action: Action): State {
       return { ...state, searchQuery: action.payload };
     case 'SET_PANEL_SHOWN':
       return { ...state, isPanelShown: action.payload };
+    case 'SET_ADD_PANEL_SHOWN':
+      return { ...state, isAddPanelShown: action.payload };
     case 'SET_COMMENT_SHOWN':
       return { ...state, isCommentVisible: action.payload };
     case 'SET_COMMENT_EDITOR':
@@ -36,6 +42,12 @@ export function reducer(state: State, action: Action): State {
       return { ...state, routeData: action.payload };
     case 'SET_POINT_DATA':
       return { ...state, pointData: action.payload };
+    case 'SET_MAP_CENTER':
+      return { ...state, mapCenter: action.payload };
+    case 'SET_MAP_SIZE':
+      return { ...state, mapZoom: action.payload };
+    case 'SET_AUTH_SHOWN':
+      return { ...state, isAuthModalShown: action.payload };
     default:
       return state;
   }

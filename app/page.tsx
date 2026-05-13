@@ -1,10 +1,14 @@
+import { cookies } from 'next/headers'
+
 import MainPage from "./components/MainPage";
 
-export default function Home() {
+export default async function Home() {
+  const cookieStore = await cookies()
+  const auth = cookieStore.get('auth')?.value || null
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <MainPage />
+      <MainPage authToken={auth} />
     </div>
   );
 }

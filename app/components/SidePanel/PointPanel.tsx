@@ -1,11 +1,11 @@
 import { ActionDispatch, useEffect, useState } from 'react'
 import Image from 'next/image'
 
-import { Action, State } from '../LocalTypes'
+import { Action, State } from '../../types/LocalTypes'
 
 import './Panel.css'
 import './PointPanel.css'
-import './Cards/Card.css'
+import '../Cards/Card.css'
 
 export function PointPanel({ state, dispatch }: { state: State, dispatch: ActionDispatch<[action: Action]> }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -63,6 +63,7 @@ export function PointPanel({ state, dispatch }: { state: State, dispatch: Action
       <div className='collapseContainer'>
         <button className='collapseButton' onClick={() => {
           document.getElementById('pointPanelContainer')?.classList.add('sidePanelHidden')
+          dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: false })
         }}>
           <Image alt='' src='/search-window/collapse-button.svg' width={25} height={25} />
         </button>

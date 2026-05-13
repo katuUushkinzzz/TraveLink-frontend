@@ -1,4 +1,4 @@
-import { PointData, RouteData } from "../LocalTypes";
+import { PointData, RouteData, PinData } from "../types/LocalTypes";
 
 export const TestPoints: PointData[] = [
   {
@@ -102,6 +102,32 @@ export const TestRoutes: RouteData[] = [
     likeCount: 157,
     commentCount: 52,
     points: TestPoints,
+    stops: [
+      {
+        order: 1,
+        id: 188,
+        lat: 47.220882,
+        lng: 38.937658,
+      },
+      {
+        order: 2,
+        id: 185,
+        lat: 47.216553,
+        lng: 38.938986,
+      },
+      {
+        order: 3,
+        id: 96,
+        lat: 47.21264,
+        lng: 38.938132,
+      },
+      {
+        order: 4,
+        id: 102,
+        lat: 47.214336,
+        lng: 38.941752,
+      },
+    ],
     isLiked: false,
     image: '/search-window/point-previews/alpaca.jpg'
   },
@@ -116,6 +142,38 @@ export const TestRoutes: RouteData[] = [
     likeCount: 100,
     commentCount: 31,
     points: TestPoints,
+    stops: [
+      {
+        order: 1,
+        id: 767,
+        lat: 47.22123,
+        lng: 38.85495,
+      },
+      {
+        order: 2,
+        id: 766,
+        lat: 47.22156,
+        lng: 38.856664,
+      },
+      {
+        order: 3,
+        id: 772,
+        lat: 47.227443,
+        lng: 38.863572,
+      },
+      {
+        order: 4,
+        id: 715,
+        lat: 47.227004,
+        lng: 38.835535,
+      },
+      {
+        order: 5,
+        id: 719,
+        lat: 47.228288,
+        lng: 38.843189,
+      },
+    ],
     isLiked: false,
     image: '/search-window/route-previews/park.jpg'
   },
@@ -130,6 +188,68 @@ export const TestRoutes: RouteData[] = [
     likeCount: 50,
     commentCount: 3,
     points: TestPoints,
+    stops: [
+      {
+        order: 1,
+        id: 58,
+        lat: 47.209564,
+        lng: 38.93788,
+      },
+      {
+        order: 2,
+        id: 59,
+        lat: 47.209146,
+        lng: 38.93597,
+      },
+      {
+        order: 3,
+        id: 130,
+        lat: 47.206874,
+        lng: 38.931242,
+      },
+      {
+        order: 4,
+        id: 71,
+        lat: 47.210729,
+        lng: 38.932238,
+      },
+      {
+        order: 5,
+        id: 117,
+        lat: 47.210754,
+        lng: 38.933708,
+      },
+      {
+        order: 6,
+        id: 118,
+        lat: 47.210678,
+        lng: 38.933651,
+      },
+      {
+        order: 7,
+        id: 132,
+        lat: 47.21362,
+        lng: 38.928386,
+      },
+      {
+        order: 8,
+        id: 167,
+        lat: 47.214494,
+        lng: 38.930249,
+      },
+      {
+        order: 9,
+        id: 174,
+        lat: 47.215371,
+        lng: 38.928602,
+      },
+      {
+        order: 10,
+        id: 143,
+        lat: 47.21571,
+        lng: 38.9312,
+      },
+    ],
     isLiked: false,
     image: '/search-window/route-previews/horse.png'
   },
@@ -144,8 +264,59 @@ export const TestRoutes: RouteData[] = [
     likeCount: 228,
     commentCount: 413,
     points: TestPoints,
+    stops: [
+      {
+        order: 1,
+        id: 10,
+        lat: 47.204338,
+        lng: 38.946064,
+      },
+      {
+        order: 2,
+        id: 9,
+        lat: 47.205017,
+        lng: 38.946396,
+      },
+      {
+        order: 3,
+        id: 11,
+        lat: 47.204139,
+        lng: 38.945882,
+      },
+      {
+        order: 4,
+        id: 19,
+        lat: 47.205845,
+        lng: 38.944411,
+      },
+      {
+        order: 5,
+        id: 75,
+        lat: 47.211765,
+        lng: 38.933267,
+      },
+      {
+        order: 6,
+        id: 164,
+        lat: 47.21848,
+        lng: 38.92485,
+      },
+      {
+        order: 7,
+        id: 216,
+        lat: 47.220766,
+        lng: 38.925035,
+      },
+      {
+        order: 8,
+        id: 215,
+        lat: 47.218877,
+        lng: 38.925427,
+      },
+    ],
     isLiked: false,
     image: '/search-window/route-previews/checker.png'
   }
 ]
 
+export const TestPins: PinData[] = []
