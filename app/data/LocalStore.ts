@@ -10,12 +10,11 @@ export const initialState: State = {
   isPanelShown: true,
   isAddPanelShown: false,
   isAuthModalShown: false,
+  isAuthorized: false,
   currentCity: '',
   searchQuery: '',
   routeData: undefined,
   pointData: undefined,
-  mapCenter: [47.219, 38.925],
-  mapZoom: 12
 }
 
 export function reducer(state: State, action: Action): State {
@@ -42,12 +41,10 @@ export function reducer(state: State, action: Action): State {
       return { ...state, routeData: action.payload };
     case 'SET_POINT_DATA':
       return { ...state, pointData: action.payload };
-    case 'SET_MAP_CENTER':
-      return { ...state, mapCenter: action.payload };
-    case 'SET_MAP_SIZE':
-      return { ...state, mapZoom: action.payload };
     case 'SET_AUTH_SHOWN':
       return { ...state, isAuthModalShown: action.payload };
+    case 'SET_AUTHORIZED':
+      return { ...state, isAuthorized: action.payload };
     default:
       return state;
   }

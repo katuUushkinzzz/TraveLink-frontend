@@ -14,6 +14,11 @@ import L from 'leaflet';
 
 import { Action, Category, PinData, State } from '@/app/types/LocalTypes';
 
+interface Bounds {
+  northEast: { lat: number; lng: number };
+  southWest: { lat: number; lng: number };
+}
+
 function createIcon(
   iconUrl: string,
   iconSize: [number, number],
@@ -45,24 +50,15 @@ function createNumberedIcon(number: number, color: string, size: number) {
 }
 
 
-function ZoomHandler({ dispatch }: { dispatch: ActionDispatch<[action: Action]> }) {
+function ZoomHandler({ onZoomend }: { onZoomend: (zoom: number) => void }) {
   const map = useMapEvents({
-    zoomend: () => {
-      dispatch({ type: 'SET_MAP_SIZE', payload: map.getZoom() })
-    },
+    zoomend: () => onZoomend(map.getZoom())
   });
 
   return null;
 }
 
-function MapMoveHandler({
-  onMapMoveEnd,
-}: {
-  onMapMoveEnd: (bounds: {
-    northEast: { lat: number; lng: number };
-    southWest: { lat: number; lng: number };
-  }) => void;
-}) {
+function MapMoveHandler({ onMapMoveEnd }: { onMapMoveEnd: (bounds: Bounds) => void }) {
   useMapEvents({
     dragend: (event) => {
       const map = event.target;
@@ -117,6 +113,34 @@ export default function Map({ state, dispatch }:
   const [routePointIds, setRoutePointIds] = useState<number[]>([]);
   const [routeCoords, setRouteCoords] = useState<[number, number][]>([]);
 
+  const [zoom, setZoom] = useState<number>(12);
+
+  function fetchPins(bounds: Bounds) {
+    fetch("http://217.60.36.77:4000/point/getPolyPoint", {
+      method: "post",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+
+      body: JSON.stringify(bounds)
+    })
+      .then(r => r.json())
+      .then((j) => {
+        setDisplayedPoints(
+          j.map((p: { id: number, category: Category, coordinates: { coordinates: number[] } }) => {
+
+            return {
+              id: p.id - 1,
+              category: (p.category ?? 'unknown'),
+              lat: p.coordinates.coordinates[1],
+              lng: p.coordinates.coordinates[0],
+            };
+          })
+        )
+      })
+  }
+
   useEffect(() => {
     async function fetchPath() {
       if (!state.routeData || state.routeData?.stops.length < 2) {
@@ -157,27 +181,27 @@ export default function Map({ state, dispatch }:
 
 
   const circleSize =
-    state.mapZoom <= 12 ? 3 :
-      state.mapZoom <= 13 ? 4 :
-        state.mapZoom <= 14 ? 6 :
-          state.mapZoom <= 15 ? 10 :
-            state.mapZoom <= 16 ? 16 :
+    zoom <= 12 ? 3 :
+      zoom <= 13 ? 4 :
+        zoom <= 14 ? 6 :
+          zoom <= 15 ? 10 :
+            zoom <= 16 ? 16 :
               24;
 
   const pinWidth =
-    state.mapZoom <= 12 ? 10 :
-      state.mapZoom <= 13 ? 12 :
-        state.mapZoom <= 14 ? 16 :
-          state.mapZoom <= 15 ? 22 :
-            state.mapZoom <= 16 ? 30 :
+    zoom <= 12 ? 10 :
+      zoom <= 13 ? 12 :
+        zoom <= 14 ? 16 :
+          zoom <= 15 ? 22 :
+            zoom <= 16 ? 30 :
               40;
 
   const pinHeight =
-    state.mapZoom <= 12 ? 14 :
-      state.mapZoom <= 13 ? 16 :
-        state.mapZoom <= 14 ? 22 :
-          state.mapZoom <= 15 ? 30 :
-            state.mapZoom <= 16 ? 42 :
+    zoom <= 12 ? 14 :
+      zoom <= 13 ? 16 :
+        zoom <= 14 ? 22 :
+          zoom <= 15 ? 30 :
+            zoom <= 16 ? 42 :
               56;
 
   const icons = useMemo(() => {
@@ -239,42 +263,18 @@ export default function Map({ state, dispatch }:
 
   return (
     <MapContainer
-      center={state.mapCenter}
-      zoom={state.mapZoom}
+      center={[47.219, 38.925]}
+      zoom={zoom}
       zoomControl={false}
       style={{ height: '100vh', width: '100%', zIndex: 0 }}
       attributionControl={false}
     >
-      <ZoomHandler dispatch={dispatch} />
+      <ZoomHandler onZoomend={setZoom} />
       <ZoomControl position="topright" />
       <ResetMapCenterHandler routePath={routeCoords} panelShown={state.isPanelShown} addPanelShown={state.isAddPanelShown} />
 
       <MapMoveHandler
-        onMapMoveEnd={(bounds) => {
-          fetch("http://217.60.36.77:4000/point/getPolyPoint", {
-            method: "post",
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-
-            body: JSON.stringify(bounds)
-          })
-            .then(r => r.json())
-            .then((j) => {
-              setDisplayedPoints(
-                j.map((p: { id: number, category: Category, coordinates: { coordinates: number[] } }) => {
-
-                  return {
-                    id: p.id - 1,
-                    category: (p.category ?? 'unknown'),
-                    lat: p.coordinates.coordinates[1],
-                    lng: p.coordinates.coordinates[0],
-                  };
-                })
-              )
-            })
-        }}
+        onMapMoveEnd={(bounds) => fetchPins(bounds)}
       />
 
       <TileLayer
@@ -293,11 +293,11 @@ export default function Map({ state, dispatch }:
         }}
       />
 
-      {state.routeData?.stops.map((stop) => (
+      {state.routeData?.stops.map((stop, i) => (
         <Marker
           key={`route-stop-${state.routeData?.id}-${stop.id}`}
           position={[stop.lat, stop.lng]}
-          icon={createNumberedIcon(stop.order, "#922b2b", 32)}
+          icon={createNumberedIcon(i + 1, "#922b2b", 32)}
           zIndexOffset={3000}
           eventHandlers={{
             click: () => {

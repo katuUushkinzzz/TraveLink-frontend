@@ -35,7 +35,12 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
             return
           }
 
-          setCookieAction('auth', j.token)
+          if (remember) {
+            setCookieAction('auth', j.token, { httpOnly: true, path: '/', maxAge: 86400 })
+          }
+          else {
+            setCookieAction('auth', j.token, { httpOnly: true, path: '/' })
+          }
           dispatch({ type: 'SET_AUTH_SHOWN', payload: false })
         })
     } else {
@@ -45,15 +50,12 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
 
   return (
     <>
-      <button className="authButton" onClick={() => dispatch({ type: 'SET_AUTH_SHOWN', payload: true })}>
-        <Image src={'/auth-window/person.svg'} width={28} height={34} alt="" />
-      </button>
       {state.isAuthModalShown && <div className="login-overlay">
         <div className="login-modal">
 
           {mode === 'register' && (
             <Image
-              src="/arrow-back.svg"
+              src="/auth-window/arrow-back.svg"
               alt="Назад"
               className="back-arrow"
               onClick={() => setMode('login')}
@@ -63,14 +65,13 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
           )}
 
           <button className="login-close" type="button" onClick={() => dispatch({ type: 'SET_AUTH_SHOWN', payload: false })}>
-            <Image src="/close.svg" alt="закрыть" width={20} height={20} />
+            <Image src="/auth-window/close.svg" alt="закрыть" width={20} height={20} />
           </button>
 
           <h2 className="login-title">
             {mode === 'login' ? 'Вход' : 'Регистрация'}
           </h2>
 
-          {/* ===== LOGIN ===== */}
           {mode === 'login' && (
             <>
               <input
@@ -91,7 +92,7 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
                 />
                 <button className="eye-button" type="button" onClick={() => setShowPassword(!showPassword)}>
                   <Image
-                    src={showPassword ? "/eye-open.svg" : "/eye-closed.svg"}
+                    src={showPassword ? "/auth-window/eye-open.svg" : "/auth-window/eye-closed.svg"}
                     alt="показать пароль"
                     className="eye-icon"
                     width={24}
@@ -121,7 +122,7 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
               <div className="login-or">или</div>
 
               <button className="login-btn-vk" type="button">
-                <Image src="/VK.svg" alt="vk" width={28} height={28} />
+                <Image src="/auth-window/VK.svg" alt="vk" width={28} height={28} />
                 Войти с VK ID
               </button>
 
@@ -132,7 +133,6 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
             </>
           )}
 
-          {/* ===== REGISTER ===== */}
           {mode === 'register' && (
             <>
               <input
@@ -148,10 +148,7 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
                 type="email"
                 placeholder="Почта"
                 value={email}
-                onChange={(e) =>
-
-
-                  setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
 
               <div className="password-container-reg">
@@ -164,7 +161,7 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
                 />
                 <button className="eye-button" type="button" onClick={() => setShowPassword(!showPassword)}>
                   <Image
-                    src={showPassword ? "/eye-open.svg" : "/eye-closed.svg"}
+                    src={showPassword ? "/auth-window/eye-open.svg" : "/auth-window/eye-closed.svg"}
                     className="eye-icon"
                     alt=''
                     width={24}
@@ -183,7 +180,7 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
                 />
                 <button className="eye-button" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                   <Image
-                    src={showConfirmPassword ? "/eye-open.svg" : "/eye-closed.svg"}
+                    src={showConfirmPassword ? "/auth-window/eye-open.svg" : "/auth-window/eye-closed.svg"}
                     className="eye-icon"
                     alt=''
                     width={24}

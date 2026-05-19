@@ -1,4 +1,3 @@
-import { LatLngTuple } from "leaflet";
 import { StaticImport } from "next/dist/shared/lib/get-img-props"
 
 export type Category =
@@ -70,10 +69,9 @@ export interface State {
   isABMultiRouteShown: boolean;
   isAddPanelShown: boolean;
   isAuthModalShown: boolean;
+  isAuthorized: boolean;
   routeData?: RouteData;
   pointData?: PointData;
-  mapCenter: LatLngTuple;
-  mapZoom: number
 }
 
 export type Action =
@@ -88,6 +86,5 @@ export type Action =
   | { type: 'SET_AB_MULTIROUTE_SHOWN'; payload: boolean }
   | { type: 'SET_ROUTE_DATA'; payload: RouteData }
   | { type: 'SET_POINT_DATA'; payload: PointData }
-  | { type: 'SET_MAP_CENTER'; payload: LatLngTuple }
-  | { type: 'SET_MAP_SIZE'; payload: number }
   | { type: 'SET_AUTH_SHOWN'; payload: boolean }
+  | { type: 'SET_AUTHORIZED'; payload: boolean }

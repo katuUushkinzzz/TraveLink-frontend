@@ -1,13 +1,6 @@
-* {
+.login-overlay {
   font-family: 'Montserrat', sans-serif;
   box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
-.login-overlay {
   position: fixed;
   top: 0;
   left: 0;
