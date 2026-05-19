@@ -12,7 +12,8 @@ import {
 
 import L from 'leaflet';
 
-import { Action, Category, PinData, State } from '@/app/types/LocalTypes';
+import { Category, PinData } from '@/app/types/localTypes';
+import { State, Action } from '@/app/utils/reducer';
 
 interface Bounds {
   northEast: { lat: number; lng: number };

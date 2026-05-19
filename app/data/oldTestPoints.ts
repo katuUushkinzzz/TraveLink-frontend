@@ -1,4 +1,4 @@
-import { Category } from "../types/LocalTypes";
+import { Category } from "../types/localTypes";
 
 export type Point = {
   id: number;

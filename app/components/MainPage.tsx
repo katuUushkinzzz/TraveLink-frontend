@@ -7,14 +7,17 @@ import dynamic from "next/dynamic";
 import CityPicker from "./CityPicker/CityPicker";
 import SearchBar from "./SearchBar/SearchBar";
 import SidePanel from "./SidePanel/SidePanel";
-import { RoutePanel } from "./SidePanel/RoutePanel";
-import { TestPoints, TestRoutes } from "../data/TestContent";
-import { reducer, initialState, useLocalStorage, useRoutes } from "../data/LocalStore";
-import { PointData } from "../types/LocalTypes";
-import { PointPanel } from "./SidePanel/PointPanel";
+import RoutePanel from "./SidePanel/RoutePanel";
+import PointPanel from "./SidePanel/PointPanel";
 import CommentSection from "./CommentSection/CommentSection";
 import CommentEditor from "./CommentSection/CommentEditor";
 import AuthModal from "./Login/Login";
+
+import { TestPoints, TestRoutes } from "../data/testContent";
+import { initialState, useLocalStorage } from "../utils/useLocalStore";
+import { PointData } from "../types/localTypes";
+import { reducer } from "../utils/reducer";
+import { useRoutes } from "../utils/useRoutes";
 
 const Map = dynamic(() => import('./Map/Map'), {
   ssr: false

@@ -2,8 +2,8 @@
 import { ActionDispatch, useState } from 'react';
 import Image from 'next/image';
 
-import { Action, State } from '@/app/types/LocalTypes';
-import { setCookieAction } from '@/app/actions'
+import { setCookieAction } from '@/app/utils/actions'
+import { Action, State } from '@/app/utils/reducer';
 
 import './Login.css';
 
@@ -19,7 +19,7 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
 
   const handleSubmit = () => {
     if (mode === 'login') {
-      fetch("http://217.60.36.77:4000/auth/login", {
+      fetch(`http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/auth/login`, {
         method: "post",
         headers: {
           'Accept': 'application/json',

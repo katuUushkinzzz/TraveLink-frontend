@@ -1,12 +1,13 @@
 import Image from 'next/image'
 
-import { Action, PointData, State } from '../../types/LocalTypes'
+import { ActionDispatch } from 'react'
+import { PointData } from '@/app/types/localTypes'
+import { Action, State } from '@/app/utils/reducer'
 import LikeSvg from '@/public/search-window/like.svg'
 
 import './Panel.css'
 import './RoutePanel.css'
 import '../Cards/Card.css'
-import { ActionDispatch } from 'react'
 
 function Point({ id, pointContents, dispatch }: { id: number, pointContents: PointData, dispatch: ActionDispatch<[action: Action]> }) {
   function showCommentSection() {
@@ -50,7 +51,7 @@ function Point({ id, pointContents, dispatch }: { id: number, pointContents: Poi
   )
 }
 
-export function RoutePanel({ state, dispatch, toggleLike }:
+export default function RoutePanel({ state, dispatch, toggleLike }:
   {
     state: State, dispatch: ActionDispatch<[action: Action]>, toggleLike(id: number | undefined): void
   }) {

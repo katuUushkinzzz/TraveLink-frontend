@@ -1,10 +1,11 @@
 import { ActionDispatch } from 'react'
-import { State, Action } from '../../types/LocalTypes'
 import Image from 'next/image'
+import Link from 'next/link'
+
+import { State, Action } from '@/app/utils/reducer'
+import Modal from '../Modal'
 
 import './CommentSection.css'
-import Modal from '../Modal'
-import Link from 'next/link'
 
 interface CommentData {
   rating: number,

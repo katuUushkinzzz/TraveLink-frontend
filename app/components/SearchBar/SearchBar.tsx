@@ -1,23 +1,10 @@
 import { ActionDispatch, useEffect } from 'react';
 import Image from 'next/image';
 
-import './SearchBar.css'
-import { State, Action } from '../../types/LocalTypes';
+import { State, Action } from '@/app/utils/reducer';
 
-/**
- * Search bar element with collapse button
- * @param setPanelShown - `useState` `Dispatch` component for collapsible element
- * @param isPanelShown - `useState` `boolean` component for collapsible element
- *
- * @example
- * ```tsx
- *  // Create stateful value to control collapsible state
- *  const [isPanelShown, setPanelShown] = useState(true);
- *
- *  // Pass it to SearchBar to allow for update with 'collapse' button
- *  <SearchBar setPanelShown={setPanelShown} isPanelShown={isPanelShown}/>
- * ```
- */
+import './SearchBar.css'
+
 export default function SearchBar({ state, dispatch }:
   {
     state: State, dispatch: ActionDispatch<[action: Action]>

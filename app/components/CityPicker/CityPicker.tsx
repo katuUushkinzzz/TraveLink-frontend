@@ -1,9 +1,10 @@
 import { ActionDispatch } from 'react';
 import Image from 'next/image'
 
-import './CityPicker.css'
-import { State, Action } from '../../types/LocalTypes';
+import { State, Action } from '@/app/utils/reducer';
 import Modal from '../Modal';
+
+import './CityPicker.css'
 
 export default function CityPicker({ state, dispatch, setCityName }:
   {

@@ -1,10 +1,13 @@
+import { ActionDispatch, ChangeEventHandler, MouseEventHandler } from 'react'
 import Image from 'next/image'
+
 import FavSvg from '@/public/search-window/fav.svg'
 import LikeSvg from '@/public/search-window/like.svg'
+import { RouteData } from '@/app/types/localTypes'
+import { Action } from '@/app/utils/reducer'
+
 import './Card.css'
 import './RouteCard.css'
-import { ActionDispatch, ChangeEventHandler, MouseEventHandler } from 'react'
-import { Action, RouteData } from '../../../types/LocalTypes'
 
 export default function RouteCard({ routeData, onLiked, onClick, dispatch }:
   {

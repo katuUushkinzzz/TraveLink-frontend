@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 import RouteCard from '../Cards/RouteCard'
 import PointCard from '../Cards/PointCard'
-import { Action, PointData, RouteData, State } from '../../types/LocalTypes'
+import { Action, PointData, RouteData, State } from '../../types/localTypes'
 
 import './SidePanel.css'
 import React from 'react'

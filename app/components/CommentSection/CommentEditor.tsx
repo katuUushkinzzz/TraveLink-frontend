@@ -1,7 +1,7 @@
 import { ActionDispatch, useState } from "react";
 import Image from 'next/image'
 
-import { State, Action } from "../../types/LocalTypes";
+import { State, Action } from "@/app/utils/reducer";
 import Modal from "../Modal";
 
 import './CommentEditor.css'

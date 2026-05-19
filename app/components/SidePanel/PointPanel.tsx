@@ -1,13 +1,13 @@
 import { ActionDispatch, useEffect, useState } from 'react'
 import Image from 'next/image'
 
-import { Action, State } from '../../types/LocalTypes'
+import { State, Action } from '@/app/utils/reducer'
 
 import './Panel.css'
 import './PointPanel.css'
 import '../Cards/Card.css'
 
-export function PointPanel({ state, dispatch }: { state: State, dispatch: ActionDispatch<[action: Action]> }) {
+export default function PointPanel({ state, dispatch }: { state: State, dispatch: ActionDispatch<[action: Action]> }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   function swipeLeft() {

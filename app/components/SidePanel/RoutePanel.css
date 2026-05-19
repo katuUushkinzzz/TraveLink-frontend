@@ -114,11 +114,12 @@
   background-color: #C9F3FF;
   font-size: 30px;
   height: 45px;
-  width: 45px;
+  min-width: 45px;
   text-align: center;
   font-family: 'Molle';
   border-radius: 100%;
   align-self: end;
+  align-content: center;
   margin-bottom: auto;
 }
 

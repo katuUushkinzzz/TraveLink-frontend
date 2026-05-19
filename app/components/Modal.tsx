@@ -1,8 +1,8 @@
 import Image from 'next/image'
 
-import { Action } from '../types/LocalTypes'
 import './Modal.css'
 import { ReactNode } from 'react'
+import { Action } from '../utils/reducer'
 
 export default function Modal({ stateSwitch, dispatch, action, children }:
   {

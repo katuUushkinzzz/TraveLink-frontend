@@ -1,4 +1,4 @@
-import { PointData, RouteData, PinData } from "../types/LocalTypes";
+import { PointData, RouteData, PinData } from "../types/localTypes";
 
 export const TestPoints: PointData[] = [
   {
