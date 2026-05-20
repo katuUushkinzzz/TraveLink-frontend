@@ -9,9 +9,12 @@ import { PointData, RouteData } from '@/types/localTypes'
 import './SidePanel.css'
 import React from 'react'
 
-export default function SidePanel({ state, dispatch, routes, points, toggleLike }:
+export default function SidePanel({ state, dispatch, routes, points, isRoutesLoading, isPointsLodaing, toggleLike }:
   {
-    state: State, dispatch: ActionDispatch<[action: Action]>, routes: RouteData[] | undefined, points: PointData[], toggleLike(id: number | undefined): void
+    state: State, dispatch: ActionDispatch<[action: Action]>,
+    routes: RouteData[] | undefined, points: PointData[],
+    isRoutesLoading: boolean, isPointsLodaing: boolean,
+    toggleLike(id: number | undefined): void
   }) {
   const [currentRecTab, setRecTab] = useState(1);
   const [multiPoints, setMultiPoints] = useState(['', '', '']);
@@ -100,60 +103,56 @@ export default function SidePanel({ state, dispatch, routes, points, toggleLike 
         <div className='sidePanelScrollArea'>
           {state.isABRouteShown && <div className='sidePanelABRouteContainer'>
             <header>
-              {
-                !state.isABMultiRouteShown && <>
-                  <div className='sidePanelABRouteInputs'>
-                    <h2 className='txt'>Откуда</h2>
-                    <input id='fromPoint' type='search' placeholder='Введите адрес' className='txt' value={multiPoints[0]}
-                      onChange={(e) => {
-                        const newPoints = [...multiPoints];
-                        newPoints[0] = e.target.value;
-                        setMultiPoints(newPoints);
-                      }}
-                    />
-                    <h2 className='txt'>Куда</h2>
-                    <input id='toPoint' type='search' placeholder='Введите адрес' className='txt' value={multiPoints[multiPoints.length - 1]}
-                      onChange={(e) => {
-                        const newPoints = [...multiPoints];
-                        newPoints[newPoints.length - 1] = e.target.value;
-                        setMultiPoints(newPoints);
-                      }}
-                    />
-                  </div>
-                  <button onClick={() => swapSearchPoints()}>
-                    <Image alt="" src="/search-window/switch.png" width={30} height={30} className='img' />
-                  </button>
-                </>
-              }
-              {
-                state.isABMultiRouteShown && <div className='sidePanelABRouteInputs'>
+              {!state.isABMultiRouteShown && <>
+                <div className='sidePanelABRouteInputs'>
                   <h2 className='txt'>Откуда</h2>
-                  {multiPoints.map((point, index) => {
-                    return (
-                      <React.Fragment key={index}>
-                        {index === multiPoints.length - 1 && <h2 className='txt'>Куда</h2>}
-                        <div className='sidePanelABRouteInput'>
-                          <input id='fromPoint' type='search' placeholder='Введите адрес' className='txt'
-                            value={point}
-                            onChange={(e) => {
-                              const newPoints = [...multiPoints];
-                              newPoints[index] = e.target.value;
-                              setMultiPoints(newPoints);
-                            }}
-                          />
-                          <div draggable
-                            onDragStart={(e) => onDragStart(e, index)}
-                            onDragOver={(e) => onDragOver(e, index)}
-                            onDragEnd={onDragEnd}
-                          >
-                            <Image src='/search-window/handle.png' alt='' width={30} height={30} draggable={false} />
-                          </div>
-                        </div>
-                      </React.Fragment>
-                    )
-                  })}
+                  <input id='fromPoint' type='search' placeholder='Введите адрес' className='txt' value={multiPoints[0]}
+                    onChange={(e) => {
+                      const newPoints = [...multiPoints];
+                      newPoints[0] = e.target.value;
+                      setMultiPoints(newPoints);
+                    }}
+                  />
+                  <h2 className='txt'>Куда</h2>
+                  <input id='toPoint' type='search' placeholder='Введите адрес' className='txt' value={multiPoints[multiPoints.length - 1]}
+                    onChange={(e) => {
+                      const newPoints = [...multiPoints];
+                      newPoints[newPoints.length - 1] = e.target.value;
+                      setMultiPoints(newPoints);
+                    }}
+                  />
                 </div>
-              }
+                <button onClick={() => swapSearchPoints()}>
+                  <Image alt="" src="/search-window/switch.png" width={30} height={30} className='img' />
+                </button>
+              </>}
+              {state.isABMultiRouteShown && <div className='sidePanelABRouteInputs'>
+                <h2 className='txt'>Откуда</h2>
+                {multiPoints.map((point, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      {index === multiPoints.length - 1 && <h2 className='txt'>Куда</h2>}
+                      <div className='sidePanelABRouteInput'>
+                        <input id='fromPoint' type='search' placeholder='Введите адрес' className='txt'
+                          value={point}
+                          onChange={(e) => {
+                            const newPoints = [...multiPoints];
+                            newPoints[index] = e.target.value;
+                            setMultiPoints(newPoints);
+                          }}
+                        />
+                        <div draggable
+                          onDragStart={(e) => onDragStart(e, index)}
+                          onDragOver={(e) => onDragOver(e, index)}
+                          onDragEnd={onDragEnd}
+                        >
+                          <Image src='/search-window/handle.png' alt='' width={30} height={30} draggable={false} />
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  )
+                })}
+              </div>}
             </header>
             <footer>
               <button className='txt' onClick={() => addSearchPoint()}>
@@ -199,6 +198,9 @@ export default function SidePanel({ state, dispatch, routes, points, toggleLike 
                   dispatch={dispatch}
                 />
               ))}
+              {isRoutesLoading && <div>
+                loading...
+              </div>}
             </div>
             <div className='recommendsCards' style={{ display: currentRecTab === 2 ? 'flex' : 'none' }}>
               {points.map(point => (
@@ -209,6 +211,9 @@ export default function SidePanel({ state, dispatch, routes, points, toggleLike 
                   onComment={() => showCommentSection(point)}
                 />
               ))}
+              {isPointsLodaing && <div>
+                loading...
+              </div>}
             </div>
           </div>
         </div>

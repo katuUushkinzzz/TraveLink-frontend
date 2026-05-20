@@ -2,7 +2,7 @@ import { PointData, RouteData, PinData } from "../types/localTypes";
 
 export const TestPoints: PointData[] = [
   {
-    id: 0,
+    id: 100,
     pointName: 'Парк Альпак Пача Мама',
     pointType: 'Парк',
     pointLocation: 'пр-кт Сельмаш, 1А Парк культуры и отдыха им. Николая Островского, Ростов-на-Дону',
@@ -15,7 +15,7 @@ export const TestPoints: PointData[] = [
     image: '/search-window/point-previews/alpaca.jpg'
   },
   {
-    id: 1,
+    id: 101,
     pointName: 'Сицилия',
     pointType: 'Ресторан',
     pointLocation: 'просп. Шолохова, 31А, Ростов-на-Дону',
@@ -28,7 +28,7 @@ export const TestPoints: PointData[] = [
     image: '/search-window/point-previews/sicily.jpg'
   },
   {
-    id: 2,
+    id: 102,
     pointName: 'Дом Нино',
     pointType: 'Ресторан',
     pointLocation: 'Московское ш., 254, Самара, Самарская обл., 443125',
@@ -41,7 +41,7 @@ export const TestPoints: PointData[] = [
     image: '/search-window/point-previews/ninho.png'
   },
   {
-    id: 3,
+    id: 103,
     pointName: 'Утесов',
     pointType: 'Ресторан',
     pointLocation: 'ул. Лесная, 23, Самара, Самарская обл., 443110',
@@ -54,7 +54,7 @@ export const TestPoints: PointData[] = [
     image: '/search-window/point-previews/restaurant.jpg'
   },
   {
-    id: 4,
+    id: 104,
     pointName: 'Sapore Italiano',
     pointType: 'Ресторан',
     pointLocation: 'пр-т Михаила Нагибина, 32/2, Ростов-на-Дону, Ростовская обл., 344068',
@@ -67,7 +67,7 @@ export const TestPoints: PointData[] = [
     image: '/search-window/point-previews/sapore.jpg'
   },
   {
-    id: 5,
+    id: 105,
     pointName: 'Филармония Самары',
     pointType: 'Культура',
     pointLocation: 'ул. Фрунзе, 141, Самара, Самарская обл., 443010',
@@ -78,7 +78,7 @@ export const TestPoints: PointData[] = [
     image: '/search-window/point-previews/filarmony.png'
   },
   {
-    id: 6,
+    id: 106,
     pointName: 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.',
     pointType: 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.',
     pointLocation: 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.',

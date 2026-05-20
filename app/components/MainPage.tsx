@@ -1,6 +1,6 @@
 'use client'
 
-import { useReducer, useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
@@ -26,9 +26,8 @@ const Map = dynamic(() => import('./Map/Map'), {
 
 export default function MainPage({ authToken }: { authToken: string | null }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { routes, setRoutes, fetchRoutes } = useRoutes();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [points, setPoints] = useState<PointData[]>(TestPoints);
+  const { routes, setRoutes, fetchRoutes, isLoading: isRoutesLoading } = useRoutes();
+  const { points, setPoints, fetchPoints, isLoading: isPointsLoading } = usePoints();
   const [cityName, setCityName] = useLocalStorage('city', 'Москва');
 
   function toggleLike(id: number) {
@@ -53,8 +52,13 @@ export default function MainPage({ authToken }: { authToken: string | null }) {
 
   useEffect(() => {
     if (authToken) {
-      setRoutes(TestRoutes)
+      // TODO: Remove this in prod
+      //setRoutes(TestRoutes)
+      //setPoints(TestPoints)
+
       fetchRoutes(0, authToken)
+      //fetchPoints(0, authToken)
+
       dispatch({ type: 'SET_AUTHORIZED', payload: true })
     }
     else {
@@ -62,7 +66,7 @@ export default function MainPage({ authToken }: { authToken: string | null }) {
     }
 
     dispatch({ type: 'SET_CITY', payload: cityName })
-  }, [authToken, cityName, fetchRoutes, setRoutes])
+  }, [authToken, cityName, fetchRoutes, setRoutes, fetchPoints, setPoints])
 
   return (
     <>
@@ -72,7 +76,10 @@ export default function MainPage({ authToken }: { authToken: string | null }) {
         <Image src={'/auth-window/person.svg'} width={28} height={34} alt="" />
       </button>
 
-      <SidePanel state={state} dispatch={dispatch} routes={routes} points={points} toggleLike={toggleLike} />
+      <SidePanel state={state} dispatch={dispatch}
+        routes={routes} points={points}
+        isRoutesLoading={isRoutesLoading} isPointsLodaing={isPointsLoading}
+        toggleLike={toggleLike} />
       <SearchBar state={state} dispatch={dispatch} />
       <RoutePanel state={state} dispatch={dispatch} toggleLike={toggleLike} />
       <PointPanel state={state} dispatch={dispatch} />

@@ -1,15 +1,15 @@
 import { useState, useCallback } from "react";
 
-import { RouteData } from "../types/localTypes";
+import { PointData } from "../types/localTypes";
 
-export default function useRoutes(initialValue: RouteData[] = []) {
-  const [routes, setRoutes] = useState<RouteData[]>(initialValue);
+export default function usePoints(initialValue: PointData[] = []) {
+  const [points, setPoints] = useState<PointData[]>(initialValue);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchRoutes = useCallback(async (page: number, token: string) => {
+  const fetchPoints = useCallback(async (page: number, token: string) => {
     const baseUrl = `http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}`;
-    const url = `${baseUrl}/route/cards/${page}`;
+    const url = `${baseUrl}/point/cards/${page}`;
 
     setIsLoading(true);
     setError(null);
@@ -29,7 +29,8 @@ export default function useRoutes(initialValue: RouteData[] = []) {
 
       const json = await response.json();
 
-      setRoutes((prev) => (page === 1 ? json : [...prev, ...json]));
+      setPoints(prev => [...prev, ...json]);
+      console.log(json)
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error occurred'));
     } finally {
@@ -37,5 +38,5 @@ export default function useRoutes(initialValue: RouteData[] = []) {
     }
   }, []);
 
-  return { routes, setRoutes, isLoading, error, fetchRoutes };
+  return { points, setPoints, isLoading, error, fetchPoints };
 }
