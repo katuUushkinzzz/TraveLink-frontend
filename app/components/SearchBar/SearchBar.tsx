@@ -1,7 +1,7 @@
 import { ActionDispatch, useEffect } from 'react';
 import Image from 'next/image';
 
-import { State, Action } from '@/app/utils/reducer';
+import { State, Action } from '@/utils/reducer';
 
 import './SearchBar.css'
 

@@ -1,8 +1,8 @@
 import Image from 'next/image'
 
 import { ActionDispatch } from 'react'
-import { PointData } from '@/app/types/localTypes'
-import { Action, State } from '@/app/utils/reducer'
+import { PointData } from '@/types/localTypes'
+import { Action, State } from '@/utils/reducer'
 import LikeSvg from '@/public/search-window/like.svg'
 
 import './Panel.css'

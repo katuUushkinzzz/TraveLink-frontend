@@ -2,8 +2,8 @@
 import { ActionDispatch, useState } from 'react';
 import Image from 'next/image';
 
-import { setCookieAction } from '@/app/utils/actions'
-import { Action, State } from '@/app/utils/reducer';
+import { setCookieAction } from '@/utils/actions'
+import { Action, State } from '@/utils/reducer';
 
 import './Login.css';
 

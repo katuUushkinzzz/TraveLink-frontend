@@ -3,8 +3,8 @@ import Image from 'next/image'
 
 import FavSvg from '@/public/search-window/fav.svg'
 import LikeSvg from '@/public/search-window/like.svg'
-import { RouteData } from '@/app/types/localTypes'
-import { Action } from '@/app/utils/reducer'
+import { RouteData } from '@/types/localTypes'
+import { Action } from '@/utils/reducer'
 
 import './Card.css'
 import './RouteCard.css'

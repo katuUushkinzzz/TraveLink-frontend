@@ -1,7 +1,7 @@
 import { ActionDispatch } from 'react';
 import Image from 'next/image'
 
-import { State, Action } from '@/app/utils/reducer';
+import { State, Action } from '@/utils/reducer';
 import Modal from '../Modal';
 
 import './CityPicker.css'

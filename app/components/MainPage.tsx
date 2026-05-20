@@ -13,11 +13,12 @@ import CommentSection from "./CommentSection/CommentSection";
 import CommentEditor from "./CommentSection/CommentEditor";
 import AuthModal from "./Login/Login";
 
-import { TestPoints, TestRoutes } from "../data/testContent";
-import { initialState, useLocalStorage } from "../utils/useLocalStore";
-import { PointData } from "../types/localTypes";
-import { reducer } from "../utils/reducer";
-import { useRoutes } from "../utils/useRoutes";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { TestPoints, TestRoutes } from "@/data/testContent";
+import { initialState, useLocalStorage } from "@/utils/useLocalStore";
+import { reducer } from "@/utils/reducer";
+import useRoutes from "@/utils/useRoutes";
+import usePoints from "@/utils/usePoints";
 
 const Map = dynamic(() => import('./Map/Map'), {
   ssr: false

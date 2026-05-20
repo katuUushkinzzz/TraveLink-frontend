@@ -2,7 +2,7 @@ import { MouseEventHandler } from 'react'
 import Image from 'next/image'
 
 import FavSvg from '@/public/search-window/fav.svg'
-import { PointData } from '@/app/types/localTypes'
+import { PointData } from '@/types/localTypes'
 
 import './Card.css'
 import './PointCard.css'

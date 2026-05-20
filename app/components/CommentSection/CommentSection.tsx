@@ -2,7 +2,7 @@ import { ActionDispatch } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { State, Action } from '@/app/utils/reducer'
+import { State, Action } from '@/utils/reducer'
 import Modal from '../Modal'
 
 import './CommentSection.css'

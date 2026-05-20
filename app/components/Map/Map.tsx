@@ -12,8 +12,8 @@ import {
 
 import L from 'leaflet';
 
-import { Category, PinData } from '@/app/types/localTypes';
-import { State, Action } from '@/app/utils/reducer';
+import { Category, PinData } from '@/types/localTypes';
+import { State, Action } from '@/utils/reducer';
 
 interface Bounds {
   northEast: { lat: number; lng: number };
@@ -91,11 +91,15 @@ function ResetMapCenterHandler({ routePath, panelShown, addPanelShown }:
     if (routePath.length < 1) return
 
     const bounds = [
-      routePath.reduce((min, curr) => [min[0] <= curr[0] ? min[0] : curr[0], min[1] <= curr[1] ? min[1] : curr[1]]),
-      routePath.reduce((max, curr) => [max[0] >= curr[0] ? max[0] : curr[0], max[1] >= curr[1] ? max[1] : curr[1]])
+      routePath.reduce((min, curr) => {
+        return [min[0] <= curr[0] ? min[0] : curr[0], min[1] <= curr[1] ? min[1] : curr[1]]
+      }, [Number.MAX_VALUE, Number.MAX_VALUE]),
+
+      routePath.reduce((max, curr) => {
+        return [max[0] >= curr[0] ? max[0] : curr[0], max[1] >= curr[1] ? max[1] : curr[1]]
+      }, [Number.MIN_VALUE, Number.MIN_VALUE])
     ]
 
-    console.log((panelShown ? 525 : 0) + (addPanelShown ? 525 : 0))
     map.fitBounds(bounds, {
       paddingTopLeft: [(panelShown ? 525 : 0) + (addPanelShown ? 525 : 0), 0]
     })
@@ -144,16 +148,15 @@ export default function Map({ state, dispatch }:
 
   useEffect(() => {
     async function fetchPath() {
+      setRouteCoords([])
+
       if (!state.routeData || state.routeData?.stops.length < 2) {
-        setRouteCoords([]);
         return;
       }
 
       const coords = state.routeData.stops
         .map((stop) => `${stop.lng},${stop.lat}`)
         .join(';');
-
-      setRouteCoords([]);
 
       const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`)
 

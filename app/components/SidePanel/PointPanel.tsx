@@ -1,7 +1,7 @@
 import { ActionDispatch, useEffect, useState } from 'react'
 import Image from 'next/image'
 
-import { State, Action } from '@/app/utils/reducer'
+import { State, Action } from '@/utils/reducer'
 
 import './Panel.css'
 import './PointPanel.css'
