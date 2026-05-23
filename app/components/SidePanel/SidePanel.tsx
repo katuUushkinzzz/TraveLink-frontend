@@ -1,19 +1,22 @@
 import { ActionDispatch, useEffect, useState } from 'react'
 import Image from 'next/image'
+import React from 'react'
 
 import RouteCard from '../Cards/RouteCard'
 import PointCard from '../Cards/PointCard'
+import Loader from '../Loading/Loading'
+
 import { State, Action } from '@/utils/reducer'
+import { PointUtils } from '@/utils/usePoints'
 import { PointData, RouteData } from '@/types/localTypes'
 
 import './SidePanel.css'
-import React from 'react'
 
-export default function SidePanel({ state, dispatch, routes, points, isRoutesLoading, isPointsLodaing, toggleLike }:
+export default function SidePanel({ state, dispatch, routes, isRoutesLoading, pointUtils, toggleLike }:
   {
     state: State, dispatch: ActionDispatch<[action: Action]>,
-    routes: RouteData[] | undefined, points: PointData[],
-    isRoutesLoading: boolean, isPointsLodaing: boolean,
+    routes: RouteData[] | undefined, isRoutesLoading: boolean,
+    pointUtils: PointUtils
     toggleLike(id: number | undefined): void
   }) {
   const [currentRecTab, setRecTab] = useState(1);
@@ -22,16 +25,12 @@ export default function SidePanel({ state, dispatch, routes, points, isRoutesLoa
 
   function showRoutePanel(contents: RouteData) {
     dispatch({ type: 'SET_ROUTE_DATA', payload: contents })
-    dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: true })
-    document.getElementById('pointPanelContainer')?.classList.add('sidePanelHidden')
-    document.getElementById('routePanelContainer')?.classList.remove('sidePanelHidden')
+    dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 1 })
   }
 
   function showPointPanel(contents: PointData) {
     dispatch({ type: 'SET_POINT_DATA', payload: contents })
-    dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: true })
-    document.getElementById('routePanelContainer')?.classList.add('sidePanelHidden')
-    document.getElementById('pointPanelContainer')?.classList.remove('sidePanelHidden')
+    dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 2 })
   }
 
   function showCommentSection(contents: PointData) {
@@ -68,11 +67,11 @@ export default function SidePanel({ state, dispatch, routes, points, isRoutesLoa
     setMultiPoints(newPoints);
   }
 
-  function onDragStart(e: React.DragEvent<HTMLDivElement>, index: number) {
+  function onDragStart(index: number) {
     setDraggedItemIndex(index);
   };
 
-  const onDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+  function onDragOver(e: React.DragEvent<HTMLDivElement>, index: number) {
     e.preventDefault();
     if (draggedItemIndex === index || draggedItemIndex === null) return;
 
@@ -86,7 +85,7 @@ export default function SidePanel({ state, dispatch, routes, points, isRoutesLoa
     setMultiPoints(newPoints);
   };
 
-  const onDragEnd = () => {
+  function onDragEnd() {
     setDraggedItemIndex(null);
   };
 
@@ -95,12 +94,25 @@ export default function SidePanel({ state, dispatch, routes, points, isRoutesLoa
       document.getElementById('sidePanelContainer')?.classList.remove('sidePanelHidden')
     else
       document.getElementById('sidePanelContainer')?.classList.add('sidePanelHidden')
+
+    if (state.isAddPanelShown === 1) {
+      document.getElementById('pointPanelContainer')?.classList.add('sidePanelHidden')
+      document.getElementById('routePanelContainer')?.classList.remove('sidePanelHidden')
+    }
+    else if (state.isAddPanelShown === 2) {
+      document.getElementById('routePanelContainer')?.classList.add('sidePanelHidden')
+      document.getElementById('pointPanelContainer')?.classList.remove('sidePanelHidden')
+    }
+    else {
+      document.getElementById('routePanelContainer')?.classList.add('sidePanelHidden')
+      document.getElementById('pointPanelContainer')?.classList.add('sidePanelHidden')
+    }
   });
 
   return (
-    <>
-      <div id="sidePanelContainer" className="sidePanelContainer">
-        <div className='sidePanelScrollArea'>
+    <div id="sidePanelContainer" className="sidePanelContainer">
+      <div className='sidePanelScrollArea'>
+        {!state.isSearching && <>
           {state.isABRouteShown && <div className='sidePanelABRouteContainer'>
             <header>
               {!state.isABMultiRouteShown && <>
@@ -142,7 +154,7 @@ export default function SidePanel({ state, dispatch, routes, points, isRoutesLoa
                           }}
                         />
                         <div draggable
-                          onDragStart={(e) => onDragStart(e, index)}
+                          onDragStart={() => onDragStart(index)}
                           onDragOver={(e) => onDragOver(e, index)}
                           onDragEnd={onDragEnd}
                         >
@@ -183,12 +195,12 @@ export default function SidePanel({ state, dispatch, routes, points, isRoutesLoa
           <h1 className="h1 txt">Рекомендации</h1>
           <div className="recommendsContainer">
             <div className='recommendsTabs'>
-              <input onChange={() => setRecTab(1)} id='recommendsTabRoutes' type='radio' name='tabs' defaultChecked={true}></input>
+              <input onChange={() => setRecTab(1)} id='recommendsTabRoutes' type='radio' name='tabs' defaultChecked={currentRecTab === 1}></input>
               <label htmlFor='recommendsTabRoutes' className='txt recommendsTab'>Маршруты</label>
-              <input onChange={() => setRecTab(2)} id='recommendsTabPoints' type='radio' name='tabs'></input>
-              <label htmlFor='recommendsTabPoints' className='txt recommendsTab'>Точки</label>
+              <input onChange={() => setRecTab(2)} id='recommendsTabPoints' type='radio' name='tabs' defaultChecked={currentRecTab === 2}></input>
+              <label htmlFor='recommendsTabPoints' className='txt recommendsTab'>Места</label>
             </div>
-            <div className='recommendsCards' style={{ display: currentRecTab === 1 ? 'flex' : 'none' }}>
+            {currentRecTab === 1 && <div className='recommendsCards'>
               {routes && routes.map(route => (
                 <RouteCard
                   key={route.id}
@@ -198,12 +210,10 @@ export default function SidePanel({ state, dispatch, routes, points, isRoutesLoa
                   dispatch={dispatch}
                 />
               ))}
-              {isRoutesLoading && <div>
-                loading...
-              </div>}
-            </div>
-            <div className='recommendsCards' style={{ display: currentRecTab === 2 ? 'flex' : 'none' }}>
-              {points.map(point => (
+              {isRoutesLoading && <Loader />}
+            </div>}
+            {currentRecTab === 2 && <div className='recommendsCards'>
+              {pointUtils.points.map(point => (
                 <PointCard
                   key={point.id}
                   pointData={point}
@@ -211,14 +221,25 @@ export default function SidePanel({ state, dispatch, routes, points, isRoutesLoa
                   onComment={() => showCommentSection(point)}
                 />
               ))}
-              {isPointsLodaing && <div>
-                loading...
-              </div>}
-            </div>
+              {pointUtils.isLoading && <Loader />}
+            </div>}
           </div>
-        </div>
-      </div >
-    </>
+        </>}
+        {state.isSearching && <>
+          {currentRecTab === 2 && <>
+            {pointUtils.points.map(point => (
+              <PointCard
+                key={point.id}
+                pointData={point}
+                onClick={() => showPointPanel(point)}
+                onComment={() => showCommentSection(point)}
+              />
+            ))}
+            {pointUtils.isLoading && <Loader />}
+          </>}
+        </>}
+      </div>
+    </div>
   )
 }
 

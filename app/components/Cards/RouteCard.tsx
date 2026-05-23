@@ -18,7 +18,7 @@ export default function RouteCard({ routeData, onLiked, onClick, dispatch }:
   }) {
   return (
     <div className='txt card'>
-      <Image className='cardThumbnail' alt="" src={routeData.image} width={200} height={200} onClick={onClick} />
+      <Image className='cardThumbnail' alt="" src={routeData.image !== "" ? routeData.image : "/checker.png"} width={200} height={200} onClick={onClick} />
       <div className='cardContent'>
         <h1 className='cardName h1'>{routeData.routeName}</h1>
         <span className='cardDesc'>{routeData.routeDescription}</span>

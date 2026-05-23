@@ -13,12 +13,10 @@ import CommentSection from "./CommentSection/CommentSection";
 import CommentEditor from "./CommentSection/CommentEditor";
 import AuthModal from "./Login/Login";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { TestPoints, TestRoutes } from "@/data/testContent";
-import { initialState, useLocalStorage } from "@/utils/useLocalStore";
-import { reducer } from "@/utils/reducer";
-import useRoutes from "@/utils/useRoutes";
+import { useLocalStorage } from "@/utils/useLocalStore";
+import { initialState, reducer } from "@/utils/reducer";
 import usePoints from "@/utils/usePoints";
+import useRoutes from "@/utils/useRoutes";
 
 const Map = dynamic(() => import('./Map/Map'), {
   ssr: false
@@ -27,7 +25,7 @@ const Map = dynamic(() => import('./Map/Map'), {
 export default function MainPage({ authToken }: { authToken: string | null }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { routes, setRoutes, fetchRoutes, isLoading: isRoutesLoading } = useRoutes();
-  const { points, setPoints, fetchPoints, isLoading: isPointsLoading } = usePoints();
+  const pointUtils = usePoints([], state, dispatch);
   const [cityName, setCityName] = useLocalStorage('city', 'Москва');
 
   function toggleLike(id: number) {
@@ -50,23 +48,23 @@ export default function MainPage({ authToken }: { authToken: string | null }) {
     }));
   };
 
+  const { fetchPoints } = pointUtils;
+
   useEffect(() => {
     if (authToken) {
-      // TODO: Remove this in prod
-      //setRoutes(TestRoutes)
-      //setPoints(TestPoints)
-
       fetchRoutes(0, authToken)
-      //fetchPoints(0, authToken)
+      fetchPoints(0)
 
       dispatch({ type: 'SET_AUTHORIZED', payload: true })
     }
     else {
       dispatch({ type: 'SET_AUTH_SHOWN', payload: true })
     }
+  }, [authToken, fetchPoints, fetchRoutes])
 
+  useEffect(() => {
     dispatch({ type: 'SET_CITY', payload: cityName })
-  }, [authToken, cityName, fetchRoutes, setRoutes, fetchPoints, setPoints])
+  }, [cityName])
 
   return (
     <>
@@ -77,10 +75,10 @@ export default function MainPage({ authToken }: { authToken: string | null }) {
       </button>
 
       <SidePanel state={state} dispatch={dispatch}
-        routes={routes} points={points}
-        isRoutesLoading={isRoutesLoading} isPointsLodaing={isPointsLoading}
+        routes={routes} isRoutesLoading={isRoutesLoading}
+        pointUtils={pointUtils}
         toggleLike={toggleLike} />
-      <SearchBar state={state} dispatch={dispatch} />
+      <SearchBar state={state} dispatch={dispatch} pointUtils={pointUtils} />
       <RoutePanel state={state} dispatch={dispatch} toggleLike={toggleLike} />
       <PointPanel state={state} dispatch={dispatch} />
       <CityPicker state={state} dispatch={dispatch} setCityName={setCityName} />

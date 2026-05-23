@@ -63,7 +63,7 @@ export default function PointPanel({ state, dispatch }: { state: State, dispatch
       <div className='collapseContainer'>
         <button className='collapseButton' onClick={() => {
           document.getElementById('pointPanelContainer')?.classList.add('sidePanelHidden')
-          dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: false })
+          dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 0 })
         }}>
           <Image alt='' src='/search-window/collapse-button.svg' width={25} height={25} />
         </button>

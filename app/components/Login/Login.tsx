@@ -16,8 +16,19 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
   const [remember, setRemember] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [incorrect, setIncorrect] = useState(true);
 
-  const handleSubmit = () => {
+  async function handleSubmit() {
+    if (email === '') {
+      alert('Ошибка: Необходино указать адрес email')
+      return
+    }
+
+    if (password === '') {
+      alert('Ошибка: Необходино ввести пароль')
+      return
+    }
+
     if (mode === 'login') {
       fetch(`http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/auth/login`, {
         method: "post",
@@ -43,10 +54,44 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
           }
           dispatch({ type: 'SET_AUTH_SHOWN', payload: false })
         })
+
     } else {
-      alert(`Регистрация: ${name}, ${email}`);
+      if (incorrect) {
+        alert(`Ошибка: Пароли не совподают`)
+        return
+      }
+
+      if (name === '') {
+        alert('Ошибка: Необходино указать имя пользователя')
+        return
+      }
+
+      fetch(`http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/auth/registration`, {
+        method: "post",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+
+        body: `{"email":"${email}","password":"${password}","username":"${name}"}`
+      })
+        .then(r => r.json())
+        .then(j => {
+          if (j.statusCode === 401) {
+            alert(`Ошибка: ${j.message}`)
+            return
+          }
+
+          if (remember) {
+            setCookieAction('auth', j.token, { httpOnly: true, path: '/', maxAge: 86400 })
+          }
+          else {
+            setCookieAction('auth', j.token, { httpOnly: true, path: '/' })
+          }
+          dispatch({ type: 'SET_AUTH_SHOWN', payload: false })
+        })
     }
-  };
+  }
 
   return (
     <>
@@ -157,7 +202,10 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Пароль"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value)
+                    setIncorrect(e.target.value !== confirmPassword)
+                  }}
                 />
                 <button className="eye-button" type="button" onClick={() => setShowPassword(!showPassword)}>
                   <Image
@@ -176,7 +224,13 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Подтвердите пароль"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  style={{
+                    borderColor: incorrect ? '#e10000d1' : ''
+                  }}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value)
+                    setIncorrect(password !== e.target.value)
+                  }}
                 />
                 <button className="eye-button" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                   <Image

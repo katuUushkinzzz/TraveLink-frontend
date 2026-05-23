@@ -1,4 +1,4 @@
-import { RouteData, PointData } from "../types/localTypes";
+import { RouteData, PointData } from "@/types/localTypes";
 
 export interface State {
   currentCity: string;
@@ -9,18 +9,36 @@ export interface State {
   isCommentVisible: boolean;
   isCommentEditorVisible: boolean;
   isABMultiRouteShown: boolean;
-  isAddPanelShown: boolean;
+  isAddPanelShown: number;
   isAuthModalShown: boolean;
   isAuthorized: boolean;
+  isSearching: boolean;
   routeData?: RouteData;
   pointData?: PointData;
+}
+
+export const initialState: State = {
+  isPickerVisible: false,
+  isABRouteShown: false,
+  isCommentVisible: false,
+  isCommentEditorVisible: false,
+  isABMultiRouteShown: false,
+  isPanelShown: true,
+  isAddPanelShown: 0,
+  isAuthModalShown: false,
+  isAuthorized: false,
+  isSearching: false,
+  currentCity: '',
+  searchQuery: '',
+  routeData: undefined,
+  pointData: undefined,
 }
 
 export type Action =
   | { type: 'SET_CITY'; payload: string }
   | { type: 'SET_QUERY'; payload: string }
   | { type: 'SET_PANEL_SHOWN'; payload: boolean }
-  | { type: 'SET_ADD_PANEL_SHOWN'; payload: boolean }
+  | { type: 'SET_ADD_PANEL_SHOWN'; payload: 0 | 1 | 2 }
   | { type: 'SET_COMMENT_SHOWN'; payload: boolean }
   | { type: 'SET_COMMENT_EDITOR'; payload: boolean }
   | { type: 'SET_AB_ROUTE_SHOWN'; payload: boolean }
@@ -30,6 +48,7 @@ export type Action =
   | { type: 'SET_POINT_DATA'; payload: PointData }
   | { type: 'SET_AUTH_SHOWN'; payload: boolean }
   | { type: 'SET_AUTHORIZED'; payload: boolean }
+  | { type: 'SET_SEARCHING'; payload: boolean }
 
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -59,6 +78,8 @@ export function reducer(state: State, action: Action): State {
       return { ...state, isAuthModalShown: action.payload };
     case 'SET_AUTHORIZED':
       return { ...state, isAuthorized: action.payload };
+    case 'SET_SEARCHING':
+      return { ...state, isSearching: action.payload };
     default:
       return state;
   }

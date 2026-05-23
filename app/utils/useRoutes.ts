@@ -29,7 +29,7 @@ export default function useRoutes(initialValue: RouteData[] = []) {
 
       const json = await response.json();
 
-      setRoutes((prev) => (page === 1 ? json : [...prev, ...json]));
+      setRoutes((prev) => [...prev, ...json]);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error occurred'));
     } finally {

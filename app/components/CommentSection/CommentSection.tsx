@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { State, Action } from '@/utils/reducer'
-import Modal from '../Modal'
+import Modal from '../Modal/Modal'
 
 import './CommentSection.css'
 
@@ -80,7 +80,7 @@ export default function CommentSection({ state, dispatch }: { state: State, disp
       </div>
       <div className='commentSectionScroll'>
         {[1, 2, 3, 4, 5].map(i => <Comment key={i} data={{
-          authorPfp: '/search-window/route-previews/checker.png',
+          authorPfp: '/checker.png',
           authorName: 'Jane Doe',
           authorRank: 'Профи',
           rating: 5 / i,

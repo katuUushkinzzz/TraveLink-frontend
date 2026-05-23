@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, ActionDispatch } from 'react';
+import { useMemo, useState, useEffect, ActionDispatch, useRef, useCallback } from 'react';
 
 import {
   MapContainer,
@@ -50,7 +50,6 @@ function createNumberedIcon(number: number, color: string, size: number) {
   });
 }
 
-
 function ZoomHandler({ onZoomend }: { onZoomend: (zoom: number) => void }) {
   const map = useMapEvents({
     zoomend: () => onZoomend(map.getZoom())
@@ -59,31 +58,35 @@ function ZoomHandler({ onZoomend }: { onZoomend: (zoom: number) => void }) {
   return null;
 }
 
-function MapMoveHandler({ onMapMoveEnd }: { onMapMoveEnd: (bounds: Bounds) => void }) {
-  useMapEvents({
-    dragend: (event) => {
-      const map = event.target;
-      const bounds = map.getBounds();
+function MapMoveHandler({ onMapMoveEnd }: { onMapMoveEnd: (bounds: Bounds, mapZoom: number) => void }) {
+  function evenHandler(event: L.DragEndEvent | L.LeafletEvent) {
+    const map = event.target
+    const bounds = map.getBounds();
+    const zoom = map.getZoom();
 
-      onMapMoveEnd({
-        northEast: {
-          lat: bounds.getNorthEast().lat,
-          lng: bounds.getNorthEast().lng,
-        },
-        southWest: {
-          lat: bounds.getSouthWest().lat,
-          lng: bounds.getSouthWest().lng,
-        },
-      });
-    },
+    onMapMoveEnd({
+      northEast: {
+        lat: bounds.getNorthEast().lat,
+        lng: bounds.getNorthEast().lng,
+      },
+      southWest: {
+        lat: bounds.getSouthWest().lat,
+        lng: bounds.getSouthWest().lng,
+      },
+    }, zoom);
+  }
+
+  useMapEvents({
+    dragend: (event) => evenHandler(event),
+    zoomend: (event) => evenHandler(event)
   });
 
   return null;
 }
 
-function ResetMapCenterHandler({ routePath, panelShown, addPanelShown }:
+function MapCenterHandler({ routePath, panelShown, addPanelShown, activePointCoords }:
   {
-    routePath: [number, number][], panelShown: boolean, addPanelShown: boolean
+    routePath: [number, number][], panelShown: boolean, addPanelShown: number, activePointCoords: [number, number] | null
   }) {
   const map = useMap()
 
@@ -105,7 +108,44 @@ function ResetMapCenterHandler({ routePath, panelShown, addPanelShown }:
     })
   }, [routePath, panelShown, addPanelShown, map])
 
+  useEffect(() => {
+    if (activePointCoords) {
+      map.fitBounds([activePointCoords, activePointCoords], {
+        paddingTopLeft: [(panelShown ? 525 : 0) + (addPanelShown ? 525 : 0), 0]
+      })
+    }
+  }, [panelShown, addPanelShown, activePointCoords, map])
+
   return null
+}
+
+function MapLoadHandler({ onMapLoad, fetchCity }:
+  {
+    onMapLoad: (bounds: Bounds, mapZoom: number) => void, fetchCity: () => Promise<L.LatLng>
+  }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map) return
+
+    fetchCity().then(c => map.setView(c, 12))
+
+    const bounds = map.getBounds();
+    const zoom = map.getZoom();
+
+    onMapLoad({
+      northEast: {
+        lat: bounds.getNorthEast().lat,
+        lng: bounds.getNorthEast().lng,
+      },
+      southWest: {
+        lat: bounds.getSouthWest().lat,
+        lng: bounds.getSouthWest().lng,
+      },
+    }, zoom);
+  }, [fetchCity, map, onMapLoad]);
+
+  return null;
 }
 
 export default function Map({ state, dispatch }:
@@ -113,15 +153,23 @@ export default function Map({ state, dispatch }:
     state: State, dispatch: ActionDispatch<[action: Action]>
   }) {
   const [activePointId, setActivePointId] = useState<number | null>(null);
+  const [activePointCoords, setActivePointCoords] = useState<[number, number] | null>(null);
   const [displayedPoints, setDisplayedPoints] = useState<PinData[] | null>(null);
 
   const [routePointIds, setRoutePointIds] = useState<number[]>([]);
   const [routeCoords, setRouteCoords] = useState<[number, number][]>([]);
 
-  const [zoom, setZoom] = useState<number>(12);
+  const [zoom, setZoom] = useState<number>(3);
 
-  function fetchPins(bounds: Bounds) {
-    fetch("http://217.60.36.77:4000/point/getPolyPoint", {
+  const mapRef = useRef<L.Map>(null)
+
+  const fetchPins = useCallback((bounds: Bounds, mapZoom: number) => {
+    if (mapZoom < 12) {
+      setDisplayedPoints([])
+      return null
+    }
+
+    fetch(`${process.env.NEXT_PUBLIC_PROTO}://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/point/getPolyPoint`, {
       method: "post",
       headers: {
         'Accept': 'application/json',
@@ -133,18 +181,44 @@ export default function Map({ state, dispatch }:
       .then(r => r.json())
       .then((j) => {
         setDisplayedPoints(
-          j.map((p: { id: number, category: Category, coordinates: { coordinates: number[] } }) => {
+          j.map((p: { id: number, category: Category, lat: number, lng: number }) => {
 
             return {
               id: p.id - 1,
               category: (p.category ?? 'unknown'),
-              lat: p.coordinates.coordinates[1],
-              lng: p.coordinates.coordinates[0],
+              lat: p.lat,
+              lng: p.lng,
             };
           })
         )
       })
-  }
+  }, [])
+
+  function fetchPoint(id: number) {
+    fetch(`${process.env.NEXT_PUBLIC_PROTO}://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/point/${id}`, {
+      method: "get",
+    })
+      .then(r => r.json())
+      .then((j) => {
+        dispatch({ type: 'SET_POINT_DATA', payload: j })
+      })
+  };
+
+  const fetchCity = useCallback(() => {
+    return fetch(`https://nominatim.openstreetmap.org/search?city=${state.currentCity}&format=jsonv2`, {
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_3_0) Gecko/20130401 Firefox/71.3"
+      }
+    })
+      .then(r => r.json())
+      .then(j => {
+        const city = j[0]
+
+        return L.latLng(city.lat, city.lon)
+      })
+  }, [state.currentCity])
 
   useEffect(() => {
     async function fetchPath() {
@@ -177,12 +251,11 @@ export default function Map({ state, dispatch }:
       );
 
       setRouteCoords(path);
-      setRoutePointIds(state.routeData.stops.map(s => s.id))
+      setRoutePointIds(state.routeData.stops.map(s => s.id - 1))
     };
 
     fetchPath()
-  }, [state.routeData, dispatch]);
-
+  }, [state.routeData]);
 
   const circleSize =
     zoom <= 12 ? 3 :
@@ -259,14 +332,15 @@ export default function Map({ state, dispatch }:
         pin: createIcon('/map-icons/beauty-pin.svg', [pinWidth, pinHeight], [pinWidth / 2, pinHeight]),
       },
       unknown: {
-        circle: createIcon('/search-window/route-previews/checker.png', [circleSize, circleSize], [circleSize / 2, circleSize / 2]),
-        pin: createIcon('/search-window/route-previews/checker.png', [pinWidth, pinHeight], [pinWidth / 2, pinHeight]),
+        circle: createIcon('/checker.png', [circleSize, circleSize], [circleSize / 2, circleSize / 2]),
+        pin: createIcon('/checker.png', [pinWidth, pinHeight], [pinWidth / 2, pinHeight]),
       }
     };
   }, [circleSize, pinWidth, pinHeight]);
 
   return (
     <MapContainer
+      ref={mapRef}
       center={[47.219, 38.925]}
       zoom={zoom}
       zoomControl={false}
@@ -275,10 +349,16 @@ export default function Map({ state, dispatch }:
     >
       <ZoomHandler onZoomend={setZoom} />
       <ZoomControl position="topright" />
-      <ResetMapCenterHandler routePath={routeCoords} panelShown={state.isPanelShown} addPanelShown={state.isAddPanelShown} />
-
+      <MapCenterHandler
+        routePath={routeCoords} panelShown={state.isPanelShown}
+        addPanelShown={state.isAddPanelShown} activePointCoords={activePointCoords}
+      />
       <MapMoveHandler
-        onMapMoveEnd={(bounds) => fetchPins(bounds)}
+        onMapMoveEnd={fetchPins}
+      />
+      <MapLoadHandler
+        onMapLoad={fetchPins}
+        fetchCity={fetchCity}
       />
 
       <TileLayer
@@ -306,6 +386,15 @@ export default function Map({ state, dispatch }:
           eventHandlers={{
             click: () => {
               setActivePointId(activePointId === stop.id ? null : stop.id);
+              setActivePointCoords(activePointId === stop.id ? null : [stop.lat, stop.lng])
+
+              if (activePointId !== stop.id) {
+                fetchPoint(stop.id)
+                dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 2 })
+              }
+              else {
+                dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 0 })
+              }
             },
           }}
         />
@@ -330,6 +419,15 @@ export default function Map({ state, dispatch }:
               eventHandlers={{
                 click: () => {
                   setActivePointId(activePointId === point.id ? null : point.id);
+                  setActivePointCoords(activePointId === point.id ? null : [point.lat, point.lng])
+
+                  if (activePointId !== point.id) {
+                    fetchPoint(point.id + 1)
+                    dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 2 })
+                  }
+                  else {
+                    dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 0 })
+                  }
                 },
               }}
             />

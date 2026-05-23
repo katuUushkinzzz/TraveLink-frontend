@@ -61,7 +61,7 @@ export default function RoutePanel({ state, dispatch, toggleLike }:
       <div className='panelScrollArea'>
         <div className='routePanelHeader'>
           <div className='routePanelProfile'>
-            <Image src={state.routeData?.authorPfp ?? '/search-window/route-previews/checker.png'} alt='' width={50} height={50} />
+            <Image src={state.routeData?.authorPfp ?? '/checker.png'} alt='' width={50} height={50} />
             <div>
               <h2 className='txt'>{state.routeData?.author}</h2>
               <h3 className='txt'>{state.routeData?.creationDate}</h3>
@@ -99,7 +99,7 @@ export default function RoutePanel({ state, dispatch, toggleLike }:
       <div className='collapseContainer'>
         <button className='collapseButton' onClick={() => {
           document.getElementById('routePanelContainer')?.classList.add('sidePanelHidden')
-          dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: false })
+          dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 0 })
         }}>
           <Image alt='' src='/search-window/collapse-button.svg' width={25} height={25} />
         </button>

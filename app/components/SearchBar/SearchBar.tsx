@@ -1,14 +1,17 @@
-import { ActionDispatch, useEffect } from 'react';
+import { ActionDispatch, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 import { State, Action } from '@/utils/reducer';
+import { PointUtils } from '@/utils/usePoints';
 
 import './SearchBar.css'
 
-export default function SearchBar({ state, dispatch }:
+export default function SearchBar({ state, dispatch, pointUtils }:
   {
-    state: State, dispatch: ActionDispatch<[action: Action]>
+    state: State, dispatch: ActionDispatch<[action: Action]>, pointUtils: PointUtils
   }) {
+
+  const searchField = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (state.isPanelShown)
@@ -21,13 +24,19 @@ export default function SearchBar({ state, dispatch }:
     <div className='searchContainer'>
       <div className='searchBar'>
         <Image alt="" src="/search-window/search-route.png" width={30} height={30} />
-        <input type='search' className='searchField' placeholder='Поиск' value={state.searchQuery}
-          onChange={e => dispatch({ type: 'SET_QUERY', payload: e.target.value })}
+        <input ref={searchField} type='search' className='searchField' placeholder='Поиск' value={state.searchQuery}
+          onChange={e => {
+            dispatch({ type: 'SET_QUERY', payload: e.target.value })
+            if (e.target.value === "" && state.isSearching) {
+              dispatch({ type: 'SET_SEARCHING', payload: false })
+              pointUtils.setPoints([])
+              pointUtils.fetchPoints(0)
+            }
+          }}
+          onKeyDown={e => { if (e.code === "Enter") pointUtils.searchPoints() }}
         />
         <div className='searchButton'>
-          <button className='barButton' onClick={() => {
-            // TODO: Make search implementation
-          }}>
+          <button className='barButton' onClick={() => pointUtils.searchPoints()}>
             <Image alt="" src="/search-window/search.png" width={30} height={30} />
           </button>
           <div className='separator' />

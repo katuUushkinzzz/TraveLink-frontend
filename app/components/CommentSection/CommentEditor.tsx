@@ -2,7 +2,7 @@ import { ActionDispatch, useState } from "react";
 import Image from 'next/image'
 
 import { State, Action } from "@/utils/reducer";
-import Modal from "../Modal";
+import Modal from "../Modal/Modal";
 
 import './CommentEditor.css'
 
@@ -15,7 +15,7 @@ export default function CommentEditor({ state, dispatch }: { state: State, dispa
       <div className="editorContainer">
         <h1 className="txt editorTitle">Как вам это место?</h1>
         <div className="editorHeader">
-          <Image src={state.pointData?.image ?? '/search-window/route-previews/checker.png'} alt='' width={270} height={152} />
+          <Image src={state.pointData?.image ?? '/checker.png'} alt='' width={270} height={152} />
           <div className="editorInfo" >
             <h1 className="txt">{state.pointData?.pointName}</h1>
             <div className='starsRow'>

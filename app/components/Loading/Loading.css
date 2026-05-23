@@ -1,0 +1,28 @@
+.loader {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #8c8c8c;
+  box-shadow: 16px 0 #8c8c8c, -16px 0 #8c8c8c;
+  position: relative;
+  animation: flash 0.5s ease-out infinite alternate;
+  align-self: center;
+  margin-bottom: 15px;
+}
+
+@keyframes flash {
+  0% {
+    background-color: #8c8c8c22;
+    box-shadow: 16px 0 #8c8c8c22, -16px 0 #8c8c8c;
+  }
+
+  50% {
+    background-color: #8c8c8c;
+    box-shadow: 16px 0 #8c8c8c22, -16px 0 #8c8c8c22;
+  }
+
+  100% {
+    background-color: #8c8c8c22;
+    box-shadow: 16px 0 #8c8c8c, -16px 0 #8c8c8c22;
+  }
+}

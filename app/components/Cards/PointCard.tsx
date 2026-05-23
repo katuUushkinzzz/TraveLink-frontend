@@ -10,7 +10,7 @@ import './PointCard.css'
 export default function PointCard({ pointData, onClick, onComment }: { pointData: PointData, onClick: MouseEventHandler<HTMLDivElement>, onComment: MouseEventHandler<HTMLDivElement> }) {
   return (
     <div className='txt card'>
-      <Image className='cardThumbnail' alt="" src={pointData.image} width={200} height={200} onClick={onClick} />
+      <Image className='cardThumbnail' alt="" src={pointData.image !== "" ? pointData.image : "/checker.png"} width={200} height={200} onClick={onClick} />
       <div className='cardContent'>
         <h1 className='cardName'>{pointData.pointName}</h1>
         <h2 className='pointType'>{pointData.pointType}</h2>
