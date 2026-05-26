@@ -15,6 +15,7 @@ export interface State {
   isSearching: boolean;
   routeData?: RouteData;
   pointData?: PointData;
+  activePointId: number | undefined;
 }
 
 export const initialState: State = {
@@ -32,6 +33,7 @@ export const initialState: State = {
   searchQuery: '',
   routeData: undefined,
   pointData: undefined,
+  activePointId: undefined,
 }
 
 export type Action =
@@ -44,11 +46,12 @@ export type Action =
   | { type: 'SET_AB_ROUTE_SHOWN'; payload: boolean }
   | { type: 'TOGGLE_PICKER'; payload: boolean }
   | { type: 'SET_AB_MULTIROUTE_SHOWN'; payload: boolean }
-  | { type: 'SET_ROUTE_DATA'; payload: RouteData }
+  | { type: 'SET_ROUTE_DATA'; payload: RouteData | undefined }
   | { type: 'SET_POINT_DATA'; payload: PointData }
   | { type: 'SET_AUTH_SHOWN'; payload: boolean }
   | { type: 'SET_AUTHORIZED'; payload: boolean }
   | { type: 'SET_SEARCHING'; payload: boolean }
+  | { type: 'SET_ACTIVE_POINT'; payload: number | undefined }
 
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -80,6 +83,8 @@ export function reducer(state: State, action: Action): State {
       return { ...state, isAuthorized: action.payload };
     case 'SET_SEARCHING':
       return { ...state, isSearching: action.payload };
+    case 'SET_ACTIVE_POINT':
+      return { ...state, activePointId: action.payload };
     default:
       return state;
   }

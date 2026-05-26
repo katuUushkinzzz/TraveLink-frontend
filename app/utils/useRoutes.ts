@@ -1,13 +1,22 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, Dispatch, SetStateAction } from "react";
 
 import { RouteData } from "../types/localTypes";
 
-export default function useRoutes(initialValue: RouteData[] = []) {
+export interface RouteUtils {
+  routes: RouteData[];
+  setRoutes: Dispatch<SetStateAction<RouteData[]>>;
+  isLoading: boolean;
+  error: Error | null;
+  fetchRoutes: (page: number) => Promise<void>;
+}
+
+export default function useRoutes(initialValue: RouteData[] = [], authToken: string | null) {
   const [routes, setRoutes] = useState<RouteData[]>(initialValue);
+  const [token, setToken] = useState<string>(authToken ?? '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchRoutes = useCallback(async (page: number, token: string) => {
+  const fetchRoutes = useCallback(async (page: number) => {
     const baseUrl = `http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}`;
     const url = `${baseUrl}/route/cards/${page}`;
 
@@ -35,7 +44,7 @@ export default function useRoutes(initialValue: RouteData[] = []) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [token]);
 
-  return { routes, setRoutes, isLoading, error, fetchRoutes };
+  return { routes, setRoutes, isLoading, error, fetchRoutes, setToken };
 }

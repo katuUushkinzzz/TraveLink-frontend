@@ -194,17 +194,14 @@ export default function Map({ state, dispatch }:
       })
   }, [])
 
-  function fetchPoint(id: number) {
-    fetch(`${process.env.NEXT_PUBLIC_PROTO}://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/point/${id}`, {
+  async function fetchPoint(id: number) {
+    return fetch(`${process.env.NEXT_PUBLIC_PROTO}://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/point/${id}`, {
       method: "get",
     })
       .then(r => r.json())
-      .then((j) => {
-        dispatch({ type: 'SET_POINT_DATA', payload: j })
-      })
   };
 
-  const fetchCity = useCallback(() => {
+  const fetchCity = useCallback(async () => {
     return fetch(`https://nominatim.openstreetmap.org/search?city=${state.currentCity}&format=jsonv2`, {
       headers: {
         "Accept": "application/json",
@@ -256,6 +253,12 @@ export default function Map({ state, dispatch }:
 
     fetchPath()
   }, [state.routeData]);
+
+  useEffect(() => {
+    if (state.activePointId) {
+      console.log(state.activePointId)
+    }
+  }, [state.activePointId])
 
   const circleSize =
     zoom <= 12 ? 3 :
@@ -341,7 +344,7 @@ export default function Map({ state, dispatch }:
   return (
     <MapContainer
       ref={mapRef}
-      center={[47.219, 38.925]}
+      center={[0, 0]}
       zoom={zoom}
       zoomControl={false}
       style={{ height: '100vh', width: '100%', zIndex: 0 }}
@@ -422,12 +425,16 @@ export default function Map({ state, dispatch }:
                   setActivePointCoords(activePointId === point.id ? null : [point.lat, point.lng])
 
                   if (activePointId !== point.id) {
-                    fetchPoint(point.id + 1)
+                    fetchPoint(point.id + 1).then((j) => dispatch({ type: 'SET_POINT_DATA', payload: j }))
                     dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 2 })
                   }
                   else {
                     dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 0 })
                   }
+
+                  dispatch({ type: 'SET_ROUTE_DATA', payload: undefined })
+                  setRouteCoords([])
+                  setRoutePointIds([])
                 },
               }}
             />

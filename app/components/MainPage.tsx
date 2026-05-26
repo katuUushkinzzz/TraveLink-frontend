@@ -24,12 +24,12 @@ const Map = dynamic(() => import('./Map/Map'), {
 
 export default function MainPage({ authToken }: { authToken: string | null }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { routes, setRoutes, fetchRoutes, isLoading: isRoutesLoading } = useRoutes();
+  const routeUtils = useRoutes([], authToken);
   const pointUtils = usePoints([], state, dispatch);
   const [cityName, setCityName] = useLocalStorage('city', 'Москва');
 
   function toggleLike(id: number) {
-    setRoutes(routes.map(route => {
+    routeUtils.setRoutes(routeUtils.routes.map(route => {
       if (route.id === id) {
         const isNowLiked = !route.isLiked;
         const updatedRoute = {
@@ -49,10 +49,11 @@ export default function MainPage({ authToken }: { authToken: string | null }) {
   };
 
   const { fetchPoints } = pointUtils;
+  const { fetchRoutes, setToken } = routeUtils;
 
   useEffect(() => {
     if (authToken) {
-      fetchRoutes(0, authToken)
+      fetchRoutes(0)
       fetchPoints(0)
 
       dispatch({ type: 'SET_AUTHORIZED', payload: true })
@@ -60,7 +61,7 @@ export default function MainPage({ authToken }: { authToken: string | null }) {
     else {
       dispatch({ type: 'SET_AUTH_SHOWN', payload: true })
     }
-  }, [authToken, fetchPoints, fetchRoutes])
+  }, [authToken, fetchPoints, fetchRoutes, setToken])
 
   useEffect(() => {
     dispatch({ type: 'SET_CITY', payload: cityName })
@@ -75,9 +76,7 @@ export default function MainPage({ authToken }: { authToken: string | null }) {
       </button>
 
       <SidePanel state={state} dispatch={dispatch}
-        routes={routes} isRoutesLoading={isRoutesLoading}
-        pointUtils={pointUtils}
-        toggleLike={toggleLike} />
+        routeUtils={routeUtils} pointUtils={pointUtils} toggleLike={toggleLike} />
       <SearchBar state={state} dispatch={dispatch} pointUtils={pointUtils} />
       <RoutePanel state={state} dispatch={dispatch} toggleLike={toggleLike} />
       <PointPanel state={state} dispatch={dispatch} />

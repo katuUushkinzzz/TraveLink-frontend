@@ -11,15 +11,16 @@ import { PointUtils } from '@/utils/usePoints'
 import { PointData, RouteData } from '@/types/localTypes'
 
 import './SidePanel.css'
+import { RouteUtils } from '@/app/utils/useRoutes'
 
-export default function SidePanel({ state, dispatch, routes, isRoutesLoading, pointUtils, toggleLike }:
+export default function SidePanel({ state, dispatch, routeUtils, pointUtils, toggleLike }:
   {
     state: State, dispatch: ActionDispatch<[action: Action]>,
-    routes: RouteData[] | undefined, isRoutesLoading: boolean,
-    pointUtils: PointUtils
-    toggleLike(id: number | undefined): void
+    routeUtils: RouteUtils, pointUtils: PointUtils, toggleLike(id: number | undefined): void
   }) {
-  const [currentRecTab, setRecTab] = useState(1);
+  const [currentRecTab, setRecTab] = useState(0);
+  const [lastScrollTop, setlastScrollTop] = useState(0);
+  const [nextPage, setNextPage] = useState([1, 1]);
   const [multiPoints, setMultiPoints] = useState(['', '', '']);
   const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
 
@@ -89,6 +90,34 @@ export default function SidePanel({ state, dispatch, routes, isRoutesLoading, po
     setDraggedItemIndex(null);
   };
 
+  function onScrollEnd(event: React.UIEvent<HTMLDivElement, UIEvent>) {
+    if (event.currentTarget.scrollTop < lastScrollTop) {
+      return;
+    }
+    setlastScrollTop(event.currentTarget.scrollTop <= 0 ? 0 : event.currentTarget.scrollTop);
+    console.log(event.currentTarget.scrollTop, event.currentTarget.offsetHeight, event.currentTarget.scrollHeight)
+    if (event.currentTarget.scrollTop + event.currentTarget.offsetHeight >= event.currentTarget.scrollHeight) {
+      if (currentRecTab === 0) {
+        if (state.isSearching) {
+          // TODO: Searching by pages
+        }
+        else {
+          routeUtils.fetchRoutes(nextPage[0])
+        }
+        setNextPage([nextPage[0] + 1, nextPage[1]])
+      }
+      else {
+        if (state.isSearching) {
+          // TODO: Searching by pages
+        }
+        else {
+          pointUtils.fetchPoints(nextPage[1])
+        }
+        setNextPage([nextPage[0], nextPage[1] + 1])
+      }
+    }
+  }
+
   useEffect(() => {
     if (state.isPanelShown)
       document.getElementById('sidePanelContainer')?.classList.remove('sidePanelHidden')
@@ -107,11 +136,13 @@ export default function SidePanel({ state, dispatch, routes, isRoutesLoading, po
       document.getElementById('routePanelContainer')?.classList.add('sidePanelHidden')
       document.getElementById('pointPanelContainer')?.classList.add('sidePanelHidden')
     }
-  });
+  }, [state.isAddPanelShown, state.isPanelShown]);
+
+  useEffect(() => { console.log(nextPage) }, [nextPage, setNextPage])
 
   return (
     <div id="sidePanelContainer" className="sidePanelContainer">
-      <div className='sidePanelScrollArea'>
+      <div className='sidePanelScrollArea' onScrollEnd={e => onScrollEnd(e)} style={{ gap: state.isSearching ? '35px' : '9px' }}>
         {!state.isSearching && <>
           {state.isABRouteShown && <div className='sidePanelABRouteContainer'>
             <header>
@@ -195,13 +226,13 @@ export default function SidePanel({ state, dispatch, routes, isRoutesLoading, po
           <h1 className="h1 txt">Рекомендации</h1>
           <div className="recommendsContainer">
             <div className='recommendsTabs'>
-              <input onChange={() => setRecTab(1)} id='recommendsTabRoutes' type='radio' name='tabs' defaultChecked={currentRecTab === 1}></input>
+              <input onChange={() => setRecTab(0)} id='recommendsTabRoutes' type='radio' name='tabs' defaultChecked={currentRecTab === 0} />
               <label htmlFor='recommendsTabRoutes' className='txt recommendsTab'>Маршруты</label>
-              <input onChange={() => setRecTab(2)} id='recommendsTabPoints' type='radio' name='tabs' defaultChecked={currentRecTab === 2}></input>
+              <input onChange={() => setRecTab(1)} id='recommendsTabPoints' type='radio' name='tabs' defaultChecked={currentRecTab === 1} />
               <label htmlFor='recommendsTabPoints' className='txt recommendsTab'>Места</label>
             </div>
-            {currentRecTab === 1 && <div className='recommendsCards'>
-              {routes && routes.map(route => (
+            {currentRecTab === 0 && <div className='recommendsCards'>
+              {routeUtils.routes && routeUtils.routes.map(route => (
                 <RouteCard
                   key={route.id}
                   routeData={route}
@@ -210,14 +241,14 @@ export default function SidePanel({ state, dispatch, routes, isRoutesLoading, po
                   dispatch={dispatch}
                 />
               ))}
-              {isRoutesLoading && <Loader />}
+              {routeUtils.isLoading && <Loader />}
             </div>}
-            {currentRecTab === 2 && <div className='recommendsCards'>
+            {currentRecTab === 1 && <div className='recommendsCards'>
               {pointUtils.points.map(point => (
                 <PointCard
                   key={point.id}
                   pointData={point}
-                  onClick={() => showPointPanel(point)}
+                  onClick={() => { showPointPanel(point); dispatch({ type: 'SET_ACTIVE_POINT', payload: point.id }) }}
                   onComment={() => showCommentSection(point)}
                 />
               ))}
@@ -226,7 +257,7 @@ export default function SidePanel({ state, dispatch, routes, isRoutesLoading, po
           </div>
         </>}
         {state.isSearching && <>
-          {currentRecTab === 2 && <>
+          {currentRecTab === 1 && <>
             {pointUtils.points.map(point => (
               <PointCard
                 key={point.id}
