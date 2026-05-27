@@ -49,11 +49,11 @@ export default function MainPage({ authToken }: { authToken: string | null }) {
   };
 
   const { fetchPoints } = pointUtils;
-  const { fetchRoutes, setToken } = routeUtils;
+  const { fetchRoutes } = routeUtils;
 
   useEffect(() => {
     if (authToken) {
-      fetchRoutes(0)
+      fetchRoutes(0, authToken)
       fetchPoints(0)
 
       dispatch({ type: 'SET_AUTHORIZED', payload: true })
@@ -61,7 +61,7 @@ export default function MainPage({ authToken }: { authToken: string | null }) {
     else {
       dispatch({ type: 'SET_AUTH_SHOWN', payload: true })
     }
-  }, [authToken, fetchPoints, fetchRoutes, setToken])
+  }, [authToken, fetchPoints, fetchRoutes])
 
   useEffect(() => {
     dispatch({ type: 'SET_CITY', payload: cityName })

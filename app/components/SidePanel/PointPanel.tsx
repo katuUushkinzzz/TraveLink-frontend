@@ -18,10 +18,7 @@ export default function PointPanel({ state, dispatch }: { state: State, dispatch
     if (state.pointData?.imageCarousel && currentIndex < state.pointData?.imageCarousel?.length - 1) setCurrentIndex(currentIndex + 1)
   }
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCurrentIndex(0);
-  }, [state.pointData]);
+  useEffect(() => (() => setCurrentIndex(0))(), [state.pointData]);
 
   return (
     <div className='panelContainer sidePanelHidden' id='pointPanelContainer'>

@@ -16,7 +16,7 @@ export default function useRoutes(initialValue: RouteData[] = [], authToken: str
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchRoutes = useCallback(async (page: number) => {
+  const fetchRoutes = useCallback(async (page: number, authToken?: string) => {
     const baseUrl = `http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}`;
     const url = `${baseUrl}/route/cards/${page}`;
 
@@ -27,7 +27,7 @@ export default function useRoutes(initialValue: RouteData[] = [], authToken: str
       const response = await fetch(url, {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          "Authorization": `Bearer ${authToken ?? token}`,
           "Content-Type": "application/json",
         },
       });
@@ -46,5 +46,5 @@ export default function useRoutes(initialValue: RouteData[] = [], authToken: str
     }
   }, [token]);
 
-  return { routes, setRoutes, isLoading, error, fetchRoutes, setToken };
+  return { routes, setRoutes, isLoading, error, fetchRoutes, token, setToken };
 }
