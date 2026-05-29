@@ -10,14 +10,24 @@ import {
   useMap,
 } from 'react-leaflet';
 
-import L from 'leaflet';
+import L, { LatLngBounds } from 'leaflet';
 
 import { Category, PinData } from '@/types/localTypes';
 import { State, Action } from '@/utils/reducer';
 
-interface Bounds {
-  northEast: { lat: number; lng: number };
-  southWest: { lat: number; lng: number };
+class Bounds {
+  northEast: { lat: number; lng: number } = { lat: 0, lng: 0 };
+  southWest: { lat: number; lng: number } = { lat: 0, lng: 0 };
+  static toBounds: (latLngBounds: LatLngBounds | undefined) => Bounds = (latLngBounds) => {
+    const bounds = new Bounds()
+
+    if (latLngBounds) {
+      bounds.northEast = latLngBounds.getNorthEast()
+      bounds.southWest = latLngBounds.getSouthWest()
+    }
+
+    return bounds
+  }
 }
 
 function createIcon(
@@ -64,16 +74,7 @@ function MapMoveHandler({ onMapMoveEnd }: { onMapMoveEnd: (bounds: Bounds, mapZo
     const bounds = map.getBounds();
     const zoom = map.getZoom();
 
-    onMapMoveEnd({
-      northEast: {
-        lat: bounds.getNorthEast().lat,
-        lng: bounds.getNorthEast().lng,
-      },
-      southWest: {
-        lat: bounds.getSouthWest().lat,
-        lng: bounds.getSouthWest().lng,
-      },
-    }, zoom);
+    onMapMoveEnd(Bounds.toBounds(bounds), zoom);
   }
 
   useMapEvents({
@@ -184,7 +185,7 @@ export default function Map({ state, dispatch }:
           j.map((p: { id: number, category: Category, lat: number, lng: number }) => {
 
             return {
-              id: p.id - 1,
+              id: p.id,
               category: (p.category ?? 'unknown'),
               lat: p.lat,
               lng: p.lng,
@@ -193,13 +194,6 @@ export default function Map({ state, dispatch }:
         )
       })
   }, [])
-
-  async function fetchPoint(id: number) {
-    return fetch(`${process.env.NEXT_PUBLIC_PROTO}://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/point/${id}`, {
-      method: "get",
-    })
-      .then(r => r.json())
-  };
 
   const fetchCity = useCallback(async () => {
     return fetch(`https://nominatim.openstreetmap.org/search?city=${state.currentCity}&format=jsonv2`, {
@@ -217,16 +211,24 @@ export default function Map({ state, dispatch }:
       })
   }, [state.currentCity])
 
+  function fetchPoint(id: number) {
+    fetch(`${process.env.NEXT_PUBLIC_PROTO}://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/point/${id}`, {
+      method: "get",
+    })
+      .then(r => r.json())
+      .then(j => dispatch({ type: 'SET_POINT_DATA', payload: j }))
+  };
+
   useEffect(() => {
     async function fetchPath() {
       setRouteCoords([])
 
-      if (!state.routeData || state.routeData?.stops.length < 2) {
+      if (!state.routeData || state.routeData?.points.length < 2) {
         return;
       }
 
-      const coords = state.routeData.stops
-        .map((stop) => `${stop.lng},${stop.lat}`)
+      const coords = state.routeData.points
+        .map((point) => `${point.pointCoordinates[0]},${point.pointCoordinates[1]}`)
         .join(';');
 
       const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`)
@@ -248,16 +250,24 @@ export default function Map({ state, dispatch }:
       );
 
       setRouteCoords(path);
-      setRoutePointIds(state.routeData.stops.map(s => s.id - 1))
+      setRoutePointIds(state.routeData.points.map(p => p.id - 1))
     };
 
     fetchPath()
   }, [state.routeData]);
 
   useEffect(() => {
-    if (state.activePointId) {
-      console.log(state.activePointId)
-    }
+    (() => {
+      if (state.activePointId && state.pointData) {
+        const coords = [...state.pointData?.pointCoordinates].reverse() as [number, number]
+        const id = state.activePointId - 1
+
+        setActivePointId(activePointId === id ? null : id)
+        setActivePointCoords(activePointId === id ? null : coords)
+
+        //fetchPins(Bounds.toBounds(mapRef.current?.getBounds()), zoom)
+      }
+    })()
   }, [state.activePointId])
 
   const circleSize =
@@ -380,28 +390,32 @@ export default function Map({ state, dispatch }:
         }}
       />
 
-      {state.routeData?.stops.map((stop, i) => (
-        <Marker
-          key={`route-stop-${state.routeData?.id}-${stop.id}`}
-          position={[stop.lat, stop.lng]}
-          icon={createNumberedIcon(i + 1, "#922b2b", 32)}
-          zIndexOffset={3000}
-          eventHandlers={{
-            click: () => {
-              setActivePointId(activePointId === stop.id ? null : stop.id);
-              setActivePointCoords(activePointId === stop.id ? null : [stop.lat, stop.lng])
+      {state.routeData?.points.map((point, i) => {
+        const coords = [...point.pointCoordinates].reverse() as [number, number]
 
-              if (activePointId !== stop.id) {
-                fetchPoint(stop.id)
-                dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 2 })
-              }
-              else {
-                dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 0 })
-              }
-            },
-          }}
-        />
-      ))}
+        return (
+          <Marker
+            key={`route-stop-${state.routeData?.id}-${point.id}`}
+            position={coords}
+            icon={createNumberedIcon(i + 1, "#922b2b", 32)}
+            zIndexOffset={3000}
+            eventHandlers={{
+              click: () => {
+                setActivePointId(activePointId === point.id ? null : point.id);
+                setActivePointCoords(activePointId === point.id ? null : coords)
+
+                if (activePointId !== point.id) {
+                  fetchPoint(point.id)
+                  dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 2 })
+                }
+                else {
+                  dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 0 })
+                }
+              },
+            }}
+          />
+        )
+      })}
 
       {displayedPoints &&
         displayedPoints.map((point) => {
@@ -409,8 +423,12 @@ export default function Map({ state, dispatch }:
 
           const pointIcons = icons[point.category];
 
-          const isActive = activePointId === point.id;
+          const isActive = activePointId === point.id - 1;
           const pointIcon = isActive ? pointIcons.pin : pointIcons.circle;
+
+          if (isActive) {
+            console.log(activePointId, point.id)
+          }
 
           return (
             <Marker
@@ -425,7 +443,7 @@ export default function Map({ state, dispatch }:
                   setActivePointCoords(activePointId === point.id ? null : [point.lat, point.lng])
 
                   if (activePointId !== point.id) {
-                    fetchPoint(point.id + 1).then((j) => dispatch({ type: 'SET_POINT_DATA', payload: j }))
+                    fetchPoint(point.id)
                     dispatch({ type: 'SET_ADD_PANEL_SHOWN', payload: 2 })
                   }
                   else {

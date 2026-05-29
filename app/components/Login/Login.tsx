@@ -39,19 +39,23 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
 
         body: `{"email":"${email}","password":"${password}"}`
       })
-        .then(r => r.json())
-        .then(j => {
-          if (j.statusCode === 401) {
-            alert(`Ошибка: ${j.message}`)
-            return
+        .then(r => {
+          if (!r.ok) {
+            alert(`Ошибка: ${r.status} -> ${r.statusText}`)
           }
 
+          return r.json()
+        })
+        .then(j => {
           if (remember) {
             setCookieAction('auth', j.token, { httpOnly: true, path: '/', maxAge: 86400 })
+            setCookieAction('userId', j.id, { httpOnly: true, path: '/', maxAge: 86400 })
           }
           else {
             setCookieAction('auth', j.token, { httpOnly: true, path: '/' })
+            setCookieAction('userId', j.id, { httpOnly: true, path: '/', })
           }
+
           dispatch({ type: 'SET_AUTH_SHOWN', payload: false })
         })
 

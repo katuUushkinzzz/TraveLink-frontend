@@ -39,6 +39,7 @@ export default function useRoutes(initialValue: RouteData[] = [], authToken: str
       const json = await response.json();
 
       setRoutes((prev) => [...prev, ...json]);
+      console.log(json)
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error occurred'));
     } finally {

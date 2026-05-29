@@ -68,10 +68,6 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
     setMultiPoints(newPoints);
   }
 
-  function onDragStart(index: number) {
-    setDraggedItemIndex(index);
-  };
-
   function onDragOver(e: React.DragEvent<HTMLDivElement>, index: number) {
     e.preventDefault();
     if (draggedItemIndex === index || draggedItemIndex === null) return;
@@ -84,10 +80,6 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
 
     setDraggedItemIndex(index);
     setMultiPoints(newPoints);
-  };
-
-  function onDragEnd() {
-    setDraggedItemIndex(null);
   };
 
   function onScrollEnd(event: React.UIEvent<HTMLDivElement, UIEvent>) {
@@ -118,7 +110,7 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
     }
   }
 
-  useEffect(() => {
+  useEffect(/* Show pannel */() => {
     if (state.isPanelShown)
       document.getElementById('sidePanelContainer')?.classList.remove('sidePanelHidden')
     else
@@ -138,9 +130,34 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
     }
   }, [state.isAddPanelShown, state.isPanelShown]);
 
+  useEffect(/* Get user profile */() => {
+    const baseUrl = `http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}`;
+    const url = `${baseUrl}/user/get/${state.userId}`;
+
+    if (state.isProfileShown) {
+      console.log({
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${state.authToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+
+      fetch(url, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${state.authToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then(r => r.json())
+        .then(j => console.log(j));
+    }
+  }, [state.authToken, state.isProfileShown, state.userId])
+
   return (
     <div id="sidePanelContainer" className="sidePanelContainer">
-      <div className='sidePanelScrollArea' onScrollEnd={e => onScrollEnd(e)} style={{ gap: state.isSearching ? '35px' : '9px' }}>
+      <div className='sidePanelScrollArea' onScrollEnd={e => onScrollEnd(e)} style={{ paddingTop: state.isSearching ? '0px' : '10px' }}>
         {!state.isSearching && <>
           {state.isABRouteShown && <div className='sidePanelABRouteContainer'>
             <header>
@@ -149,7 +166,7 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
               }
               {state.isABMultiRouteShown &&
                 <ABMultiSearchSection multiPoints={multiPoints} setMultiPoints={setMultiPoints}
-                  onDragEnd={onDragEnd} onDragOver={onDragOver} onDragStart={onDragStart} />
+                  setDraggedItemIndex={setDraggedItemIndex} onDragOver={onDragOver} />
               }
             </header>
             <footer>
@@ -168,52 +185,17 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
           <CategoryButtonSection />
 
           <h1 className="h1 txt">Рекомендации</h1>
-          <div className="recommendsContainer">
-            <div className='recommendsTabs'>
-              <input onChange={() => setRecTab(0)} id='recommendsTabRoutes' type='radio' name='tabs' defaultChecked={currentRecTab === 0} />
-              <label htmlFor='recommendsTabRoutes' className='txt recommendsTab'>Маршруты</label>
-
-              <input onChange={() => setRecTab(1)} id='recommendsTabPoints' type='radio' name='tabs' defaultChecked={currentRecTab === 1} />
-              <label htmlFor='recommendsTabPoints' className='txt recommendsTab'>Места</label>
-            </div>
-            {currentRecTab === 0 && <div className='recommendsCards'>
-              {routeUtils.routes && routeUtils.routes.map(route => (
-                <RouteCard
-                  key={route.id}
-                  routeData={route}
-                  onClick={() => showRoutePanel(route)}
-                  onLiked={() => toggleLike(route.id)}
-                  dispatch={dispatch}
-                />
-              ))}
-              {routeUtils.isLoading && <Loader />}
-            </div>}
-            {currentRecTab === 1 && <div className='recommendsCards'>
-              {pointUtils.points.map(point => (
-                <PointCard
-                  key={point.id}
-                  pointData={point}
-                  onClick={() => { showPointPanel(point); dispatch({ type: 'SET_ACTIVE_POINT', payload: point.id }) }}
-                  onComment={() => showCommentSection(point)}
-                />
-              ))}
-              {pointUtils.isLoading && <Loader />}
-            </div>}
-          </div>
         </>}
-        {state.isSearching && <>
-          {currentRecTab === 1 && <>
-            {pointUtils.points.map(point => (
-              <PointCard
-                key={point.id}
-                pointData={point}
-                onClick={() => showPointPanel(point)}
-                onComment={() => showCommentSection(point)}
-              />
-            ))}
-            {pointUtils.isLoading && <Loader />}
-          </>}
-          {currentRecTab === 0 && <>
+
+        <div className="recommendsContainer">
+          <div className='recommendsTabs'>
+            <input onChange={() => setRecTab(0)} id='recommendsTabRoutes' type='radio' name='tabs' defaultChecked={currentRecTab === 0} />
+            <label htmlFor='recommendsTabRoutes' className='txt recommendsTab'>Маршруты</label>
+
+            <input onChange={() => setRecTab(1)} id='recommendsTabPoints' type='radio' name='tabs' defaultChecked={currentRecTab === 1} />
+            <label htmlFor='recommendsTabPoints' className='txt recommendsTab'>Места</label>
+          </div>
+          {currentRecTab === 0 && <div className='recommendsCards'>
             {routeUtils.routes.map(route => (
               <RouteCard
                 key={route.id}
@@ -224,8 +206,19 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
               />
             ))}
             {routeUtils.isLoading && <Loader />}
-          </>}
-        </>}
+          </div>}
+          {currentRecTab === 1 && <div className='recommendsCards'>
+            {pointUtils.points.map(point => (
+              <PointCard
+                key={point.id}
+                pointData={point}
+                onClick={() => { showPointPanel(point); dispatch({ type: 'SET_ACTIVE_POINT', payload: point.id }) }}
+                onComment={() => showCommentSection(point)}
+              />
+            ))}
+            {pointUtils.isLoading && <Loader />}
+          </div>}
+        </div>
       </div>
     </div>
   )
@@ -293,11 +286,10 @@ function ABSearchSection({ multiPoints, setMultiPoints, swapSearchPoints }:
   </>)
 }
 
-function ABMultiSearchSection({ multiPoints, setMultiPoints, onDragStart, onDragOver, onDragEnd }:
+function ABMultiSearchSection({ multiPoints, setMultiPoints, setDraggedItemIndex, onDragOver }:
   {
     multiPoints: string[], setMultiPoints: (points: string[]) => void,
-    onDragStart: (index: number) => void, onDragOver: (e: React.DragEvent<HTMLDivElement>, index: number) => void,
-    onDragEnd: () => void
+    setDraggedItemIndex: (index: number | null) => void, onDragOver: (e: React.DragEvent<HTMLDivElement>, index: number) => void,
   }) {
   return (
     <div className='sidePanelABRouteInputs'>
@@ -316,9 +308,9 @@ function ABMultiSearchSection({ multiPoints, setMultiPoints, onDragStart, onDrag
                 }}
               />
               <div draggable
-                onDragStart={() => onDragStart(index)}
+                onDragStart={() => setDraggedItemIndex(index)}
                 onDragOver={(e) => onDragOver(e, index)}
-                onDragEnd={onDragEnd}
+                onDragEnd={() => setDraggedItemIndex(null)}
               >
                 <Image src='/search-window/handle.png' alt='' width={30} height={30} draggable={false} />
               </div>

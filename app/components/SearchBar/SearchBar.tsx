@@ -24,7 +24,7 @@ export default function SearchBar({ state, dispatch, pointUtils }:
     <div className='searchContainer'>
       <div className='searchBar'>
         <Image alt="" src="/search-window/search-route.png" width={30} height={30} />
-        <input ref={searchField} type='search' className='searchField' placeholder='Поиск' value={state.searchQuery}
+        <input ref={searchField} type='search' className='searchField' placeholder='Поиск' defaultValue={state.searchQuery}
           onChange={e => {
             dispatch({ type: 'SET_QUERY', payload: e.target.value })
             if (e.target.value === "" && state.isSearching) {

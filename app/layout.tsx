@@ -8,7 +8,6 @@ const montserrat = Montserrat({
   subsets: ["latin", "cyrillic"],
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const molle = Molle({
   weight: "400",
   subsets: ["latin"],
@@ -26,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body className={montserrat.className}>
+      <body style={{ fontFamily: `${montserrat.style.fontFamily}, ${molle.style.fontFamily}` }}>
         {children}
       </body>
     </html>

@@ -14,18 +14,11 @@ export type Category =
   | 'beach'
   | 'beauty';
 
-interface RawPinData {
+export interface PinData {
   id: number;
   lat: number;
   lng: number;
-}
-
-export interface PinData extends RawPinData {
   category: Category;
-};
-
-export interface StopData extends RawPinData {
-  order: number
 }
 
 export interface RouteData {
@@ -39,7 +32,6 @@ export interface RouteData {
   routeDescription: string
   routeTags: string[]
   points: PointData[]
-  stops: StopData[]
   isLiked: boolean
   image: string
 }
@@ -50,6 +42,7 @@ export interface PointData {
   pointType: string
   pointLocation: string
   pointDescription: string
+  pointCoordinates: [number, number]
   image: string,
   pointRating: number
   ratingCount: number

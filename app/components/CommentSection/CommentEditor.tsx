@@ -1,4 +1,4 @@
-import { ActionDispatch, useState } from "react";
+import { ActionDispatch, useEffect, useState } from "react";
 import Image from 'next/image'
 
 import { State, Action } from "@/utils/reducer";
@@ -9,6 +9,24 @@ import './CommentEditor.css'
 export default function CommentEditor({ state, dispatch }: { state: State, dispatch: ActionDispatch<[action: Action]> }) {
   const [volatileRate, setVolatileRate] = useState(0);
   const [constantRate, setConstantRate] = useState(0);
+  const [comments, setComments] = useState([])
+
+  useEffect(() => {
+    const baseUrl = `http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}`;
+    const url = `${baseUrl}/review/get/route/${state.routeData?.id}/0`;
+
+    if (state.isCommentVisible) {
+      fetch(url, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${state.authToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then(r => r.json())
+        .then(j => console.log(j));
+    }
+  }, [state.authToken, state.isCommentVisible, state.routeData?.id])
 
   return (
     <Modal stateSwitch={state.isCommentEditorVisible} dispatch={dispatch} action={{ type: 'SET_COMMENT_EDITOR', payload: false }}>
