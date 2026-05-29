@@ -21,7 +21,6 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
   const [currentRecTab, setRecTab] = useState(0);
   const [lastScrollTop, setlastScrollTop] = useState(0);
   const [nextPage, setNextPage] = useState([1, 1]);
-  const [multiPoints, setMultiPoints] = useState(['', '', '']);
   const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
 
   function showRoutePanel(contents: RouteData) {
@@ -42,9 +41,9 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
   function addSearchPoint() {
     if (!state.isABMultiRouteShown) dispatch({ type: 'SET_AB_MULTIROUTE_SHOWN', payload: true })
     else {
-      const newPoints = [...multiPoints];
-      newPoints.splice(multiPoints.length - 1, 0, '');
-      setMultiPoints(newPoints);
+      const newPoints = [...state.multiPoints];
+      newPoints.splice(state.multiPoints.length - 1, 0, '');
+      dispatch({ type: "SET_MULTIPOINTS", payload: newPoints });
     }
   }
 
@@ -55,39 +54,38 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
       (document.getElementById('toPoint') as HTMLInputElement).value = ''
     }
 
-    setMultiPoints(['', '', ''])
+    dispatch({ type: "SET_MULTIPOINTS", payload: ['', '', ''] })
   }
 
   function swapSearchPoints() {
-    const newPoints = [...multiPoints];
+    const newPoints = [...state.multiPoints];
     const fromPoint = newPoints[0];
 
     newPoints[0] = newPoints[newPoints.length - 1];
     newPoints[newPoints.length - 1] = fromPoint;
 
-    setMultiPoints(newPoints);
+    dispatch({ type: "SET_MULTIPOINTS", payload: newPoints });
   }
 
   function onDragOver(e: React.DragEvent<HTMLDivElement>, index: number) {
     e.preventDefault();
     if (draggedItemIndex === index || draggedItemIndex === null) return;
 
-    const newPoints = [...multiPoints];
+    const newPoints = [...state.multiPoints];
     const draggedItem = newPoints[draggedItemIndex];
 
     newPoints.splice(draggedItemIndex, 1);
     newPoints.splice(index, 0, draggedItem);
 
     setDraggedItemIndex(index);
-    setMultiPoints(newPoints);
+    dispatch({ type: "SET_MULTIPOINTS", payload: newPoints });
   };
 
   function onScrollEnd(event: React.UIEvent<HTMLDivElement, UIEvent>) {
-    if (event.currentTarget.scrollTop < lastScrollTop) {
+    if (event.currentTarget.scrollTop < lastScrollTop || state.isABRouteShown || state.isCathegorized) {
       return;
     }
     setlastScrollTop(event.currentTarget.scrollTop <= 0 ? 0 : event.currentTarget.scrollTop);
-    console.log(event.currentTarget.scrollTop, event.currentTarget.offsetHeight, event.currentTarget.scrollHeight)
     if (event.currentTarget.scrollTop + event.currentTarget.offsetHeight >= event.currentTarget.scrollHeight) {
       if (currentRecTab === 0) {
         if (state.isSearching) {
@@ -135,14 +133,6 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
     const url = `${baseUrl}/user/get/${state.userId}`;
 
     if (state.isProfileShown) {
-      console.log({
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${state.authToken}`,
-          "Content-Type": "application/json",
-        },
-      })
-
       fetch(url, {
         method: "GET",
         headers: {
@@ -151,7 +141,7 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
         },
       })
         .then(r => r.json())
-        .then(j => console.log(j));
+        .then(() => { });
     }
   }, [state.authToken, state.isProfileShown, state.userId])
 
@@ -162,10 +152,10 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
           {state.isABRouteShown && <div className='sidePanelABRouteContainer'>
             <header>
               {!state.isABMultiRouteShown &&
-                <ABSearchSection multiPoints={multiPoints} setMultiPoints={setMultiPoints} swapSearchPoints={swapSearchPoints} />
+                <ABSearchSection multiPoints={state.multiPoints} dispatch={dispatch} swapSearchPoints={swapSearchPoints} />
               }
               {state.isABMultiRouteShown &&
-                <ABMultiSearchSection multiPoints={multiPoints} setMultiPoints={setMultiPoints}
+                <ABMultiSearchSection multiPoints={state.multiPoints} dispatch={dispatch}
                   setDraggedItemIndex={setDraggedItemIndex} onDragOver={onDragOver} />
               }
             </header>
@@ -180,22 +170,24 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
             </footer>
           </div>}
 
-          <h1 className="h1 txt"><button onClick={() => dispatch({ type: 'TOGGLE_PICKER', payload: true })}>{state.currentCity}</button></h1>
-          <h3 className="h3 txt">Категории</h3>
-          <CategoryButtonSection />
+          {!state.isABRouteShown && <>
+            <h1 className="h1 txt"><button onClick={() => dispatch({ type: 'TOGGLE_PICKER', payload: true })}>{state.currentCity}</button></h1>
+            <h3 className="h3 txt">Категории</h3>
+            <CategoryButtonSection state={state} pointUtils={pointUtils} dispatch={dispatch} />
 
-          <h1 className="h1 txt">Рекомендации</h1>
+            {!state.isCathegorized && <h1 className="h1 txt">Рекомендации</h1>}
+          </>}
         </>}
 
         <div className="recommendsContainer">
-          <div className='recommendsTabs'>
+          {!state.isABRouteShown && !state.isCathegorized && <div className='recommendsTabs'>
             <input onChange={() => setRecTab(0)} id='recommendsTabRoutes' type='radio' name='tabs' defaultChecked={currentRecTab === 0} />
             <label htmlFor='recommendsTabRoutes' className='txt recommendsTab'>Маршруты</label>
 
             <input onChange={() => setRecTab(1)} id='recommendsTabPoints' type='radio' name='tabs' defaultChecked={currentRecTab === 1} />
             <label htmlFor='recommendsTabPoints' className='txt recommendsTab'>Места</label>
-          </div>
-          {currentRecTab === 0 && <div className='recommendsCards'>
+          </div>}
+          {(currentRecTab === 0 && !state.isABRouteShown && !state.isCathegorized) && <div className='recommendsCards'>
             {routeUtils.routes.map(route => (
               <RouteCard
                 key={route.id}
@@ -207,7 +199,7 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
             ))}
             {routeUtils.isLoading && <Loader />}
           </div>}
-          {currentRecTab === 1 && <div className='recommendsCards'>
+          {(currentRecTab === 1 || state.isABRouteShown || state.isCathegorized) && <div className='recommendsCards'>
             {pointUtils.points.map(point => (
               <PointCard
                 key={point.id}
@@ -224,42 +216,63 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
   )
 }
 
-function CategoryButton({ categoryName, image, color, categoryId }: { categoryName: string, image: string, color: string, categoryId: string }) {
+function CategoryButton({ categoryName, image, color, categoryId, pointUtils, state, dispatch }:
+  {
+    categoryName: string, image: string, color: string, categoryId: string, pointUtils: PointUtils,
+    state: State, dispatch: ActionDispatch<[action: Action]>,
+  }) {
   return (
-    <button className="categoryButton" onClick={() => {
-      // TODO: Make category sorting work
-      console.log(`[Debug] Sorted search results by category '${categoryId}'`)
-    }}>
-      <div className="categoryImage" style={{ backgroundColor: color }}>
-        <Image alt="" src={image} width={45} height={45} />
-      </div>
-      <span>{categoryName}</span>
-    </button>
+    <>
+      <input type='radio' id={categoryId} name='categories' onClickCapture={(e) => {
+        if (state.isCathegorized === categoryId) {
+          dispatch({ type: 'SET_CATHEGORIZED', payload: undefined })
+          pointUtils.fetchPoints(0)
+          pointUtils.setPoints([])
+          e.currentTarget.checked = false
+        }
+      }} onChange={() => {
+        fetch(`${process.env.NEXT_PUBLIC_PROTO}://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/search/filterby/${categoryId}`, {
+          method: "get",
+        })
+          .then(r => r.json())
+          .then(j => {
+            pointUtils.setPoints(j[0])
+            dispatch({ type: 'SET_DISPLAYED_POINTS', payload: j[1] })
+            dispatch({ type: 'SET_CATHEGORIZED', payload: categoryId })
+          })
+      }} />
+      <label className="categoryButton" htmlFor={categoryId}>
+        <div className="categoryImage" style={{ backgroundColor: color }}>
+          <Image alt="" src={image} width={45} height={45} />
+        </div>
+        <span>{categoryName}</span>
+      </label>
+    </>
   )
 }
 
-function CategoryButtonSection() {
+function CategoryButtonSection({ pointUtils, state, dispatch }: { pointUtils: PointUtils, state: State, dispatch: ActionDispatch<[action: Action]> }) {
   return (
     <div className="sidePanelCategories">
-      <CategoryButton categoryId='restaurants' categoryName="Рестораны" image="/search-window/category-icons/restaurant-cat-icon.png" color="#FE8E43" />
-      <CategoryButton categoryId='architechture' categoryName="Архитектура" image="/search-window/category-icons/architechture-cat-icon.png" color="#FFE898" />
-      <CategoryButton categoryId='parks' categoryName="Парки" image="/search-window/category-icons/park-cat-icon.png" color="#85DB85" />
-      <CategoryButton categoryId='medicine' categoryName="Медицина" image="/search-window/category-icons/medicine-cat-icon.png" color="#FF7070" />
-      <CategoryButton categoryId='groceries' categoryName="Продукты" image="/search-window/category-icons/groceries-cat-icon.png" color="#FE8E43" />
-      <CategoryButton categoryId='malls' categoryName="Торговые центры" image="/search-window/category-icons/mall-cat-icon.png" color="#67999C" />
-      <CategoryButton categoryId='rest' categoryName="Отдых" image="/search-window/category-icons/rest-cat-icon.png" color="#FF7070" />
-      <CategoryButton categoryId='laudries' categoryName="Отели" image="/search-window/category-icons/hotel-cat-icon.png" color="#67999C" />
-      <CategoryButton categoryId='ent' categoryName="Развлечения" image="/search-window/category-icons/ent-cat-icon.png" color="#CB3466" />
-      <CategoryButton categoryId='cafes' categoryName="Кофейни" image="/search-window/category-icons/cafe-cat-icon.png" color="#BE8667" />
-      <CategoryButton categoryId='beaches' categoryName="Пляжи" image="/search-window/category-icons/beach-cat-icon.png" color="#FFE897" />
-      <CategoryButton categoryId='beauty' categoryName="Салоны красоты" image="/search-window/category-icons/beauty-cat-icon.png" color="#FF7070" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='restaurants' categoryName="Рестораны" image="/search-window/category-icons/restaurant-cat-icon.png" color="#FE8E43" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='architecture' categoryName="Архитектура" image="/search-window/category-icons/architechture-cat-icon.png" color="#FFE898" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='parks' categoryName="Парки" image="/search-window/category-icons/park-cat-icon.png" color="#85DB85" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='medicine' categoryName="Медицина" image="/search-window/category-icons/medicine-cat-icon.png" color="#FF7070" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='products' categoryName="Продукты" image="/search-window/category-icons/groceries-cat-icon.png" color="#FE8E43" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='shopping' categoryName="Торговые центры" image="/search-window/category-icons/mall-cat-icon.png" color="#67999C" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='leisure' categoryName="Отдых" image="/search-window/category-icons/rest-cat-icon.png" color="#FF7070" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='hotels' categoryName="Отели" image="/search-window/category-icons/hotel-cat-icon.png" color="#67999C" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='entertainment' categoryName="Развлечения" image="/search-window/category-icons/ent-cat-icon.png" color="#CB3466" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='coffee' categoryName="Кофейни" image="/search-window/category-icons/cafe-cat-icon.png" color="#BE8667" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='beach' categoryName="Пляжи" image="/search-window/category-icons/beach-cat-icon.png" color="#FFE897" />
+      <CategoryButton state={state} pointUtils={pointUtils} dispatch={dispatch} categoryId='beauty' categoryName="Салоны красоты" image="/search-window/category-icons/beauty-cat-icon.png" color="#FF7070" />
     </div>
   )
 }
 
-function ABSearchSection({ multiPoints, setMultiPoints, swapSearchPoints }:
+function ABSearchSection({ multiPoints, dispatch, swapSearchPoints }:
   {
-    multiPoints: string[], setMultiPoints: (points: string[]) => void, swapSearchPoints: () => void
+    multiPoints: string[], dispatch: (action: Action) => void, swapSearchPoints: () => void
   }) {
   return (<>
     <div className='sidePanelABRouteInputs'>
@@ -268,7 +281,7 @@ function ABSearchSection({ multiPoints, setMultiPoints, swapSearchPoints }:
         onChange={(e) => {
           const newPoints = [...multiPoints];
           newPoints[0] = e.target.value;
-          setMultiPoints(newPoints);
+          dispatch({ type: "SET_MULTIPOINTS", payload: newPoints });
         }}
       />
       <h2 className='txt'>Куда</h2>
@@ -276,7 +289,7 @@ function ABSearchSection({ multiPoints, setMultiPoints, swapSearchPoints }:
         onChange={(e) => {
           const newPoints = [...multiPoints];
           newPoints[newPoints.length - 1] = e.target.value;
-          setMultiPoints(newPoints);
+          dispatch({ type: "SET_MULTIPOINTS", payload: newPoints });
         }}
       />
     </div>
@@ -286,9 +299,9 @@ function ABSearchSection({ multiPoints, setMultiPoints, swapSearchPoints }:
   </>)
 }
 
-function ABMultiSearchSection({ multiPoints, setMultiPoints, setDraggedItemIndex, onDragOver }:
+function ABMultiSearchSection({ multiPoints, dispatch, setDraggedItemIndex, onDragOver }:
   {
-    multiPoints: string[], setMultiPoints: (points: string[]) => void,
+    multiPoints: string[], dispatch: (action: Action) => void,
     setDraggedItemIndex: (index: number | null) => void, onDragOver: (e: React.DragEvent<HTMLDivElement>, index: number) => void,
   }) {
   return (
@@ -304,7 +317,7 @@ function ABMultiSearchSection({ multiPoints, setMultiPoints, setDraggedItemIndex
                 onChange={(e) => {
                   const newPoints = [...multiPoints];
                   newPoints[index] = e.target.value;
-                  setMultiPoints(newPoints);
+                  dispatch({ type: "SET_MULTIPOINTS", payload: newPoints });
                 }}
               />
               <div draggable

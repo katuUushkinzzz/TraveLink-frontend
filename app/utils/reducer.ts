@@ -1,4 +1,4 @@
-import { RouteData, PointData } from "@/types/localTypes";
+import { RouteData, PointData, PinData } from "@/types/localTypes";
 
 export interface State {
   currentCity?: string;
@@ -13,11 +13,15 @@ export interface State {
   isAuthModalShown: boolean;
   isSearching: boolean;
   isProfileShown: boolean;
+  isCathegorized?: string;
   authToken?: string;
   userId?: number;
   routeData?: RouteData;
   pointData?: PointData;
+  displayedPoints?: PinData[];
   activePointId?: number;
+  multiPoints: string[];
+  pathData: [number, number][]
 }
 
 export const initialState: State = {
@@ -31,13 +35,17 @@ export const initialState: State = {
   isAuthModalShown: false,
   isSearching: false,
   isProfileShown: false,
+  isCathegorized: undefined,
   authToken: undefined,
   userId: undefined,
   currentCity: undefined,
   searchQuery: undefined,
   routeData: undefined,
   pointData: undefined,
+  displayedPoints: undefined,
   activePointId: undefined,
+  multiPoints: ["", "", ""],
+  pathData: []
 }
 
 export type Action =
@@ -58,6 +66,10 @@ export type Action =
   | { type: 'TOGGLE_PICKER'; payload: boolean }
   | { type: 'TOGGLE_USER_PROFILE'; payload: boolean }
   | { type: 'SET_USER_ID'; payload: number }
+  | { type: 'SET_MULTIPOINTS'; payload: string[] }
+  | { type: 'SET_PATH_DATA'; payload: [number, number][] }
+  | { type: 'SET_DISPLAYED_POINTS'; payload: PinData[] }
+  | { type: 'SET_CATHEGORIZED'; payload: string | undefined }
 
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -95,6 +107,14 @@ export function reducer(state: State, action: Action): State {
       return { ...state, userId: action.payload };
     case 'TOGGLE_USER_PROFILE':
       return { ...state, isProfileShown: action.payload };
+    case 'SET_MULTIPOINTS':
+      return { ...state, multiPoints: action.payload };
+    case 'SET_PATH_DATA':
+      return { ...state, pathData: action.payload };
+    case 'SET_DISPLAYED_POINTS':
+      return { ...state, displayedPoints: action.payload };
+    case 'SET_CATHEGORIZED':
+      return { ...state, isCathegorized: action.payload };
     default:
       return state;
   }

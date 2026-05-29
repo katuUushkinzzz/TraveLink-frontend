@@ -66,7 +66,6 @@ export default function MainPage({ authToken, userId }: { authToken: string | nu
   useEffect(() => {
     if (userId) {
       dispatch({ type: 'SET_USER_ID', payload: parseInt(userId) })
-      console.log(userId)
     }
   }, [userId])
 

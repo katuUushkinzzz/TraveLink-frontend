@@ -12,7 +12,7 @@ import {
 
 import L, { LatLngBounds } from 'leaflet';
 
-import { Category, PinData } from '@/types/localTypes';
+import { PinData } from '@/types/localTypes';
 import { State, Action } from '@/utils/reducer';
 
 class Bounds {
@@ -155,7 +155,6 @@ export default function Map({ state, dispatch }:
   }) {
   const [activePointId, setActivePointId] = useState<number | null>(null);
   const [activePointCoords, setActivePointCoords] = useState<[number, number] | null>(null);
-  const [displayedPoints, setDisplayedPoints] = useState<PinData[] | null>(null);
 
   const [routePointIds, setRoutePointIds] = useState<number[]>([]);
   const [routeCoords, setRouteCoords] = useState<[number, number][]>([]);
@@ -166,7 +165,7 @@ export default function Map({ state, dispatch }:
 
   const fetchPins = useCallback((bounds: Bounds, mapZoom: number) => {
     if (mapZoom < 12) {
-      setDisplayedPoints([])
+      dispatch({ type: 'SET_DISPLAYED_POINTS', payload: [] })
       return null
     }
 
@@ -181,19 +180,19 @@ export default function Map({ state, dispatch }:
     })
       .then(r => r.json())
       .then((j) => {
-        setDisplayedPoints(
-          j.map((p: { id: number, category: Category, lat: number, lng: number }) => {
 
-            return {
-              id: p.id,
-              category: (p.category ?? 'unknown'),
-              lat: p.lat,
-              lng: p.lng,
-            };
-          })
-        )
+        j.map((p: PinData) => {
+          return {
+            id: p.id,
+            category: (p.category ?? 'unknown'),
+            lat: p.lat,
+            lng: p.lng,
+          };
+        })
+
+        dispatch({ type: 'SET_DISPLAYED_POINTS', payload: j })
       })
-  }, [])
+  }, [dispatch])
 
   const fetchCity = useCallback(async () => {
     return fetch(`https://nominatim.openstreetmap.org/search?city=${state.currentCity}&format=jsonv2`, {
@@ -250,17 +249,60 @@ export default function Map({ state, dispatch }:
       );
 
       setRouteCoords(path);
-      setRoutePointIds(state.routeData.points.map(p => p.id - 1))
+      setRoutePointIds(state.routeData.points.map(p => p.id))
     };
 
     fetchPath()
   }, [state.routeData]);
 
   useEffect(() => {
+    async function fetchPath() {
+      setRouteCoords([])
+
+      if (!state.pathData || state.pathData?.length < 2) {
+        return;
+      }
+
+      const coords = state.pathData
+        .map((point) => `${point[0]},${point[1]}`)
+        .join(';');
+
+      const res = await fetch(`https://router.project-osrm.org/route/v1/walking/${coords}?overview=full&geometries=geojson`)
+
+      if (!res.ok) {
+        console.error('OSRM error:', res.status, res.statusText);
+        return;
+      }
+
+      const data = await res.json()
+
+      if (!data.routes?.[0]?.geometry?.coordinates) {
+        console.error('Маршрут не найден:', data);
+        return;
+      }
+
+      const path: [number, number][] = data.routes[0].geometry.coordinates.map(
+        ([lng, lat]: [number, number]) => [lat, lng]
+      );
+
+      setRouteCoords(path)
+      setRoutePointIds([])
+    };
+
+    if (state.pathData.length !== 0) {
+      fetchPath()
+    }
+    else {
+      setRouteCoords([])
+      setRoutePointIds([])
+    }
+  }, [dispatch, state.pathData])
+
+  useEffect(() => {
     (() => {
       if (state.activePointId && state.pointData) {
         const coords = [...state.pointData?.pointCoordinates].reverse() as [number, number]
-        const id = state.activePointId - 1
+        const id = state.activePointId
 
         setActivePointId(activePointId === id ? null : id)
         setActivePointCoords(activePointId === id ? null : coords)
@@ -268,6 +310,7 @@ export default function Map({ state, dispatch }:
         //fetchPins(Bounds.toBounds(mapRef.current?.getBounds()), zoom)
       }
     })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.activePointId])
 
   const circleSize =
@@ -366,9 +409,9 @@ export default function Map({ state, dispatch }:
         routePath={routeCoords} panelShown={state.isPanelShown}
         addPanelShown={state.isAddPanelShown} activePointCoords={activePointCoords}
       />
-      <MapMoveHandler
+      {!state.isABRouteShown && !state.isCathegorized && <MapMoveHandler
         onMapMoveEnd={fetchPins}
-      />
+      />}
       <MapLoadHandler
         onMapLoad={fetchPins}
         fetchCity={fetchCity}
@@ -417,18 +460,14 @@ export default function Map({ state, dispatch }:
         )
       })}
 
-      {displayedPoints &&
-        displayedPoints.map((point) => {
+      {state.displayedPoints &&
+        state.displayedPoints.map((point) => {
           if (routePointIds.includes(point.id)) return
 
           const pointIcons = icons[point.category];
 
-          const isActive = activePointId === point.id - 1;
+          const isActive = activePointId === point.id;
           const pointIcon = isActive ? pointIcons.pin : pointIcons.circle;
-
-          if (isActive) {
-            console.log(activePointId, point.id)
-          }
 
           return (
             <Marker
@@ -451,8 +490,9 @@ export default function Map({ state, dispatch }:
                   }
 
                   dispatch({ type: 'SET_ROUTE_DATA', payload: undefined })
-                  setRouteCoords([])
                   setRoutePointIds([])
+
+                  if (!state.isABRouteShown) setRouteCoords([])
                 },
               }}
             />

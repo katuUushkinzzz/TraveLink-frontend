@@ -35,6 +35,10 @@
   padding: 0 20px;
 }
 
+.sidePanelCategories input {
+  display: none;
+}
+
 .categoryButton {
   display: flex;
   flex-direction: column;
@@ -44,6 +48,11 @@
   font-size: 10px;
   color: #53515E;
   cursor: pointer;
+  text-align: center;
+}
+
+input:checked+.categoryButton .categoryImage {
+  border: 2px solid orangered;
 }
 
 .categoryImage {

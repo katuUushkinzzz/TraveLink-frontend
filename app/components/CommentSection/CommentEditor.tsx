@@ -24,7 +24,7 @@ export default function CommentEditor({ state, dispatch }: { state: State, dispa
         },
       })
         .then(r => r.json())
-        .then(j => console.log(j));
+        .then(j => { });
     }
   }, [state.authToken, state.isCommentVisible, state.routeData?.id])
 

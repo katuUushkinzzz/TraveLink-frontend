@@ -36,12 +36,70 @@ export default function SearchBar({ state, dispatch, pointUtils }:
           onKeyDown={e => { if (e.code === "Enter") pointUtils.searchPoints() }}
         />
         <div className='searchButton'>
-          <button className='barButton' onClick={() => pointUtils.searchPoints()}>
+          <button className='barButton' onClick={async () => {
+            if (state.isABRouteShown && (state.multiPoints[0] !== "" && state.multiPoints[state.multiPoints.length - 1] !== "")) {
+              const pointACoords: [number, number] =
+                await fetch(`https://nominatim.openstreetmap.org/search?q=${state.multiPoints[0]}&format=jsonv2`, {
+                  headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_3_0) Gecko/20130401 Firefox/71.3"
+                  }
+                })
+                  .then(r => r.json())
+                  .then(j => [j[0].lon, j[0].lat])
+
+              const pointBCoords: [number, number] =
+                await fetch(`https://nominatim.openstreetmap.org/search?q=${state.multiPoints[state.multiPoints.length - 1]}&format=jsonv2`, {
+                  headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_3_0) Gecko/20130401 Firefox/71.3"
+                  }
+                })
+                  .then(r => r.json())
+                  .then(j => [j[0].lon, j[0].lat])
+
+              dispatch({ type: 'SET_PATH_DATA', payload: [pointACoords, pointBCoords] })
+
+              fetch(`${process.env.NEXT_PUBLIC_PROTO}://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/route/pof`, {
+                method: "post",
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify({
+                  "firstPoint": pointACoords,
+                  "secondPoint": pointBCoords
+                })
+              })
+                .then(r => r.json())
+                .then(j => {
+                  pointUtils.setPoints(j[0])
+                  dispatch({ type: 'SET_DISPLAYED_POINTS', payload: j[1] })
+                })
+
+              return
+            }
+
+            if (searchField.current?.value !== "") {
+              pointUtils.searchPoints()
+            }
+          }}>
             <Image alt="" src="/search-window/search.png" width={30} height={30} />
           </button>
           <div className='separator' />
           <button className='barButton' onClick={() => {
+            const clearPoints = state.multiPoints.map(() => "")
+
+            dispatch({ type: "SET_MULTIPOINTS", payload: clearPoints });
+            dispatch({ type: "SET_PATH_DATA", payload: [] })
+            dispatch({ type: "SET_ROUTE_DATA", payload: undefined })
             dispatch({ type: 'SET_AB_ROUTE_SHOWN', payload: !state.isABRouteShown })
+
+            pointUtils.setPoints([])
+            pointUtils.fetchPoints(0)
           }}>
             <Image alt="" src="/search-window/route.png" width={30} height={30} />
           </button>
