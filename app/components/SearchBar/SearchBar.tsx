@@ -49,6 +49,8 @@ export default function SearchBar({ state, dispatch, pointUtils }:
                   .then(r => r.json())
                   .then(j => [j[0].lon, j[0].lat])
 
+              console.log(`https://nominatim.openstreetmap.org/search?q=${state.multiPoints[state.multiPoints.length - 1]}&format=jsonv2`)
+
               const pointBCoords: [number, number] =
                 await fetch(`https://nominatim.openstreetmap.org/search?q=${state.multiPoints[state.multiPoints.length - 1]}&format=jsonv2`, {
                   headers: {

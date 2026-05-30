@@ -17,6 +17,8 @@ import { useLocalStorage } from "@/utils/useLocalStore";
 import { initialState, reducer } from "@/utils/reducer";
 import usePoints from "@/utils/usePoints";
 import useRoutes from "@/utils/useRoutes";
+import PointCreate from "./PointCreate/PointCreate";
+import RouteCreate from "./RouteCreate/RouteCreate";
 
 const Map = dynamic(() => import('./Map/Map'), {
   ssr: false
@@ -79,7 +81,8 @@ export default function MainPage({ authToken, userId }: { authToken: string | nu
 
       <button className="authButton" onClick={() => {
         if (!state.authToken) dispatch({ type: 'SET_AUTH_SHOWN', payload: true })
-        else dispatch({ type: 'TOGGLE_USER_PROFILE', payload: true })
+        else if (!state.isProfileShown) dispatch({ type: 'TOGGLE_USER_PROFILE', payload: true })
+        else dispatch({ type: 'TOGGLE_USER_PROFILE', payload: false })
       }}>
         <Image src={'/auth-window/person.svg'} width={28} height={34} alt="" />
       </button>
@@ -92,6 +95,8 @@ export default function MainPage({ authToken, userId }: { authToken: string | nu
       <CityPicker state={state} dispatch={dispatch} setCityName={setCityName} />
       <CommentSection state={state} dispatch={dispatch} />
       <CommentEditor state={state} dispatch={dispatch} />
+      <PointCreate state={state} dispatch={dispatch} />
+      <RouteCreate state={state} dispatch={dispatch} />
       <AuthModal state={state} dispatch={dispatch} />
     </>
   )

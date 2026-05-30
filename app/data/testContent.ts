@@ -1,5 +1,5 @@
 import { PointData, RouteData, PinData } from "../types/localTypes";
-
+/*
 export const TestPoints: PointData[] = [
   {
     id: 100,
@@ -319,4 +319,4 @@ export const TestRoutes: RouteData[] = [
   }
 ]
 
-export const TestPins: PinData[] = []
+export const TestPins: PinData[] = []*/

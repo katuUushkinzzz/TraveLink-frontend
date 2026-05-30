@@ -70,6 +70,7 @@ export default function usePoints(initialValue: PointData[] = [], state: State, 
       const json = await response.json()
 
       setPoints(json)
+      console.log(json)
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error occurred'));
     } finally {

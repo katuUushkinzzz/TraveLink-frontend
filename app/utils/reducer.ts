@@ -14,6 +14,8 @@ export interface State {
   isSearching: boolean;
   isProfileShown: boolean;
   isCathegorized?: string;
+  isPointModalShown: boolean;
+  isRouteModalShown: boolean;
   authToken?: string;
   userId?: number;
   routeData?: RouteData;
@@ -36,6 +38,8 @@ export const initialState: State = {
   isSearching: false,
   isProfileShown: false,
   isCathegorized: undefined,
+  isPointModalShown: false,
+  isRouteModalShown: false,
   authToken: undefined,
   userId: undefined,
   currentCity: undefined,
@@ -70,6 +74,8 @@ export type Action =
   | { type: 'SET_PATH_DATA'; payload: [number, number][] }
   | { type: 'SET_DISPLAYED_POINTS'; payload: PinData[] }
   | { type: 'SET_CATHEGORIZED'; payload: string | undefined }
+  | { type: 'SET_MODAL_POINT'; payload: boolean }
+  | { type: 'SET_MODAL_ROUTE'; payload: boolean }
 
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -115,6 +121,10 @@ export function reducer(state: State, action: Action): State {
       return { ...state, displayedPoints: action.payload };
     case 'SET_CATHEGORIZED':
       return { ...state, isCathegorized: action.payload };
+    case 'SET_MODAL_POINT':
+      return { ...state, isPointModalShown: action.payload };
+    case 'SET_MODAL_ROUTE':
+      return { ...state, isRouteModalShown: action.payload };
     default:
       return state;
   }

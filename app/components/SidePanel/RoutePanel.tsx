@@ -18,7 +18,7 @@ function Point({ id, pointContents, dispatch }: { id: number, pointContents: Poi
   return (
     <div>
       <div className='routePanelPointHeader'>
-        <Image src={pointContents.image} width={200} height={200} alt='' />
+        <Image src={pointContents.image !== "" ? pointContents.image : '/checker.png'} width={200} height={200} alt='' />
         <div className='routePanelPointInfoContainer'>
           <div className='routePanelPointNumber'>{id}</div>
           <div className='routePanelPointInfo'>

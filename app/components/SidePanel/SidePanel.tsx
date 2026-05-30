@@ -2,13 +2,14 @@ import { ActionDispatch, useEffect, useState } from 'react'
 import Image from 'next/image'
 import React from 'react'
 
+import LikeSvg from '@/public/search-window/like.svg'
 import RouteCard from '../Cards/RouteCard'
 import PointCard from '../Cards/PointCard'
 import Loader from '../Loading/Loading'
 
 import { State, Action } from '@/utils/reducer'
 import { PointUtils } from '@/utils/usePoints'
-import { PointData, RouteData } from '@/types/localTypes'
+import { PointData, ProfileData, RouteData } from '@/types/localTypes'
 
 import './SidePanel.css'
 import { RouteUtils } from '@/app/utils/useRoutes'
@@ -22,6 +23,7 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
   const [lastScrollTop, setlastScrollTop] = useState(0);
   const [nextPage, setNextPage] = useState([1, 1]);
   const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
+  const [profileData, setProfileData] = useState<ProfileData | null>(null)
 
   function showRoutePanel(contents: RouteData) {
     dispatch({ type: 'SET_ROUTE_DATA', payload: contents })
@@ -129,6 +131,8 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
   }, [state.isAddPanelShown, state.isPanelShown]);
 
   useEffect(/* Get user profile */() => {
+    console.log(state.authToken, state.isProfileShown, state.userId)
+
     const baseUrl = `http://${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}`;
     const url = `${baseUrl}/user/get/${state.userId}`;
 
@@ -141,14 +145,17 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
         },
       })
         .then(r => r.json())
-        .then(() => { });
+        .then(j => { console.log(j); setProfileData(j) });
+    }
+    else {
+      (() => setProfileData(null))()
     }
   }, [state.authToken, state.isProfileShown, state.userId])
 
   return (
     <div id="sidePanelContainer" className="sidePanelContainer">
       <div className='sidePanelScrollArea' onScrollEnd={e => onScrollEnd(e)} style={{ paddingTop: state.isSearching ? '0px' : '10px' }}>
-        {!state.isSearching && <>
+        {!profileData && !state.isSearching && <>
           {state.isABRouteShown && <div className='sidePanelABRouteContainer'>
             <header>
               {!state.isABMultiRouteShown &&
@@ -179,6 +186,24 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
           </>}
         </>}
 
+        {profileData && <div className='userContainer'>
+          <Image src={profileData.image ?? "/checker.png"} className='userPfp' alt='' width={100} height={100} />
+          <span className='txt userName'>{profileData.username}</span>
+          <div className='interactContainer'>
+            <label className='txt interactTxt likeButton'>
+              {profileData.personalLikes}
+              <input type='checkbox' checked={true} readOnly />
+              <LikeSvg width={20.4} height={17.7} />
+            </label>
+            <span className='txt interactTxt'>
+              {profileData.personalComments}
+              <Image alt="" src='/search-window/comm.png' width={18} height={18} />
+            </span>
+          </div>
+          <button className='txt userButton' onClick={() => dispatch({ type: 'SET_MODAL_ROUTE', payload: true })}>Создать маршрут</button>
+          <button className='txt userButton' onClick={() => dispatch({ type: 'SET_MODAL_POINT', payload: true })}>Создать точку</button>
+        </div>}
+
         <div className="recommendsContainer">
           {!state.isABRouteShown && !state.isCathegorized && <div className='recommendsTabs'>
             <input onChange={() => setRecTab(0)} id='recommendsTabRoutes' type='radio' name='tabs' defaultChecked={currentRecTab === 0} />
@@ -188,7 +213,7 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
             <label htmlFor='recommendsTabPoints' className='txt recommendsTab'>Места</label>
           </div>}
           {(currentRecTab === 0 && !state.isABRouteShown && !state.isCathegorized) && <div className='recommendsCards'>
-            {routeUtils.routes.map(route => (
+            {(() => { return profileData?.createdRoutes ?? routeUtils.routes })().map(route => (
               <RouteCard
                 key={route.id}
                 routeData={route}
@@ -200,7 +225,7 @@ export default function SidePanel({ state, dispatch, routeUtils, pointUtils, tog
             {routeUtils.isLoading && <Loader />}
           </div>}
           {(currentRecTab === 1 || state.isABRouteShown || state.isCathegorized) && <div className='recommendsCards'>
-            {pointUtils.points.map(point => (
+            {(() => { return profileData?.createdPoints ?? pointUtils.points })().map(point => (
               <PointCard
                 key={point.id}
                 pointData={point}

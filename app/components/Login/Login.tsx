@@ -88,9 +88,11 @@ function AuthModal({ state, dispatch }: { state: State, dispatch: ActionDispatch
 
           if (remember) {
             setCookieAction('auth', j.token, { httpOnly: true, path: '/', maxAge: 86400 })
+            setCookieAction('userId', j.id, { httpOnly: true, path: '/', maxAge: 86400 })
           }
           else {
             setCookieAction('auth', j.token, { httpOnly: true, path: '/' })
+            setCookieAction('userId', j.id, { httpOnly: true, path: '/', })
           }
           dispatch({ type: 'SET_AUTH_SHOWN', payload: false })
         })

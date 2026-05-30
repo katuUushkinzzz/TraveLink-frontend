@@ -50,3 +50,20 @@ export interface PointData {
   nextDistance?: number
   nextTime?: number
 }
+
+export interface ProfileData {
+  createdPoints: PointData[]
+  createdRoutes: RouteData[]
+  image: string | StaticImport
+  myProfile: boolean
+  personalComments: number
+  personalLikes: number
+  username: string
+}
+
+export interface PointCreateData {
+  name: string;
+  type: string;
+  description: string;
+  address: string;
+}

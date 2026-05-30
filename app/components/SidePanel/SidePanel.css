@@ -180,3 +180,27 @@ input:checked+.categoryButton .categoryImage {
 .sidePanelABRouteInput input {
   flex: 1;
 }
+
+.userContainer {
+  gap: 9px;
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.userPfp {
+  border-radius: 100%;
+}
+
+.userButton {
+  height: 50px;
+  width: 330px;
+  border-radius: 17px;
+  border: 2px solid #53515E;
+  align-self: center;
+  cursor: pointer;
+}
